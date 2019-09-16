@@ -39,6 +39,16 @@ sys.path.append('configs')
 import variables as var
 import outvars as out
 
+## from analysisutils
+if isCondor:sys.path.append('ExoPieUtils/scalefactortools/')
+else:sys.path.append('../../ExoPieUtils/scalefactortools/')
+##please change the era accordingly
+year_file= open("Year.py","w")
+year_file.write('era="2016"')
+year_file.close()
+import ana_weight as wgt
+
+
 
 ######################################################################################################
 ## All import are done before this
@@ -151,6 +161,7 @@ def runbbdm(txtfile):
 
     filename = infile_
     ieve = 0;icount = 0
+
     for df in read_root(filename, 'outTree', columns=var.allvars, chunksize=125000):
 
         for ep_runId, ep_lumiSection, ep_eventId, \
@@ -166,7 +177,7 @@ def runbbdm(txtfile):
             ep_HPSTau_n,ep_Taudisc_againstLooseMu,ep_Taudisc_againstLooseEle,ep_tau_isoLoose,\
             ep_pu_nTrueInt, ep_pu_nPUVert, \
             ep_THINjetNPV, \
-            ep_mcweight, ep_nGenPar, ep_genParId, ep_genMomParId, ep_genParEp, ep_genParPx, ep_genParPy, ep_genParPz, ep_genParEnergy, \
+            ep_mcweight, ep_genParPt, ep_genParSample, \
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId, \
                    df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown, df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown, \
                    df.st_THINnJet, df.st_THINjetPx, df.st_THINjetPy, df.st_THINjetPz, df.st_THINjetEnergy, \
@@ -180,9 +191,8 @@ def runbbdm(txtfile):
                    df.st_HPSTau_n,df.st_Taudisc_againstLooseMuon,df.st_Taudisc_againstLooseElectron,df.st_tau_isoLoose,\
                    df.st_pu_nTrueInt, df.st_pu_nPUVert, \
                    df.st_THINjetNPV, \
-                   df.mcweight, df.st_nGenPar, df.st_genParId, df.st_genMomParId, df.st_genParSt, df.st_genParPx, df.st_genParPy, df.st_genParPz, df.st_genParEnergy, \
+                   df.mcweight, df.st_genParPt, df.st_genParSample, \
             ):
-
 
             ieve = ieve + 1
             if ieve%1000==0: print "Processed",ieve,"Events"
@@ -209,12 +219,12 @@ def runbbdm(txtfile):
             THIN JET VARS
             -------------------------------------------------------------------------------
             '''
-
             THINjetpt = [getPt(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
             THINjeteta = [getEta(ep_THINjetPx[ij], ep_THINjetPy[ij], ep_THINjetPz[ij]) for ij in range(ep_THINnJet)]
             THINjetphi = [getPhi(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
             THINbjets = [ij for ij in range(ep_THINnJet) if (ep_THINjetDeepCSV[ij] > deepCSV_Med)]
             nBjets = len(THINbjets)
+            min_dPhi_jet_MET = min([DeltaPhi(jet_phi,ep_pfMetCorrPhi) for jet_phi in THINjetphi])
             #if ep_nfjet == 0 : continue
             print "ep_THINnJet",ep_THINnJet
 
@@ -231,16 +241,23 @@ def runbbdm(txtfile):
             '''
 
             ## place all the selection for boosted SR.
-            if  (ep_THINnJet ==2 or ep_THINnJet==3 ) and (THINjetpt[0] > 50) and (nBjets==2) and (ep_nEle == 0) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 200.):
+            if (ep_THINnJet ==2 or ep_THINnJet==3 ) and (THINjetpt[0] > 50.) and (nBjets==2) and (ep_nEle == 0) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 200. and min_dPhi_jet_MET > 0.5 and ep_THINjetCHadEF[0] >0.1 and ep_THINjetNHadEF[0] < 0.8):
                 isSR1b=True
-
                 ## cal function for each of them based on pt and eta
                 weightEle=1
                 weightMu=1
                 weightB=1
                 weightTau=1
-                weightEWK=1
-                weightTop=1
+                if ep_genParSample==23:
+                    weightEWK=wgt.getEWKZ(ep_genParPt[0])*wgt.getQCDZ(ep_genParPt[0])
+                elif ep_genParSample==24:
+                    weightEWK=wgt.getEWKW(ep_genParPt[0])*wgt.getQCDW(ep_genParPt[0])
+                if ep_genParSample==6:
+                    weightTop=wgt.getTopPtReWgt(ep_genParPt[0],ep_genParPt[1])
+                else:
+                    weightEWK = 1.0
+                    weightTop = 1.0
+
                 weightPU=1
                 weightOther=1
 
