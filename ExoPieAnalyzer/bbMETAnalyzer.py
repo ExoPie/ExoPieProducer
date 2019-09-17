@@ -152,8 +152,8 @@ def runbbdm(txtfile):
 
 
     ## define global dataframes
-    df_out_SR_resolved = out.df_out_SR_resolved
-    df_out_SR_boosted = out.df_out_SR_boosted
+    df_out_SR_2b = out.df_out_SR_2b
+    df_out_SR_1b = out.df_out_SR_1b
     #outputfilename = args.outputfile
     h_total = TH1F('h_total','h_total',2,0,2)
     h_total_mcweight = TH1F('h_total_mcweight','h_total_mcweight',2,0,2)
@@ -216,34 +216,85 @@ def runbbdm(txtfile):
             deepCSV_Med = 0.6321
             '''
             -------------------------------------------------------------------------------
+            electron VARS
+            -------------------------------------------------------------------------------
+            '''
+            ep_elePt  = [getPt(ep_elePx[ij], ep_elePy[ij]) for ij in range(ep_nEle)]
+            ep_eleEta = [getEta(ep_elePx[ij], ep_elePy[ij], ep_elePz[ij]) for ij in range(ep_nEle)]
+            ep_elePhi = [getPhi(ep_elePx[ij], ep_elePy[ij]) for ij in range(ep_nEle)]
+
+            '''
+            -------------------------------------------------------------------------------
+            muon VARS
+            -------------------------------------------------------------------------------
+            '''
+            ep_muPt = [getPt(ep_muPx[ij], ep_muPy[ij]) for ij in range(ep_nMu)]
+            ep_muEta = [getEta(ep_muPx[ij], ep_muPy[ij], ep_muPz[ij]) for ij in range(ep_nMu)]
+            ep_muPhi = [getPhi(ep_muPx[ij], ep_muPy[ij]) for ij in range(ep_nMu)]
+            '''
+
+            -------------------------------------------------------------------------------
+            photon VARS
+            -------------------------------------------------------------------------------
+            '''
+            ep_phoPt = [getPt(ep_phoPx[ij], ep_phoPy[ij]) for ij in range(ep_nPho)]
+            ep_phoEta = [getEta(ep_phoPx[ij], ep_phoPy[ij], ep_phoPz[ij]) for ij in range(ep_nPho)]
+            ep_phoPhi = [getPhi(ep_phoPx[ij], ep_phoPy[ij]) for ij in range(ep_nPho)]
+
+            '''
+            -------------------------------------------------------------------------------
             THIN JET VARS
             -------------------------------------------------------------------------------
             '''
-            THINjetpt = [getPt(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
-            THINjeteta = [getEta(ep_THINjetPx[ij], ep_THINjetPy[ij], ep_THINjetPz[ij]) for ij in range(ep_THINnJet)]
-            THINjetphi = [getPhi(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
-            THINbjets = [ij for ij in range(ep_THINnJet) if (ep_THINjetDeepCSV[ij] > deepCSV_Med)]
-            nBjets = len(THINbjets)
-            min_dPhi_jet_MET = min([DeltaPhi(jet_phi,ep_pfMetCorrPhi) for jet_phi in THINjetphi])
-            #if ep_nfjet == 0 : continue
-            print "ep_THINnJet",ep_THINnJet
+            ep_THINjetPt = [getPt(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
+            ep_THINjetEta = [getEta(ep_THINjetPx[ij], ep_THINjetPy[ij], ep_THINjetPz[ij]) for ij in range(ep_THINnJet)]
+            ep_THINjetPhi = [getPhi(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
+            ep_THINbjets = [ij for ij in range(ep_THINnJet) if (ep_THINjetDeepCSV[ij] > deepCSV_Med)]
+            nBjets = len(ep_THINbjets)
+            min_dPhi_jet_MET = min([DeltaPhi(jet_phi,ep_pfMetCorrPhi) for jet_phi in ep_THINjetPhi])
+            min_dPhi_jet_WenuRecoil = min([DeltaPhi(jet_phi,WenuPhi) for jet_phi in ep_THINjetPhi])
+            min_dPhi_jet_WmunuRecoil = min([DeltaPhi(jet_phi,WmunuPhi) for jet_phi in ep_THINjetPhi])
+            min_dPhi_jet_ZeeRecoil = min([DeltaPhi(jet_phi,ZeePhi) for jet_phi in ep_THINjetPhi])
+            min_dPhi_jet_ZmumuRecoil = min([DeltaPhi(jet_phi,ZmumuPhi) for jet_phi in ep_THINjetPhi])
+            min_dPhi_jet_GammaRecoil = min([DeltaPhi(jet_phi,GammaPhi) for jet_phi in ep_THINjetPhi])
 
             '''
-            TAU HADRONIC COLLECTION
+            --------------------------------------------------------------------------------
+            1b SIGNAL REGION
+            --------------------------------------------------------------------------------
             '''
-            nTau = ep_HPSTau_n #[tauIndex for tauIndex in range(ep_HPSTau_n) if (ep_Taudisc_againstLooseMu[tauIndex] and ep_Taudisc_againstLooseEle[tauIndex] and ep_tau_isoLoose[tauIndex])]
-            print 'nTau',nTau
+            ## place all the selection for 1b SR.
+            if (ep_THINnJet ==1 or ep_THINnJet==2 ) and (ep_THINjetPt[0] > 50.) and (nBjets==1) and (ep_nEle == 0) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 200.) and (min_dPhi_jet_MET > 0.5) and (ep_THINjetCHadEF[0] >0.1) and (ep_THINjetNHadEF[0] < 0.8):
+                isSR1b=True
+                ## cal function for each of them based on pt and eta
+                weightMET=wgt.getMETtrig_First(ep_pfMetCorrPt)
+                weightEle=1
+                weightMu=1
+                weightB=1
+                weightTau=1
+                if ep_genParSample==23:
+                    weightEWK=wgt.getEWKZ(ep_genParPt[0])*wgt.getQCDZ(ep_genParPt[0])
+                elif ep_genParSample==24:
+                    weightEWK=wgt.getEWKW(ep_genParPt[0])*wgt.getQCDW(ep_genParPt[0])
+                if ep_genParSample==6:
+                    weightTop=wgt.getTopPtReWgt(ep_genParPt[0],ep_genParPt[1])
+                else:
+                    weightEWK = 1.0
+                    weightTop = 1.0
+                weightPU=wgt.puweight(ep_pu_nTrueInt)
+                weightOther=1
 
+                weight = weightMET*weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
             '''
             --------------------------------------------------------------------------------
             2b SIGNAL REGION
             --------------------------------------------------------------------------------
             '''
-
-            ## place all the selection for boosted SR.
-            if (ep_THINnJet ==2 or ep_THINnJet==3 ) and (THINjetpt[0] > 50.) and (nBjets==2) and (ep_nEle == 0) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 200. and min_dPhi_jet_MET > 0.5 and ep_THINjetCHadEF[0] >0.1 and ep_THINjetNHadEF[0] < 0.8):
+            ## place all the selection for 2b SR.
+            if (ep_THINnJet ==2 or ep_THINnJet==3 ) and (ep_THINjetPt[0] > 50.) and (nBjets==2) and (ep_nEle == 0) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 200.) and (min_dPhi_jet_MET > 0.5) and (ep_THINjetCHadEF[0] >0.1) and (ep_THINjetNHadEF[0] < 0.8):
                 isSR1b=True
                 ## cal function for each of them based on pt and eta
+                weightMET=wgt.getMETtrig_First(ep_pfMetCorrPt)
                 weightEle=1
                 weightMu=1
                 weightB=1
@@ -258,83 +309,68 @@ def runbbdm(txtfile):
                     weightEWK = 1.0
                     weightTop = 1.0
 
-                weightPU=1
+                weightPU=wgt.puweight(ep_pu_nTrueInt)
+                weightOther=1
+
+                weight = weightMET*weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
+
+            '''
+            --------------------------------------------------------------------------------
+            WENU CONTROL REGION 1b
+            --------------------------------------------------------------------------------
+            '''
+            ## place all the selection for Wenu SR.
+            if (ep_THINnJet ==1) and (ep_THINjetPt[0] > 50.) and (nBjets==1) and (ep_nEle == 1) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 50.) and (ep_WenuRecoil > 200.) and (ep_Wenumass <= 160) and (min_dPhi_jet_WenuRecoil > 0.5) and (ep_THINjetCHadEF[0]) >0.1 and (ep_THINjetNHadEF[0] < 0.8) and (ep_elePt[0] > 30.):
+                is1bCRWenu=True
+                ## cal function for each of them based on pt and eta
+                weightEle=wgt.ele_weight()
+                weightMu=1
+                weightB=1
+                weightTau=1
+                if ep_genParSample==23:
+                    weightEWK=wgt.getEWKZ(ep_genParPt[0])*wgt.getQCDZ(ep_genParPt[0])
+                elif ep_genParSample==24:
+                    weightEWK=wgt.getEWKW(ep_genParPt[0])*wgt.getQCDW(ep_genParPt[0])
+                if ep_genParSample==6:
+                    weightTop=wgt.getTopPtReWgt(ep_genParPt[0],ep_genParPt[1])
+                else:
+                    weightEWK = 1.0
+                    weightTop = 1.0
+                weightPU=wgt.puweight(ep_pu_nTrueInt)
                 weightOther=1
 
                 weight = weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
 
-
-            '''
-            --------------------------------------------------------------------------------
-            SIGNAL REGION RESOLVED
-            --------------------------------------------------------------------------------
-            '''
-
-
-
-            ep_THINjetPt=[]
-            ep_THINjetEta=[]
-            ep_THINjetPhi=[]
-            n_bjets=-1
-            h_mass=-1
-            ## Resolved selection will be applied IFF there is no boosted candidate
-            if not isSR1b:
-                if (ep_THINnJet>2 and (ep_nEle == 0) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 170.) and (ep_THINjetDeepCSV[0]>0.8) and (ep_THINjetDeepCSV[1]>0.8)):
-                    isSR2b=True
-                    ## call the proper functions
-
-                    ep_THINjetPt=[1 for ijet in range(ep_THINnJet)]
-                    ep_THINjetEta=[1 for ijet in range(ep_THINnJet)]
-                    ep_THINjetPhi=[1 for ijet in range(ep_THINnJet)]
-
-                    ## cal function for each of them
-                    n_bjets=2
-                    h_mass=125.
-
-
-                    ## cal function for each of them based on pt and eta
-                    weightEle=1
-                    weightMu=1
-                    weightB=1
-                    weightTau=1
-                    weightEWK=1
-                    weightTop=1
-                    weightPU=1
-                    weightOther=1
-
-                    weight = weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
-
-
             dummy=1.0
             if isSR1b:
-                df_out_SR_boosted = df_out_SR_boosted.append({'run':ep_runId, 'lumi':ep_lumiSection, 'event':ep_eventId,
-                                                'MET':ep_pfMetCorrPt, 'Njets_PassID':ep_THINnJet,
-						'Nbjets_PassID':n_bjets, 'NTauJets':ep_HPSTau_n, 'NEle':ep_nEle, 'NMu':ep_nMu, 'nPho':ep_nPho,
-						'FJetPt':fatjetpt[fjetIndex], 'FJetEta':fatjeteta[fjetIndex], 'FJetPhi':fatjetphi[fjetIndex], 'FJetCSV':ep_fjetProbHbb[fjetIndex],
-                                                'Jet1Pt':dummy, 'Jet1Eta':dummy, 'Jet1Phi':dummy, 'Jet2Pt':dummy,'Jet2Eta':dummy, 'Jet2Phi':dummy,
-                                                'FJetMass':ep_fjetSDMass[fjetIndex], 'DiJetPt':dummy, 'DiJetEta':dummy,
-						'weight':weight
-					   },
-						ignore_index=True)
-
+                df_out_SR_1b = df_out_SR_1b.append({'run':ep_runId, 'lumi':ep_lumiSection, 'event':ep_eventId,
+                                                    'MET':ep_pfMetCorrPt,'dPhi_jetMET':min_dPhi_jet_MET,
+                                                    'NTau':ep_HPSTau_n,'NEle':ep_nEle,'NMu':ep_nMu, 'nPho':ep_nPho,
+                                                    'Njets_PassID':ep_THINnJet,'Nbjets_PassID':nBjets,
+                                                    'Jet1Pt':ep_THINjetPt[0],'Jet1Eta':ep_THINjetEta[0],'Jet1Phi':ep_THINjetPhi[0],'Jet1deepCSV':ep_THINjetDeepCSV[0],
+                                                    'Jet2Pt':ep_THINjetPt[1],'Jet2Eta':ep_THINjetEta[1],'Jet2Phi':ep_THINjetPhi[1],'Jet2deepCSV':ep_THINjetDeepCSV[1],
+                                                    'Jet3Pt':dummy,'Jet3Eta':dummy,'Jet3Phi':dummy,'Jet3CSV':dummy,
+                                                    'weight':weight
+                                                    },ignore_index=True
+                                                   )
 
             if  isSR2b:
-                df_out_SR_resolved = df_out_SR_resolved.append({'run':ep_runId, 'lumi':ep_lumiSection, 'event':ep_eventId,
-                                               'MET':ep_pfMetCorrPt, 'Njets_PassID':ep_THINnJet,
-                                               'Nbjets_PassID':n_bjets, 'NTauJets':ep_HPSTau_n, 'NEle':ep_nEle, 'NMu':ep_nMu, 'nPho':ep_nPho,
-                                               'Jet1Pt':ep_THINjetPt[0], 'Jet1Eta':ep_THINjetEta[0], 'Jet1Phi':ep_THINjetPhi[0], 'Jet1CSV':ep_THINjetDeepCSV[0],
-                                               'Jet2Pt':ep_THINjetPt[1], 'Jet2Eta':ep_THINjetEta[1], 'Jet2Phi':ep_THINjetPhi[1], 'Jet2CSV':ep_THINjetDeepCSV[1],
-                                               'Jet3Pt':ep_THINjetPt[2], 'Jet3Eta':ep_THINjetEta[2], 'Jet3Phi':ep_THINjetPhi[2], 'Jet3CSV':ep_THINjetDeepCSV[2],
-                                               'DiJetMass':h_mass,
-                                               'weight':weight
-                                           },
-                                              ignore_index=True)
+                df_out_SR_2b = df_out_SR_2b.append({'run':ep_runId, 'lumi':ep_lumiSection, 'event':ep_eventId,
+                                                    'MET':ep_pfMetCorrPt,'dPhi_jetMET':min_dPhi_jet_MET,
+                                                    'NTau':ep_HPSTau_n,'NEle':ep_nEle,'NMu':ep_nMu, 'nPho':ep_nPho,
+                                                    'Njets_PassID':ep_THINnJet,'Nbjets_PassID':nBjets,
+                                                    'Jet1Pt':ep_THINjetPt[0], 'Jet1Eta':ep_THINjetEta[0], 'Jet1Phi':ep_THINjetPhi[0], 'Jet1CSV':ep_THINjetDeepCSV[0],
+                                                    'Jet2Pt':ep_THINjetPt[1], 'Jet2Eta':ep_THINjetEta[1], 'Jet2Phi':ep_THINjetPhi[1], 'Jet2CSV':ep_THINjetDeepCSV[1],
+                                                    'Jet3Pt':ep_THINjetPt[2], 'Jet3Eta':ep_THINjetEta[2], 'Jet3Phi':ep_THINjetPhi[2], 'Jet3CSV':ep_THINjetDeepCSV[2],
+                                                    'weight':weight
+                                                    },ignore_index=True
+                                                   )
 
 
 
     outfilenameis=outfilename
-    df_out_SR_resolved.to_root(outfilenameis, key='monoHbb_SR_resolved',mode='a')
-    df_out_SR_boosted.to_root(outfilenameis, key='monoHbb_SR_boosted',mode='a')
+    df_out_SR_2b.to_root(outfilenameis, key='monoHbb_SR_resolved',mode='a')
+    df_out_SR_1b.to_root(outfilenameis, key='monoHbb_SR_boosted',mode='a')
 
     outfile = TFile(outfilenameis,'UPDATE')
     outfile.cd()
