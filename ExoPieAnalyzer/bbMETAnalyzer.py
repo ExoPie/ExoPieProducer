@@ -19,7 +19,7 @@ import multiprocessing as mp
 
 
 isCondor = False
-runInteractive = False
+runInteractive = True
 testing=True
 ## from commonutils
 if isCondor:sys.path.append('ExoPieUtils/commonutils/')
@@ -112,8 +112,6 @@ def TextToList(textfile):
 
 def runbbdm(txtfile):
 
-
-
     print "in main function"
 
     infile_=[]
@@ -152,8 +150,8 @@ def runbbdm(txtfile):
 
 
     ## define global dataframes
-    df_out_SR_2b = out.df_out_SR_2b
     df_out_SR_1b = out.df_out_SR_1b
+    df_out_SR_2b = out.df_out_SR_2b
     #outputfilename = args.outputfile
     h_total = TH1F('h_total','h_total',2,0,2)
     h_total_mcweight = TH1F('h_total_mcweight','h_total_mcweight',2,0,2)
@@ -166,6 +164,7 @@ def runbbdm(txtfile):
 
         for ep_runId, ep_lumiSection, ep_eventId, \
             ep_pfMetCorrPt, ep_pfMetCorrPhi, ep_pfMetUncJetResUp, ep_pfMetUncJetResDown, ep_pfMetUncJetEnUp, ep_pfMetUncJetEnDown, \
+            ep_isData, \
             ep_THINnJet, ep_THINjetPx, ep_THINjetPy, ep_THINjetPz, ep_THINjetEnergy, \
             ep_THINjetDeepCSV, ep_THINjetHadronFlavor, \
             ep_THINjetNHadEF, ep_THINjetCHadEF, ep_THINjetCEmEF, ep_THINjetPhoEF, ep_THINjetEleEF, ep_THINjetMuoEF, \
@@ -174,12 +173,13 @@ def runbbdm(txtfile):
             ep_eleIsPasepight, ep_eleIsPassLoose, \
             ep_nPho, ep_phoIsPasepight, ep_phoPx, ep_phoPy, ep_phoPz, ep_phoEnergy, \
             ep_nMu, ep_muPx, ep_muPy, ep_muPz, ep_muEnergy, ep_iepightMuon, \
-            ep_HPSTau_n,ep_Taudisc_againstLooseMu,ep_Taudisc_againstLooseEle,ep_tau_isoLoose,\
+            ep_HPSTau_n, ep_TausTightElectron, ep_myTausTightMuon, \
             ep_pu_nTrueInt, ep_pu_nPUVert, \
             ep_THINjetNPV, \
             ep_mcweight, ep_genParPt, ep_genParSample, \
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId, \
                    df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown, df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown, \
+                   df.st_isData, \
                    df.st_THINnJet, df.st_THINjetPx, df.st_THINjetPy, df.st_THINjetPz, df.st_THINjetEnergy, \
                    df.st_THINjetDeepCSV, df.st_THINjetHadronFlavor, \
                    df.st_THINjetNHadEF, df.st_THINjetCHadEF, df.st_THINjetCEmEF, df.st_THINjetPhoEF, df.st_THINjetEleEF, df.st_THINjetMuoEF, \
@@ -188,7 +188,7 @@ def runbbdm(txtfile):
                    df.st_eleIsPassTight, df.st_eleIsPassLoose, \
                    df.st_nPho, df.st_phoIsPassTight, df.st_phoPx, df.st_phoPy, df.st_phoPz, df.st_phoEnergy, \
                    df.st_nMu, df.st_muPx, df.st_muPy, df.st_muPz, df.st_muEnergy, df.st_isTightMuon, \
-                   df.st_HPSTau_n,df.st_Taudisc_againstLooseMuon,df.st_Taudisc_againstLooseElectron,df.st_tau_isoLoose,\
+                   df.st_nTau_discBased_looseElelooseMuVeto,df.st_nTau_discBased_TightEleTightMuVeto,df.st_nTau_discBased_looseEleTightMuVeto,\
                    df.st_pu_nTrueInt, df.st_pu_nPUVert, \
                    df.st_THINjetNPV, \
                    df.mcweight, df.st_genParPt, df.st_genParSample, \
@@ -251,12 +251,15 @@ def runbbdm(txtfile):
             ep_THINjetPhi = [getPhi(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
             ep_THINbjets = [ij for ij in range(ep_THINnJet) if (ep_THINjetDeepCSV[ij] > deepCSV_Med)]
             nBjets = len(ep_THINbjets)
+
+            if len(ep_THINjetPt)==0: continue
+
             min_dPhi_jet_MET = min([DeltaPhi(jet_phi,ep_pfMetCorrPhi) for jet_phi in ep_THINjetPhi])
-            min_dPhi_jet_WenuRecoil = min([DeltaPhi(jet_phi,WenuPhi) for jet_phi in ep_THINjetPhi])
-            min_dPhi_jet_WmunuRecoil = min([DeltaPhi(jet_phi,WmunuPhi) for jet_phi in ep_THINjetPhi])
-            min_dPhi_jet_ZeeRecoil = min([DeltaPhi(jet_phi,ZeePhi) for jet_phi in ep_THINjetPhi])
-            min_dPhi_jet_ZmumuRecoil = min([DeltaPhi(jet_phi,ZmumuPhi) for jet_phi in ep_THINjetPhi])
-            min_dPhi_jet_GammaRecoil = min([DeltaPhi(jet_phi,GammaPhi) for jet_phi in ep_THINjetPhi])
+            # min_dPhi_jet_WenuRecoil = min([DeltaPhi(jet_phi,WenuPhi) for jet_phi in ep_THINjetPhi])
+            # min_dPhi_jet_WmunuRecoil = min([DeltaPhi(jet_phi,WmunuPhi) for jet_phi in ep_THINjetPhi])
+            # min_dPhi_jet_ZeeRecoil = min([DeltaPhi(jet_phi,ZeePhi) for jet_phi in ep_THINjetPhi])
+            # min_dPhi_jet_ZmumuRecoil = min([DeltaPhi(jet_phi,ZmumuPhi) for jet_phi in ep_THINjetPhi])
+            # min_dPhi_jet_GammaRecoil = min([DeltaPhi(jet_phi,GammaPhi) for jet_phi in ep_THINjetPhi])
 
             '''
             --------------------------------------------------------------------------------
@@ -314,33 +317,32 @@ def runbbdm(txtfile):
 
                 weight = weightMET*weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
 
-            '''
-            --------------------------------------------------------------------------------
-            WENU CONTROL REGION 1b
-            --------------------------------------------------------------------------------
-            '''
-            ## place all the selection for Wenu SR.
-            if (ep_THINnJet ==1) and (ep_THINjetPt[0] > 50.) and (nBjets==1) and (ep_nEle == 1) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 50.) and (ep_WenuRecoil > 200.) and (ep_Wenumass <= 160) and (min_dPhi_jet_WenuRecoil > 0.5) and (ep_THINjetCHadEF[0]) >0.1 and (ep_THINjetNHadEF[0] < 0.8) and (ep_elePt[0] > 30.):
-                is1bCRWenu=True
-                ## cal function for each of them based on pt and eta
-                weightEle=wgt.ele_weight()
-                weightMu=1
-                weightB=1
-                weightTau=1
-                if ep_genParSample==23:
-                    weightEWK=wgt.getEWKZ(ep_genParPt[0])*wgt.getQCDZ(ep_genParPt[0])
-                elif ep_genParSample==24:
-                    weightEWK=wgt.getEWKW(ep_genParPt[0])*wgt.getQCDW(ep_genParPt[0])
-                if ep_genParSample==6:
-                    weightTop=wgt.getTopPtReWgt(ep_genParPt[0],ep_genParPt[1])
-                else:
-                    weightEWK = 1.0
-                    weightTop = 1.0
-                weightPU=wgt.puweight(ep_pu_nTrueInt)
-                weightOther=1
-
-                weight = weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
-
+            # '''
+            # --------------------------------------------------------------------------------
+            # WENU CONTROL REGION 1b
+            # --------------------------------------------------------------------------------
+            # '''
+            # ## place all the selection for Wenu SR.
+            # if (ep_THINnJet ==1) and (ep_THINjetPt[0] > 50.) and (nBjets==1) and (ep_nEle == 1) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 50.) and (ep_WenuRecoil > 200.) and (ep_Wenumass <= 160) and (min_dPhi_jet_WenuRecoil > 0.5) and (ep_THINjetCHadEF[0]) >0.1 and (ep_THINjetNHadEF[0] < 0.8) and (ep_elePt[0] > 30.):
+            #     is1bCRWenu=True
+            #     ## cal function for each of them based on pt and eta
+            #     weightEle=wgt.ele_weight()
+            #     weightMu=1
+            #     weightB=1
+            #     weightTau=1
+            #     if ep_genParSample==23:
+            #         weightEWK=wgt.getEWKZ(ep_genParPt[0])*wgt.getQCDZ(ep_genParPt[0])
+            #     elif ep_genParSample==24:
+            #         weightEWK=wgt.getEWKW(ep_genParPt[0])*wgt.getQCDW(ep_genParPt[0])
+            #     if ep_genParSample==6:
+            #         weightTop=wgt.getTopPtReWgt(ep_genParPt[0],ep_genParPt[1])
+            #     else:
+            #         weightEWK = 1.0
+            #         weightTop = 1.0
+            #     weightPU=wgt.puweight(ep_pu_nTrueInt)
+            #     weightOther=1
+            #
+            #     weight = weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
             dummy=1.0
             if isSR1b:
                 df_out_SR_1b = df_out_SR_1b.append({'run':ep_runId, 'lumi':ep_lumiSection, 'event':ep_eventId,
@@ -366,11 +368,9 @@ def runbbdm(txtfile):
                                                     },ignore_index=True
                                                    )
 
-
-
     outfilenameis=outfilename
-    df_out_SR_2b.to_root(outfilenameis, key='monoHbb_SR_resolved',mode='a')
-    df_out_SR_1b.to_root(outfilenameis, key='monoHbb_SR_boosted',mode='a')
+    df_out_SR_1b.to_root(outfilenameis, key='bbDM_SR_1b',mode='a')
+    df_out_SR_2b.to_root(outfilenameis, key='bbDM_SR_2b',mode='a')
 
     outfile = TFile(outfilenameis,'UPDATE')
     outfile.cd()
@@ -384,16 +384,14 @@ def runbbdm(txtfile):
 
 
 
-
-
 if __name__ == '__main__':
     if not runInteractive:
         txtFile='signal_sample.txt'#infile
         runbbdm(txtFile)
 
     if runInteractive and runOnTxt:
-	filesPath = dirName+'/*txt'
-	files     = glob.glob(filesPath)
+        filesPath = dirName+'/*txt'
+        files     = glob.glob(filesPath)
         n = 8 #submit n txt files at a time, make equal to cores
         final = [files[i * n:(i + 1) * n] for i in range((len(files) + n - 1) // n )]
         for i in range(len(final)):
@@ -402,14 +400,14 @@ if __name__ == '__main__':
                 pool.map(runbbdm,final[i])
                 pool.close()
                 pool.join()
-	    except Exception as e:
-		print e
-		print "Corrupt file inside input txt file is detected! Skipping this txt file:  ", final[i]
-		continue
+            except Exception as e:
+                print e
+                print "Corrupt file inside input txt file is detected! Skipping this txt file:  ", final[i]
+                continue
 
     if runInteractive and not runOnTxt:
         ''' following part is for interactive running. This is still under testing because output file name can't be changed at this moment '''
-        inputpath= "/eos/cms/store/user/khurana/test/"
+        inputpath= "/afs/cern.ch/work/p/ptiwari/bb+DM_analysis/ntuple_analysis/CMSSW_10_3_0/src/ExoPieSlimmer/SIG_2016_2HDMa_SkimRootFiles"
 
         os.system('rm dirlist.txt')
         os.system("ls -1 "+inputpath+" > dirlist.txt")
