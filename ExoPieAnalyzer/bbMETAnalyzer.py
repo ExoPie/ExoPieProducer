@@ -349,27 +349,38 @@ def runbbdm(txtfile):
             #     weightOther=1
             #
             #     weight = weightEle * weightMu * weightB * weightTau * weightEWK * weightTop * weightPU * weightOther
-            dummy=1.0
+            dummy=-9999.0
+            if len(ep_THINjetPt)>1:
+                Jet2Pt  = ep_THINjetPt[1]; Jet2Eta     = ep_THINjetEta[1]
+                Jet2Phi = ep_THINjetPhi[1];Jet2deepCSV = ep_THINjetDeepCSV[1]
+            else:
+                Jet2Pt  = dummy;Jet2Eta     = dummy
+                Jet2Phi = dummy;Jet2deepCSV = dummy
             if isSR1b:
                 df_out_SR_1b = df_out_SR_1b.append({'run':ep_runId, 'lumi':ep_lumiSection, 'event':ep_eventId,
                                                     'MET':ep_pfMetCorrPt,'dPhi_jetMET':min_dPhi_jet_MET,
                                                     'NTau':ep_HPSTau_n,'NEle':ep_nEle,'NMu':ep_nMu, 'nPho':ep_nPho,
                                                     'Njets_PassID':ep_THINnJet,'Nbjets_PassID':nBjets,
                                                     'Jet1Pt':ep_THINjetPt[0],'Jet1Eta':ep_THINjetEta[0],'Jet1Phi':ep_THINjetPhi[0],'Jet1deepCSV':ep_THINjetDeepCSV[0],
-                                                    'Jet2Pt':ep_THINjetPt[1],'Jet2Eta':ep_THINjetEta[1],'Jet2Phi':ep_THINjetPhi[1],'Jet2deepCSV':ep_THINjetDeepCSV[1],
-                                                    'Jet3Pt':dummy,'Jet3Eta':dummy,'Jet3Phi':dummy,'Jet3CSV':dummy,
+                                                    'Jet2Pt':Jet2Pt,'Jet2Eta':Jet2Eta,'Jet2Phi':Jet2Phi,'Jet2deepCSV':Jet2deepCSV,
+                                                    'Jet3Pt':dummy,'Jet3Eta':dummy,'Jet3Phi':dummy,'Jet3deepCSV':dummy,
                                                     'weight':weight
                                                     },ignore_index=True
                                                    )
-
-            if  isSR2b:
+            if len(ep_THINjetPt)>2:
+                Jet3Pt  = ep_THINjetPt[2]; Jet3Eta     = ep_THINjetEta[2]
+                Jet3Phi = ep_THINjetPhi[2];Jet3deepCSV = ep_THINjetDeepCSV[2]
+            else:
+                Jet3Pt  = dummy;Jet3Eta     = dummy
+                Jet3Phi = dummy;Jet3deepCSV = dummy
+            if isSR2b:
                 df_out_SR_2b = df_out_SR_2b.append({'run':ep_runId, 'lumi':ep_lumiSection, 'event':ep_eventId,
                                                     'MET':ep_pfMetCorrPt,'dPhi_jetMET':min_dPhi_jet_MET,
                                                     'NTau':ep_HPSTau_n,'NEle':ep_nEle,'NMu':ep_nMu, 'nPho':ep_nPho,
                                                     'Njets_PassID':ep_THINnJet,'Nbjets_PassID':nBjets,
-                                                    'Jet1Pt':ep_THINjetPt[0], 'Jet1Eta':ep_THINjetEta[0], 'Jet1Phi':ep_THINjetPhi[0], 'Jet1CSV':ep_THINjetDeepCSV[0],
-                                                    'Jet2Pt':ep_THINjetPt[1], 'Jet2Eta':ep_THINjetEta[1], 'Jet2Phi':ep_THINjetPhi[1], 'Jet2CSV':ep_THINjetDeepCSV[1],
-                                                    'Jet3Pt':ep_THINjetPt[2], 'Jet3Eta':ep_THINjetEta[2], 'Jet3Phi':ep_THINjetPhi[2], 'Jet3CSV':ep_THINjetDeepCSV[2],
+                                                    'Jet1Pt':ep_THINjetPt[0], 'Jet1Eta':ep_THINjetEta[0], 'Jet1Phi':ep_THINjetPhi[0], 'Jet1deepCSV':ep_THINjetDeepCSV[0],
+                                                    'Jet2Pt':ep_THINjetPt[1], 'Jet2Eta':ep_THINjetEta[1], 'Jet2Phi':ep_THINjetPhi[1], 'Jet2deepCSV':ep_THINjetDeepCSV[1],
+                                                    'Jet3Pt':Jet3Pt, 'Jet3Eta':Jet3Eta, 'Jet3Phi':Jet3Phi, 'Jet3deepCSV':Jet3deepCSV,
                                                     'weight':weight
                                                     },ignore_index=True
                                                    )
