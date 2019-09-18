@@ -37,7 +37,7 @@ import analysis_utils as anautil
 
 sys.path.append('configs')
 import variables as var
-import outvars as out
+import outvars_bbDM as out
 
 ## from analysisutils
 if isCondor:sys.path.append('ExoPieUtils/scalefactortools/')
@@ -160,7 +160,7 @@ def runbbdm(txtfile):
     filename = infile_
     ieve = 0;icount = 0
 
-    for df in read_root(filename, 'outTree', columns=var.allvars, chunksize=125000):
+    for df in read_root(filename, 'outTree', columns=var.allvars_bbDM, chunksize=125000):
 
         for ep_runId, ep_lumiSection, ep_eventId, \
             ep_pfMetCorrPt, ep_pfMetCorrPhi, ep_pfMetUncJetResUp, ep_pfMetUncJetResDown, ep_pfMetUncJetEnUp, ep_pfMetUncJetEnDown, \
