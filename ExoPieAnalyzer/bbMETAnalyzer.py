@@ -301,7 +301,7 @@ def runbbdm(txtfile):
             '''
             ## place all the selection for 2b SR.
             if (ep_THINnJet ==2 or ep_THINnJet==3 ) and (ep_THINjetPt[0] > 50.) and (nBjets==2) and (ep_nEle == 0) and (ep_nMu == 0) and (ep_nPho ==0) and (ep_HPSTau_n==0) and (ep_pfMetCorrPt > 200.) and (min_dPhi_jet_MET > 0.5) and (ep_THINjetCHadEF[0] >0.1) and (ep_THINjetNHadEF[0] < 0.8):
-                isSR1b=True
+                isSR2b=True
                 ## cal function for each of them based on pt and eta
                 weightMET=wgt.getMETtrig_First(ep_pfMetCorrPt)
                 weightEle=1
