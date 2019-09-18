@@ -70,6 +70,7 @@ parser.add_argument("-runOnTXT", "--runOnTXT",action="store_true", dest="runOnTX
 parser.add_argument("-o", "--outputfile", dest="outputfile", default="out.root")
 parser.add_argument("-D", "--outputdir", dest="outputdir")
 parser.add_argument("-F", "--farmout", action="store_true",  dest="farmout")
+parser.add_argument("-T", "--testing", action="store_true",  dest="testing")
 
 args = parser.parse_args()
 
@@ -77,6 +78,11 @@ if args.farmout==None:
     isfarmout = False
 else:
     isfarmout = args.farmout
+
+if args.testing==None:
+    istest = False
+else:
+    istest = args.testing
 
 if args.inputDir and isfarmout:
     dirName=args.inputDir
@@ -427,5 +433,8 @@ if __name__ == '__main__':
             ## push information about one sample into global list.
             allsample.append(sample_)
         print allsample
-        pool.map(runbbdm, allsample)
+        if istest:
+            runbbdm(allsample[0])
+        else:
+            pool.map(runbbdm, allsample)
         ## this works fine but the output file name get same value becuase it is done via a text file at the moment, need to find a better way,
