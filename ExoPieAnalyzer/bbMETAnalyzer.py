@@ -715,7 +715,7 @@ def runbbdm(txtfile):
             h_reg_preselR_cutFlow.AddBinContent(1, presel_weight)
             if mettrigdecision:
                 h_reg_preselR_cutFlow.AddBinContent(2, presel_weight*weightMET)
-                if (ep_pfMetCorrPt > 200.):
+                if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
                     h_reg_preselR_cutFlow.AddBinContent(
                        3, presel_weight*weightMET)
                     if True:
@@ -769,7 +769,7 @@ def runbbdm(txtfile):
             if mettrigdecision:
                 h_reg_SR_1b_cutFlow.AddBinContent(2, presel_weight*weightMET)
                 h_reg_SR_2b_cutFlow.AddBinContent(2, presel_weight*weightMET)
-                if (ep_pfMetCorrPt > 200.):
+                if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
                    h_reg_SR_1b_cutFlow.AddBinContent(
                        3, presel_weight*weightMET)
                    h_reg_SR_2b_cutFlow.AddBinContent(
@@ -874,7 +874,7 @@ def runbbdm(txtfile):
                                        6, presel_weight*weightEleTrig*weightEle)
                                    h_reg_ZeeCR_2b_cutFlow.AddBinContent(
                                        6, presel_weight*weightEleTrig*weightEle)
-                                   if (ep_ZeeRecoil > 200.):
+                                   if (ep_ZeeRecoil > 200. and delta_pfCaloZeeCR < 0.5):
                                        h_reg_ZeeCR_1b_cutFlow.AddBinContent(
                                            7, presel_weight*weightEleTrig*weightEle)
                                        h_reg_ZeeCR_2b_cutFlow.AddBinContent(
@@ -977,7 +977,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightRecoil*weightMu)
                                     h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightRecoil*weightMu)
-                                    if (ep_ZmumuRecoil > 200.):
+                                    if (ep_ZmumuRecoil > 200. and delta_pfCaloZmumuCR < 0.5):
                                         h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightRecoil*weightMu)
                                         h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
@@ -1079,7 +1079,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightEleTrig*weightEle)
                                     h_reg_WenuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightEleTrig*weightEle)
-                                    if (ep_WenuRecoil > 200.):
+                                    if (ep_WenuRecoil > 200. and ep_pfMetCorrPt > 100 and delta_pfCaloWenuCR < 0.5):
                                         h_reg_WenuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightEleTrig*weightEle)
                                         h_reg_WenuCR_2b_cutFlow.AddBinContent(
@@ -1159,7 +1159,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightRecoil*weightMu)
                                     h_reg_WmunuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightRecoil*weightMu)
-                                    if (ep_WmunuRecoil > 200.):
+                                    if (ep_WmunuRecoil > 200. and ep_pfMetCorrPt > 100 and delta_pfCaloWmunuCR < 0.5):
                                         h_reg_WmunuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightRecoil*weightMu)
                                         h_reg_WmunuCR_2b_cutFlow.AddBinContent(
@@ -1238,7 +1238,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightEleTrig*weightEle)
                                     h_reg_TopenuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightEleTrig*weightEle)
-                                    if (ep_WenuRecoil > 200.):
+                                    if (ep_WenuRecoil > 200. and delta_pfCaloTopenuCR < 0.5):
                                         h_reg_TopenuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightEleTrig*weightEle)
                                         h_reg_TopenuCR_2b_cutFlow.AddBinContent(
@@ -1339,7 +1339,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightRecoil*weightMu)
                                     h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightRecoil*weightMu)
-                                    if (ep_WmunuRecoil > 200.):
+                                    if (ep_WmunuRecoil > 200. and delta_pfCaloTopmunuCR < 0.5):
                                         h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightRecoil*weightMu)
                                         h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
