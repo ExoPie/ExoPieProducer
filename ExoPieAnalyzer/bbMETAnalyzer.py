@@ -20,7 +20,7 @@ import glob
 from multiprocessing import Process
 import multiprocessing as mp
 
-dummyArr = np.array([0.0], dtype=np.float64)
+dummyArr = numpy.array([0.0], dtype=numpy.float64)
 
 isCondor = True
 
