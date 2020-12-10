@@ -459,7 +459,7 @@ def runbbdm(txtfile):
             #         else:continue
 
 
-            h_mass= -9999.0
+            h_mass= -9999.0;dijet_pt=-9999.0;dijet_eta=-9999.0;dijet_phi=-9999.0
 
             #nBjets = 0
             if nBjets_notiso==2:
