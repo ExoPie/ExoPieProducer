@@ -219,7 +219,7 @@ df_out_Zmumu_resolved    = DataFrame(columns=['run', 'lumi', 'event','pu_nTrueIn
 
 
 df_out_SR_resolved = DataFrame(columns=['run', 'lumi', 'event','pu_nTrueInt','THINjetNPV','MET','trkMET','trkMETPhi','METSig',
-                                       'Nbjets_PassID', 'NTauJets', 'NEle', 'NMu', 'nPho','st_TopMatching',
+                                       'Njets_PassID','Nbjets_PassID', 'NTauJets', 'NEle', 'NMu', 'nPho','st_TopMatching',
                                        'Jet1Pt', 'Jet1Eta', 'Jet1Phi', 'Jet1CSV','Jet2Pt', 'Jet2Eta', 'Jet2Phi', 'Jet2CSV',
                                        'Jet3Pt', 'Jet3Eta', 'Jet3Phi', 'Jet3CSV',
                                        'DiJetMass','DiJetPt', 'DiJetEta','DiJetPhi','nJets','met_Phi',
