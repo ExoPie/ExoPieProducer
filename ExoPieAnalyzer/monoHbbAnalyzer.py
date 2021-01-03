@@ -320,7 +320,7 @@ def runbbdm(txtfile):
             ep_mcweight, ep_genParPt,ep_genParSample, isData, eletrigdecision, mutrigdecision, mettrigdecision,\
             ep_isak4JetBasedHemEvent, ep_isak8JetBasedHemEvent, ep_ismetphiBasedHemEvent1, ep_ismetphiBasedHemEvent2,\
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId, \
-                   df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown, df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown,df.st_pfTRKMETPt, df.st_pfTRKMETPhi,df.st_pfMetCorrSig, \
+                   df.st_METXYCorr_Met, df.st_METXYCorr_MetPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown, df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown,df.st_pfTRKMETPt, df.st_pfTRKMETPhi,df.st_pfMetCorrSig, \
                    df.st_THINnJet, df.st_THINjetPx, df.st_THINjetPy, df.st_THINjetPz, df.st_THINjetEnergy, \
                    df.st_THINjetDeepCSV, df.st_THINjetHadronFlavor, df.st_THINjetNPV, \
                    df.st_THINjetNHadEF, df.st_THINjetCHadEF, df.st_THINjetCEmEF, \
