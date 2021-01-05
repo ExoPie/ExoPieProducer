@@ -202,6 +202,15 @@ def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
                                 df["weight"], "h_reg_"+reg+"_MET_En_up", [200, 250, 350, 500, 1000]))
         h_list.append(VarToHist(df["MET_En_down"], df["weight"], df["weight"],
                                 df["weight"], "h_reg_"+reg+"_MET_En_down", [200, 250, 350, 500, 1000]))
+        #pdf and scale systematics
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightscale"],
+                                df["weightscale_up"], "h_reg_"+reg+"_MET_weightscale_up", [200, 250, 350, 500, 1000]))
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightscale"],
+                                df["weightscale_down"], "h_reg_"+reg+"_MET_weightscale_down", [200, 250, 350, 500, 1000]))
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightscale"],
+                                df["weightpdf_up"], "h_reg_"+reg+"_MET_weightpdf_up", [200, 250, 350, 500, 1000]))
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightpdf"],
+                                df["weightpdf_down"], "h_reg_"+reg+"_MET_weightpdf_down", [200, 250, 350, 500, 1000]))
         h_list.append(VarToHist(df["Njets_PassID"],   df["weight"],
                                 df["weight"], df["weight"], "h_reg_"+reg+"_nJets", [10, 0, 10]))
         h_list.append(VarToHist(df["Nbjets_PassID"],   df["weight"],
@@ -359,6 +368,16 @@ def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
                                 df["weight"], "h_reg_"+reg+"_Recoil_En_up", [200, 250, 350, 500, 1000]))
         h_list.append(VarToHist(df["Recoil_En_down"], df["weight"], df["weight"],
                                 df["weight"], "h_reg_"+reg+"_Recoil_En_down", [200, 250, 350, 500, 1000]))
+        #pdf and scale systematics
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightscale"],
+                                df["weightscale_up"], "h_reg_"+reg+"_Recoil_weightscale_up", [200, 250, 350, 500, 1000]))
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightscale"],
+                                df["weightscale_down"], "h_reg_"+reg+"_Recoil_weightscale_down", [200, 250, 350, 500, 1000]))
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightpdf"],
+                                df["weightpdf_up"], "h_reg_"+reg+"_Recoil_weightpdf_up", [200, 250, 350, 500, 1000]))
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightpdf"],
+                                df["weightpdf_down"], "h_reg_"+reg+"_Recoil_weightpdf_down", [200, 250, 350, 500, 1000]))
+        ###########################                       
         h_list.append(VarToHist(df["dPhi_lep1_MET"], df["weight"], df["weight"],
                                 df["weight"], "h_reg_"+reg+"_dPhi_lep1_MET", [15, 0, 5]))
         h_list.append(VarToHist(df["dPhi_lep2_MET"], df["weight"], df["weight"],
@@ -549,6 +568,12 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
                               [200, 250, 350, 500, 1000]))
         h_list.append(SetHist("h_reg_"+reg+"_MET_En_down",
                               [200, 250, 350, 500, 1000]))
+
+        h_list.append(SetHist("h_reg_"+reg+"_MET_weightscale_up", [200, 250, 350, 500, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_MET_weightscale_down", [200, 250, 350, 500, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_MET_weightpdf_up", [200, 250, 350, 500, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_MET_weightpdf_down", [200, 250, 350, 500, 1000]))
+
         h_list.append(SetHist("h_reg_"+reg+"_nJets", [10, 0, 10]))
         h_list.append(SetHist("h_reg_"+reg+"_nBJets", [10, 0, 10]))
         h_list.append(SetHist("h_reg_"+reg+"_NEle", [10, 0, 10]))
@@ -655,6 +680,11 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
                               [200, 250, 350, 500, 1000]))
         h_list.append(SetHist("h_reg_"+reg+"_Recoil_En_down",
                               [200, 250, 350, 500, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_weightscale_up", [200, 250, 350, 500, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_weightscale_down", [200, 250, 350, 500, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_weightpdf_up", [200, 250, 350, 500, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_weightpdf_down", [200, 250, 350, 500, 1000]))
+
         h_list.append(SetHist("h_reg_"+reg+"_dPhi_lep1_MET", [15, 0, 5]))
         h_list.append(SetHist("h_reg_"+reg+"_dPhi_lep2_MET", [15, 0, 5]))
         h_list.append(SetHist("h_reg_"+reg+"_Jet1Pt", [50, 30, 1000]))
@@ -781,12 +811,10 @@ def runFile(trees, filename):
 
         if nent > 0:
             df = read_root(filename, tree)
-            df = df[df.Jet1Pt > 50.0]
-            df = df[df.delta_pfCalo < 0.5]
-            if 'bbDM_W' in tree:
-                df = df[df.MET > 100]
             df['dPhiTrk_pfMET'] = DeltaPhi(df.METPhi,df.pfTRKMETPhi)
             df['dPhiCalo_pfMET'] = DeltaPhi(df.METPhi, df.pfpatCaloMETPhi)
+            df['weightscale'] = 1
+            df['weightpdf'] = 1
             HistWrtter(df, outfilename, tree, mode)
         else:
             emptyHistWritter(tree, outfilename, mode)

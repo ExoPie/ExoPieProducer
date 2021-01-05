@@ -365,6 +365,7 @@ def runbbdm(txtfile):
             df['st_ismetphiBasedHemEvent2'] = False
         for ep_runId, ep_lumiSection, ep_eventId, \
             ep_prefiringweight, ep_prefiringweightup, ep_prefiringweightdown,\
+            ep_scaleWeightUP, ep_scaleWeightDOWN, ep_pdfWeightUP, ep_pdfWeightDOWN,\
             ep_pfMetCorrPt, ep_pfMetCorrPhi, ep_pfMetUncJetResUp, ep_pfMetUncJetResDown, ep_pfMetUncJetEnUp, ep_pfMetUncJetEnDown, \
             ep_pfMetCorrSig, ep_pfpatCaloMETPt, ep_pfpatCaloMETPhi, ep_pfTRKMETPt, ep_pfTRKMETPhi, \
             ep_WenuPhi, ep_WmunuPhi, ep_ZeePhi, ep_ZmumuPhi, \
@@ -387,6 +388,7 @@ def runbbdm(txtfile):
             ep_isak4JetBasedHemEvent, ep_ismetphiBasedHemEvent1, ep_ismetphiBasedHemEvent2 \
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId,
                    df.st_prefiringweight, df.st_prefiringweightup, df.st_prefiringweightdown,
+                   df.st_scaleWeightUP, df.st_scaleWeightDOWN, df.st_pdfWeightUP, df.st_pdfWeightDOWN,
                    df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown,
                    df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown,
                    df.st_pfMetCorrSig, df.st_pfpatCaloMETPt, df.st_pfpatCaloMETPhi,
@@ -648,16 +650,20 @@ def runbbdm(txtfile):
             --------------------------------------------------------------------------------
             '''
             weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMET = weightRecoil = weightPrefire = -999.0
-            weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMET_up = weightRecoil_up = weightPU_up = weightJEC_up = weightPrefire_up = 1.0
-            weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMET_down = weightRecoil_down = weightPU_down = weightJEC_down = weightPrefire_down = 1.0
+            weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMET_up = weightRecoil_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = 1.0
+            weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMET_down = weightRecoil_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = 1.0
             if ep_isData:
                 weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMET = weightRecoil = weightPrefire = 1.0
-                weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMET_up = weightRecoil_up = weightPU_up = weightJEC_up = weightPrefire_up = 1.0
-                weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMET_down = weightRecoil_down = weightPU_down = weightJEC_down = weightPrefire_down = 1.0
+                weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMET_up = weightRecoil_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = 1.0
+                weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMET_down = weightRecoil_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = 1.0
             else:
                 weightB, weightB_up, weightB_down = wgt.getBTagSF(
                     ep_THINnJet, ep_THINjetPt, ep_THINjetEta, ep_THINjetHadronFlavor, ep_THINjetDeepCSV, 'MWP')
                 weightPU, weightPU_up, weightPU_down  = wgt.puweight(ep_pu_nTrueInt)
+                weightscale_up  = ep_scaleWeightUP
+                weightpdf_up = ep_pdfWeightUP
+                weightscale_down = ep_scaleWeightDOWN
+                weightpdf_down = ep_pdfWeightDOWN
                 weightEWK = 1.0
                 weightQCD = 1.0
                 weightTop = 1.0
@@ -1494,6 +1500,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -1574,7 +1584,7 @@ def runbbdm(txtfile):
                     'weightPrefire_up': float(weightPrefire_up),
                     'weightJEC_up': float(weightJEC_up),
                     'MET_Res_up': float(ep_pfMetUncJetResUp),
-                    'MET_En_up': float(ep_pfMetUncJetEnUp),
+                    'MET_En_up': float(ep_pfMetUncJetEnUp),                   
                     'MET_En_down': float(ep_pfMetUncJetEnDown),
                     'MET_Res_down': float(ep_pfMetUncJetResDown),
                     'weightJEC_down': float(weightJEC_down),
@@ -1586,6 +1596,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -1673,6 +1687,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -1778,6 +1796,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -1876,6 +1898,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -1981,6 +2007,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2079,6 +2109,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2175,6 +2209,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2270,6 +2308,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(   ),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2367,6 +2409,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2462,6 +2508,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2563,6 +2613,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2658,6 +2712,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2759,6 +2817,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2854,6 +2916,10 @@ def runbbdm(txtfile):
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
                     'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
