@@ -2310,7 +2310,7 @@ def runbbdm(txtfile):
                     'weightPU_down': float(weightPU_down),
                     'weightscale_up':float(weightscale_up),
                     'weightpdf_up':float(weightpdf_up),
-                    'weightscale_down':float(   ),
+                    'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
