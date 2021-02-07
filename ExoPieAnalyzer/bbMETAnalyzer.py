@@ -22,7 +22,7 @@ import multiprocessing as mp
 
 dummyArr = numpy.array([0.0], dtype=numpy.float64)
 
-isCondor = True
+isCondor = False
 
 ###swith off the CR which you do not want to run
 zee_cr = True
@@ -285,6 +285,9 @@ def runbbdm(txtfile):
     df_out_TopmunuCR_1b = out.df_out_TopmunuCR_1b
     df_out_TopmunuCR_2b = out.df_out_TopmunuCR_2b
 
+    df_out_QCDCR_1b = out.df_out_QCDCR_1b
+    df_out_QCDCR_2b = out.df_out_QCDCR_2b
+
     h_total = TH1F('h_total', 'h_total', 2, 0, 2)
     h_total_mcweight = TH1F('h_total_mcweight', 'h_total_mcweight', 2, 0, 2)
     h_eventCounter = TH1F('h_eventCounter', 'h_eventCounter', 2, 0.5, 2.5)
@@ -324,6 +327,11 @@ def runbbdm(txtfile):
     h_reg_TopmunuCR_2b_cutFlow = TH1F(
         "h_reg_TopmunuCR_2b_cutFlow", "h_reg_TopmunuCR_2b_cutFlow", 11, 0, 11)
 
+    h_reg_QCDCR_1b_cutFlow = TH1F(
+        "h_reg_QCDCR_1b_cutFlow", "h_reg_QCDCR_1b_cutFlow", 7, 0, 7)
+    h_reg_QCDCR_2b_cutFlow = TH1F(
+        "h_reg_QCDCR_2b_cutFlow", "h_reg_QCDCR_2b_cutFlow", 7, 0, 7)
+
     for infl in infile_:
         f_tmp = TFile.Open(infl, 'READ')
         h_tmp = f_tmp.Get('h_total')
@@ -351,6 +359,8 @@ def runbbdm(txtfile):
     TopenuCR2bcount = 0.0
     TopmunuCR1bcount = 0.0
     TopmunuCR2bcount = 0.0
+    QCDCR1bcount = 0.0
+    QCDCR2bcount = 0.0
 
     allvars_bbDM = var.allvars_bbDM
     if era == '2018':
@@ -389,7 +399,7 @@ def runbbdm(txtfile):
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId,
                    df.st_prefiringweight, df.st_prefiringweightup, df.st_prefiringweightdown,
                    df.st_scaleWeightUP, df.st_scaleWeightDOWN, df.st_pdfWeightUP, df.st_pdfWeightDOWN,
-                   df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown,
+                   df.st_METXYCorr_Met, df.st_METXYCorr_MetPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown,
                    df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown,
                    df.st_pfMetCorrSig, df.st_pfpatCaloMETPt, df.st_pfpatCaloMETPhi,
                    df.st_pfTRKMETPt, df.st_pfTRKMETPhi,
@@ -433,6 +443,7 @@ def runbbdm(txtfile):
             ispreselR = False
 
             isSR1b = False
+            isQCDCR1b = False
             is1bCRWenu = False
             is1bCRWmunu = False
             is1bCRZee = False
@@ -441,6 +452,7 @@ def runbbdm(txtfile):
             is1bCRTopmunu = False
 
             isSR2b = False
+            isQCDCR2b = False
             is2bCRWenu = False
             is2bCRWmunu = False
             is2bCRZee = False
@@ -828,8 +840,8 @@ def runbbdm(txtfile):
                                     h_reg_SR_2b_cutFlow.AddBinContent(7, weight)
                                     isSR2b = True
                                     SR2bcount += 1
-                                    rJet1PtMET = (
-                                        ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                    M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                    rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                     Jet2NHadEF = ep_THINjetNHadEF[1]
                                     Jet2CHadEF = ep_THINjetCHadEF[1]
                                     Jet2CEmEF = ep_THINjetCEmEF[1]
@@ -935,8 +947,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         ZeeCR2bcount += 1
                                                         is2bCRZee = True
-                                                        rJet1PtMET = (
-                                                           ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         Jet2NHadEF = ep_THINjetNHadEF[1]
                                                         Jet2CHadEF = ep_THINjetCHadEF[1]
                                                         Jet2CEmEF = ep_THINjetCEmEF[1]
@@ -1038,8 +1050,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         ZmumuCR2count += 1
                                                         is2bCRZmumu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         Jet2NHadEF = ep_THINjetNHadEF[1]
                                                         Jet2CHadEF = ep_THINjetCHadEF[1]
                                                         Jet2CEmEF = ep_THINjetCEmEF[1]
@@ -1118,8 +1130,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         WenuCR2bcount += 1
                                                         is2bCRWenu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
                                                             isjet1EtaMatch = 1
@@ -1198,8 +1210,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         WmunuCR2bcount += 1
                                                         is2bCRWmunu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
                                                             isjet1EtaMatch = 1
@@ -1299,8 +1311,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         TopenuCR2bcount += 1
                                                         is2bCRTopenu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet3 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[2], ep_THINjetPy[2], ep_THINjetPz[2], ep_THINjetEnergy[2])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[2] > 0:
                                                             isjet2EtaMatch = 1
@@ -1400,8 +1412,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         TopmunuCR2bcount += 1
                                                         is2bCRTopmunu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet3 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[2], ep_THINjetPy[2], ep_THINjetPz[2], ep_THINjetEnergy[2])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[2] > 0:
                                                             isjet2EtaMatch = 1
@@ -1413,6 +1425,86 @@ def runbbdm(txtfile):
                                                         Jet2NEmEF = ep_THINjetNEmEF[1]
                                                         Jet2CMulti = ep_THINjetCMulti[1]
                                                         Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
+            '''
+            --------------------------------------------------------------------------------
+            QCD REGION
+            --------------------------------------------------------------------------------
+            '''
+            h_reg_QCDCR_1b_cutFlow.AddBinContent(1, presel_weight)
+            h_reg_QCDCR_2b_cutFlow.AddBinContent(1, presel_weight)
+            if mettrigdecision:
+                h_reg_QCDCR_1b_cutFlow.AddBinContent(2, presel_weight*weightMET)
+                h_reg_QCDCR_2b_cutFlow.AddBinContent(2, presel_weight*weightMET)
+                if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
+                   h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                       3, presel_weight*weightMET)
+                   h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                       3, presel_weight*weightMET)
+                   if (ep_nEle_index == 0) and (ep_nMu == 0) and (nPho == 0) and (ep_nTau_discBased_TightEleTightMuVeto == 0):
+                       h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                           4, presel_weight*weightMET)
+                       h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                           4, presel_weight*weightMET)
+                       if (min_dPhi_jet_MET < 0.5):
+                           h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                               5, presel_weight*weightMET)
+                           h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                               5, presel_weight*weightMET)
+                           if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
+                               h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                                   6, presel_weight*weightMET)
+                               if (ep_THINbjets_Cond[0]) and (nBjets == 1):
+                                   h_reg_QCDCR_1b_cutFlow.AddBinContent(7, weight)
+                                   isQCDCR1b = True
+                                   QCDCR1bcount += 1
+                                   rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                   if ep_THINnJet == 2:
+                                        Jet2Pt = ep_THINjetPt[1]
+                                        Jet2Eta = ep_THINjetEta[1]
+                                        Jet2Phi = ep_THINjetPhi[1]
+                                        Jet2deepCSV = ep_THINjetDeepCSV[1]
+                                        ratioPtJet21 = (
+                                            ep_THINjetPt[1]/ep_THINjetPt[0])
+                                        dPhiJet12 = DeltaPhi(
+                                            ep_THINjetPhi[0],ep_THINjetPhi[1])
+                                        dEtaJet12 = (
+                                            ep_THINjetEta[0]-ep_THINjetEta[1])
+                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0],ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                        if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
+                                            isjet1EtaMatch = 1
+                                        if ep_THINjetEta[0]*ep_THINjetEta[1] < 0:
+                                            isjet1EtaMatch = -1
+                                        Jet2NHadEF = ep_THINjetNHadEF[1]
+                                        Jet2CHadEF = ep_THINjetCHadEF[1]
+                                        Jet2CEmEF = ep_THINjetCEmEF[1]
+                                        Jet2NEmEF = ep_THINjetNEmEF[1]
+                                        Jet2CMulti = ep_THINjetCMulti[1]
+                                        Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
+                           if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
+                                h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                                    6, presel_weight*weightMET)
+                                if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
+                                    h_reg_QCDCR_2b_cutFlow.AddBinContent(7, weight)
+                                    isQCDCR2b = True
+                                    QCDCR2bcount += 1
+                                    M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                    rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                    Jet2NHadEF = ep_THINjetNHadEF[1]
+                                    Jet2CHadEF = ep_THINjetCHadEF[1]
+                                    Jet2CEmEF = ep_THINjetCEmEF[1]
+                                    Jet2NEmEF = ep_THINjetNEmEF[1]
+                                    Jet2CMulti = ep_THINjetCMulti[1]
+                                    Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
+                                    if ep_THINnJet == 3:
+                                        Jet3Pt = ep_THINjetPt[2]
+                                        Jet3Eta = ep_THINjetEta[2]
+                                        Jet3Phi = ep_THINjetPhi[2]
+                                        Jet3deepCSV = ep_THINjetDeepCSV[2]
+                                        M_Jet1Jet3 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0],ep_THINjetPx[2], ep_THINjetPy[2], ep_THINjetPz[2], ep_THINjetEnergy[2])
+                                        if ep_THINjetEta[0]*ep_THINjetEta[2] > 0:
+                                            isjet2EtaMatch = 1
+                                        if ep_THINjetEta[0]*ep_THINjetEta[2] < 0:
+                                            isjet2EtaMatch = -1
             if ispreselR:
                 df_out_preselR = df_out_preselR.append({
                     'run': float(ep_runId),
@@ -1584,7 +1676,7 @@ def runbbdm(txtfile):
                     'weightPrefire_up': float(weightPrefire_up),
                     'weightJEC_up': float(weightJEC_up),
                     'MET_Res_up': float(ep_pfMetUncJetResUp),
-                    'MET_En_up': float(ep_pfMetUncJetEnUp),                   
+                    'MET_En_up': float(ep_pfMetUncJetEnUp),
                     'MET_En_down': float(ep_pfMetUncJetEnDown),
                     'MET_Res_down': float(ep_pfMetUncJetResDown),
                     'weightJEC_down': float(weightJEC_down),
@@ -1646,6 +1738,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -1853,6 +1946,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -2064,6 +2158,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -2670,6 +2765,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -2874,6 +2970,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -2928,8 +3025,196 @@ def runbbdm(txtfile):
             if istest:
                 print('is2bCRTopmunu')
 
+            if isQCDCR1b:
+                df_out_QCDCR_1b = df_out_QCDCR_1b.append({
+                    'run': float(ep_runId),
+                    'lumi': float(ep_lumiSection),
+                    'event': float(ep_eventId),
+                    'nPV': float(ep_THINjetNPV),
+                    'MET': float(ep_pfMetCorrPt),
+                    'METPhi': float(ep_pfMetCorrPhi),
+                    'pfMetCorrSig': float( ep_pfMetCorrSig),
+                    'pfpatCaloMETPt': float( ep_pfpatCaloMETPt),
+                    'pfpatCaloMETPhi': float( ep_pfpatCaloMETPhi),
+                    'pfTRKMETPt': float( ep_pfTRKMETPt),
+                    'pfTRKMETPhi': float( ep_pfTRKMETPhi),
+                    'delta_pfCalo': float(delta_pfCaloSR),
+                    'dPhi_jetMET': float(min_dPhi_jet_MET),
+                    'JetwithEta4p5': float(JetwithEta4p5),
+                    'NTau': float(ep_nTau_discBased_TightEleTightMuVeto),
+                    'NEle': float(ep_nEle_index),
+                    'NMu': float(ep_nMu),
+                    'nPho': float(nPho),
+                    'Njets_PassID': float(ep_THINnJet),
+                    'Nbjets_PassID': float(nBjets),
+                    'Jet1Pt': float(ep_THINjetPt[0]),
+                    'Jet1Eta': float(ep_THINjetEta[0]),
+                    'Jet1Phi': float(ep_THINjetPhi[0]),
+                    'Jet1deepCSV': float(ep_THINjetDeepCSV[0]),
+                    'Jet1NHadEF':float(ep_THINjetNHadEF[0]),
+                    'Jet1CHadEF':float(ep_THINjetCHadEF[0]),
+                    'Jet1CEmEF':float(ep_THINjetCEmEF[0]),
+                    'Jet1NEmEF':float(ep_THINjetNEmEF[0]),
+                    'Jet1CMulti':float(ep_THINjetCMulti[0]),
+                    'Jet1NMultiplicity':float(ep_THINjetNMultiplicity[0]),
+                    'Jet2Pt': float(Jet2Pt),
+                    'Jet2Eta': float(Jet2Eta),
+                    'Jet2Phi': float(Jet2Phi),
+                    'Jet2deepCSV': float(Jet2deepCSV),
+                    'Jet2NHadEF':float(Jet2NHadEF),
+                    'Jet2CHadEF':float(Jet2CHadEF),
+                    'Jet2CEmEF':float(Jet2CEmEF),
+                    'Jet2NEmEF':float(Jet2NEmEF),
+                    'Jet2CMulti':float(Jet2CMulti),
+                    'Jet2NMultiplicity':float(Jet2NMultiplicity),
+                    'Jet3Pt': float(dummy),
+                    'Jet3Eta': float(dummy),
+                    'Jet3Phi': float(dummy),
+                    'Jet3deepCSV': float(dummy),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
+                    'isjet1EtaMatch': float(isjet1EtaMatch),
+                    'ratioPtJet21': float(ratioPtJet21),
+                    'rJet1PtMET': float(rJet1PtMET),
+                    'dPhiJet12': float(dPhiJet12),
+                    'dEtaJet12': float(dEtaJet12),
+                    'weight': float(weight),
+                    'weightMET': float(weightMET),
+                    'weightEle': float(weightEle),
+                    'weightMu': float(weightMu),
+                    'weightB': float(weightB),
+                    'weightEWK': float(weightEWK),
+                    'weightQCD': float(weightQCD),
+                    'weightTop': float(weightTop),
+                    'weightPU': float(weightPU),
+                    'weightPrefire': float(weightPrefire),
+                    'weightMET_up': float(weightMET_up),
+                    'weightEle_up': float(weightEle_up),
+                    'weightMu_up': float(weightMu_up),
+                    'weightB_up': float(weightB_up),
+                    'weightEWK_up': float(weightEWK_up),
+                    'weightQCD_up': float(weightQCD_up),
+                    'weightTop_up': float(weightTop_up),
+                    'weightPU_up': float(weightPU_up),
+                    'weightPrefire_up': float(weightPrefire_up),
+                    'weightJEC_up': float(weightJEC_up),
+                    'MET_Res_up': float(ep_pfMetUncJetResUp),
+                    'MET_En_up': float(ep_pfMetUncJetEnUp),
+                    'MET_En_down': float(ep_pfMetUncJetEnDown),
+                    'MET_Res_down': float(ep_pfMetUncJetResDown),
+                    'weightJEC_down': float(weightJEC_down),
+                    'weightMET_down': float(weightMET_down),
+                    'weightEle_down': float(weightEle_down),
+                    'weightMu_down': float(weightMu_down),
+                    'weightB_down': float(weightB_down),
+                    'weightEWK_down': float(weightEWK_down),
+                    'weightQCD_down': float(weightQCD_down),
+                    'weightTop_down': float(weightTop_down),
+                    'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
+                    'weightPrefire_down': float(weightPrefire_down),
+                    'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
+                    'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
+                    'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                }, ignore_index = True)
+            if istest:
+                print('isQCDCR1b')
+            if isQCDCR2b:
+                df_out_QCDCR_2b = df_out_QCDCR_2b.append({
+                    'run': float(ep_runId),
+                    'lumi': float(ep_lumiSection),
+                    'event': float(ep_eventId),
+                    'nPV': float(ep_THINjetNPV),
+                    'MET': float(ep_pfMetCorrPt),
+                    'METPhi': float(ep_pfMetCorrPhi),
+                    'pfMetCorrSig': float( ep_pfMetCorrSig),
+                    'pfpatCaloMETPt': float( ep_pfpatCaloMETPt),
+                    'pfpatCaloMETPhi': float( ep_pfpatCaloMETPhi),
+                    'pfTRKMETPt': float( ep_pfTRKMETPt),
+                    'pfTRKMETPhi': float( ep_pfTRKMETPhi),
+                    'delta_pfCalo': float(delta_pfCaloSR),
+                    'dPhi_jetMET': float(min_dPhi_jet_MET),
+                    'JetwithEta4p5': float(JetwithEta4p5),
+                    'NEle': float(ep_nEle_index),
+                    'NMu': float(ep_nMu),
+                    'nPho': float(nPho),
+                    'Njets_PassID': float(ep_THINnJet),
+                    'Nbjets_PassID': float(nBjets),
+                    'Jet1Pt': float(ep_THINjetPt[0]),
+                    'Jet1Eta': float(ep_THINjetEta[0]),
+                    'Jet1Phi': float(ep_THINjetPhi[0]),
+                    'Jet1deepCSV': float(ep_THINjetDeepCSV[0]),
+                    'Jet1NHadEF':float(ep_THINjetNHadEF[0]),
+                    'Jet1CHadEF':float(ep_THINjetCHadEF[0]),
+                    'Jet1CEmEF':float(ep_THINjetCEmEF[0]),
+                    'Jet1NEmEF':float(ep_THINjetNEmEF[0]),
+                    'Jet1CMulti':float(ep_THINjetCMulti[0]),
+                    'Jet1NMultiplicity':float(ep_THINjetNMultiplicity[0]),
+                    'Jet2Pt': float(ep_THINjetPt[1]),
+                    'Jet2Eta': float(ep_THINjetEta[1]),
+                    'Jet2Phi': float(ep_THINjetPhi[1]),
+                    'Jet2deepCSV': float(ep_THINjetDeepCSV[1]),
+                    'Jet3Pt': float(Jet3Pt),
+                    'Jet3Eta': float(Jet3Eta),
+                    'Jet3Phi': float(Jet3Phi),
+                    'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
+                    'M_Jet1Jet3': float(M_Jet1Jet2),
+                    'isjet2EtaMatch': float(isjet2EtaMatch),
+                    'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
+                    'rJet1PtMET': float(rJet1PtMET),
+                    'dPhiJet12': float(DeltaPhi(ep_THINjetPhi[0],ep_THINjetPhi[1])),
+                    'dEtaJet12': float(ep_THINjetEta[0] - ep_THINjetEta[1]),
+                    'isjet2EtaMatch': float(isjet2EtaMatch),
+                    'M_Jet1Jet3': float(M_Jet1Jet3),
+                    'weight': float(weight),
+                    'weightMET': float(weightMET),
+                    'weightEle': float(weightEle),
+                    'weightMu': float(weightMu),
+                    'weightB': float(weightB),
+                    'weightEWK': float(weightEWK),
+                    'weightQCD': float(weightQCD),
+                    'weightTop': float(weightTop),
+                    'weightPU': float(weightPU),
+                    'weightPrefire': float(weightPrefire),
+                    'weightMET_up': float(weightMET_up),
+                    'weightEle_up': float(weightEle_up),
+                    'weightMu_up': float(weightMu_up),
+                    'weightB_up': float(weightB_up),
+                    'weightEWK_up': float(weightEWK_up),
+                    'weightQCD_up': float(weightQCD_up),
+                    'weightTop_up': float(weightTop_up),
+                    'weightPU_up': float(weightPU_up),
+                    'weightPrefire_up': float(weightPrefire_up),
+                    'weightJEC_up': float(weightJEC_up),
+                    'MET_Res_up': float(ep_pfMetUncJetResUp),
+                    'MET_En_up': float(ep_pfMetUncJetEnUp),
+                    'MET_En_down': float(ep_pfMetUncJetEnDown),
+                    'MET_Res_down': float(ep_pfMetUncJetResDown),
+                    'weightJEC_down': float(weightJEC_down),
+                    'weightMET_down': float(weightMET_down),
+                    'weightEle_down': float(weightEle_down),
+                    'weightMu_down': float(weightMu_down),
+                    'weightB_down': float(weightB_down),
+                    'weightEWK_down': float(weightEWK_down),
+                    'weightQCD_down': float(weightQCD_down),
+                    'weightTop_down': float(weightTop_down),
+                    'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
+                    'weightPrefire_down': float(weightPrefire_down),
+                    'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
+                    'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
+                    'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                }, ignore_index = True)
+            if istest:
+                print('isQCDCR2b')
     outfilenameis = outfilename
-    for df in [df_out_preselR, df_out_SR_1b, df_out_SR_2b, df_out_ZeeCR_1b, df_out_ZeeCR_2b, df_out_ZmumuCR_1b, df_out_ZmumuCR_2b, df_out_WenuCR_1b, df_out_WenuCR_2b, df_out_WmunuCR_1b, df_out_WmunuCR_2b, df_out_TopenuCR_1b, df_out_TopenuCR_2b, df_out_TopmunuCR_1b, df_out_TopmunuCR_2b]:
+    for df in [df_out_preselR, df_out_SR_1b, df_out_SR_2b, df_out_ZeeCR_1b, df_out_ZeeCR_2b, df_out_ZmumuCR_1b, df_out_ZmumuCR_2b, df_out_WenuCR_1b, df_out_WenuCR_2b, df_out_WmunuCR_1b, df_out_WmunuCR_2b, df_out_TopenuCR_1b, df_out_TopenuCR_2b, df_out_TopmunuCR_1b, df_out_TopmunuCR_2b, df_out_QCDCR_1b, df_out_QCDCR_2b]:
         if df.empty:
             for col in df.columns:
                 df[col] = dummyArr
@@ -2954,6 +3239,9 @@ def runbbdm(txtfile):
     df_out_TopmunuCR_1b.to_root(outfilenameis, key='bbDM_TopmunuCR_1b', mode='a')
     df_out_TopmunuCR_2b.to_root(outfilenameis, key='bbDM_TopmunuCR_2b', mode='a')
 
+    df_out_QCDCR_1b.to_root(outfilenameis, key='bbDM_QCDCR_1b', mode='a')
+    df_out_QCDCR_2b.to_root(outfilenameis, key='bbDM_QCDCR_2b', mode='a')
+
     print('\n============SR cutflow============')
     print('SR1bcount', SR1bcount, 'SR2bcount', SR2bcount)
     print('============SR cutflow============')
@@ -2967,10 +3255,12 @@ def runbbdm(txtfile):
     print('WmunuCR1bcount', WmunuCR1bcount, 'WmunuCR2bcount', WmunuCR2bcount)
 
     print('\n============Top cutflow============')
-    print('TopenuCR1bcount', TopenuCR1bcount,
-          'TopenuCR2bcount', TopenuCR2bcount)
-    print('TopmunuCR1bcount', TopmunuCR1bcount,
-          'TopmunuCR2bcount', TopmunuCR2bcount)
+    print('TopenuCR1bcount', TopenuCR1bcount, 'TopenuCR2bcount', TopenuCR2bcount)
+    print('TopmunuCR1bcount', TopmunuCR1bcount, 'TopmunuCR2bcount', TopmunuCR2bcount)
+
+    print('\n============QCD cutflow============')
+    print('QCDCR1bcount', QCDCR1bcount, 'QCDCR2bcount', QCDCR2bcount)
+
 
     cfsr_list = {1: 'presel', 2: 'trigger', 3: 'MET',
                  4: 'nLep', 5: 'min_dPhi', 6: 'nJet', 7: 'nBjets'}
@@ -2981,6 +3271,8 @@ def runbbdm(txtfile):
         h_reg_preselR_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
         h_reg_SR_1b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
         h_reg_SR_2b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
+        h_reg_QCDCR_1b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
+        h_reg_QCDCR_2b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
     for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]:
         h_reg_ZeeCR_1b_cutFlow.GetXaxis().SetBinLabel(i, cfcr_list[i])
         h_reg_ZeeCR_2b_cutFlow.GetXaxis().SetBinLabel(i, cfcr_list[i])
@@ -3009,6 +3301,8 @@ def runbbdm(txtfile):
     h_reg_TopenuCR_2b_cutFlow.SetEntries(1)
     h_reg_TopmunuCR_1b_cutFlow.SetEntries(1)
     h_reg_TopmunuCR_2b_cutFlow.SetEntries(1)
+    h_reg_QCDCR_1b_cutFlow.SetEntries(1)
+    h_reg_QCDCR_2b_cutFlow.SetEntries(1)
     print('===============================\n')
     print("output written to ", outfilename)
     outfile = TFile(outfilenameis, 'UPDATE')
@@ -3031,6 +3325,8 @@ def runbbdm(txtfile):
     h_reg_TopenuCR_2b_cutFlow.Write()
     h_reg_TopmunuCR_1b_cutFlow.Write()
     h_reg_TopmunuCR_2b_cutFlow.Write()
+    h_reg_QCDCR_1b_cutFlow.Write()
+    h_reg_QCDCR_2b_cutFlow.Write()
     outfile.Write()
     outfile.Close()
 
