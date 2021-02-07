@@ -22,7 +22,7 @@ import multiprocessing as mp
 
 dummyArr = numpy.array([0.0], dtype=numpy.float64)
 
-isCondor = False
+isCondor = True
 
 ###swith off the CR which you do not want to run
 zee_cr = True
