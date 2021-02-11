@@ -55,6 +55,7 @@ sys.path.append('ana_configs')
 import variables as var
 import outvars_bbDM as out
 import getRecoil as getRecoil
+from getJECUnc import getJECSourceUnc
 ## from analysisutils
 if isCondor:
     sys.path.append('ExoPieUtils/scalefactortools/')
@@ -147,26 +148,27 @@ def getJECWeight(ep_THINjetCorrUnc):
 
 def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle, ep_elePt, ep_eleEta, ep_eleIsPTight, nMu, ep_muPt, ep_muEta, ep_isTightMuon):
     tot_weight = 1.0
-    weightMET = 1.0
-    weightEle = 1.0
-    weightMu = 1.0
-    weightRecoil = 1.0
+    weightMETtrig = 1.0
+    weightEle = [1.0,1.0,1.0]
+    weightMu = [1.0,1.0,1.0]
+    weightRecoiltrig = 1.0
     weightEleTrig = 1.0
-    weightMET_up = 1.0
-    weightEle_up = 1.0
-    weightMu_up = 1.0
-    weightRecoil_up = 1.0
+    weightMETtrig_up = 1.0
+    weightEle_up = [1.0,1.0,1.0]
+    weightMu_up = [1.0,1.0,1.0]
+    weightRecoiltrig_up = 1.0
     weightEleTrig_up = 1.0
-    weightMET_down = 1.0
-    weightEle_down = 1.0
-    weightMu_down = 1.0
-    weightRecoil_down = 1.0
+    weightMETtrig_down = 1.0
+    weightEle_down = [1.0,1.0,1.0]
+    weightMu_down = [1.0,1.0,1.0]
+    weightRecoiltrig_down = 1.0
     weightEleTrig_down = 1.0
+
     if (nEle == 0 and nMu == 0):
         if ep_pfMetCorrPt > 200:
-            weightMET, weightMET_up, weightMET_down = wgt.getMETtrig_First(
+            weightMETtrig, weightMETtrig_up, weightMETtrig_down = wgt.getMETtrig_First(
                 ep_pfMetCorrPt, 'R')
-        tot_weight = weightMET*common_weight
+        tot_weight = weightMETtrig*common_weight
 
     if (nEle > 0 and nMu == 0):
         weightEleTrig = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])[0]
@@ -175,62 +177,122 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
                 ep_elePt[0], ep_eleEta[0], 'T')
             weightEleTrig, weightEleTrig_up, weightEleTrig_down = wgt.eletrig_weight(
                 ep_elePt[0], ep_eleEta[0])
-            tot_weight = weightEle*common_weight*weightEleTrig
+            tot_weight = weightEle[0]*common_weight*weightEleTrig
         if (nEle == 2):
             if ep_eleIsPTight[1]:
-                weightEle = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[0]
-                weightEle_up = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[1]
-                weightEle_down = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[2]
+                weightEle[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    0][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[0][0]
+                weightEle_up[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    1][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[1][0]
+                weightEle_down[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    2][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[2][0]
+
+                weightEle[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    0][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[0][1]
+                weightEle_up[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    1][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[1][1]
+                weightEle_down[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    2][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[2][1]
+
+                weightEle[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    0][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[0][1]
+                weightEle_up[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    1][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[1][2]
+                weightEle_down[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    2][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[2][2]
             else:
-                weightEle = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0]
-                weightEle_up = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1]
-                weightEle_down = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2]
+                weightEle[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    0][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][0]
+                weightEle_up[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    1][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][0]
+                weightEle_down[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    2][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][0]
+
+                weightEle[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    0][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][1]
+                weightEle_up[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    1][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][1]
+                weightEle_down[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    2][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][1]
+
+                weightEle[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    0][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][2]
+                weightEle_up[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    1][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][2]
+                weightEle_down[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
+                    2][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][2]
             weightEleTrig = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])[0]
             weightEleTrig_up = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])[1]
             weightEleTrig_down = wgt.eletrig_weight(
                 ep_elePt[0], ep_eleEta[0])[2]
 
-            tot_weight = weightEle*common_weight*weightEleTrig
+            tot_weight = weightEle[0]*common_weight*weightEleTrig
 
     if (nEle == 0 and nMu == 1):
         weightMu, weightMu_up, weightMu_down = wgt.mu_weight(
             ep_muPt[0], ep_muEta[0], 'T')
         if ep_WmunuRecoil > 200:
-            weightRecoil, weightRecoil_up, weightRecoil_down = wgt.getMETtrig_First(
+            weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(
                 ep_WmunuRecoil, 'R')
-        tot_weight = weightMu*common_weight*weightRecoil
+        tot_weight = weightMu[0]*common_weight*weightRecoiltrig
     if (nEle == 0 and nMu == 2):
         if ep_isTightMuon[1] and ep_muPt[1] > 20.0:
-            weightMu = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0]
-            weightMu_up = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1]
-            weightMu_down = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2]
-        else:
-            weightMu = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0]
-            weightMu_up = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1]
-            weightMu_down = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2]
-        if ep_ZmumuRecoil > 200:
-            weightRecoil, weightRecoil_up, weightRecoil_down = wgt.getMETtrig_First(
-                ep_ZmumuRecoil, 'R')
-        tot_weight = weightMu*common_weight*weightRecoil
+            weightMu[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][0]
+            weightMu_up[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][0]
+            weightMu_down[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][0]
 
-    ele_wgt = [weightEle*weightEleTrig, weightEle_up *
-               weightEleTrig_up, weightEle_down*weightEleTrig_down]
-    mu_wgt = [weightMu, weightMu_up, weightMu_down]
-    met_wgt = [weightMET, weightMET_up, weightMET_down]
-    recoil_wgt = [weightRecoil, weightRecoil_up, weightRecoil_down]
-    return tot_weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt
+            weightMu[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][1]
+            weightMu_up[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][1]
+            weightMu_down[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][1]
+
+            weightMu[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][2]
+            weightMu_up[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][2]
+            weightMu_down[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][2]
+        else:
+            weightMu[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][0]
+            weightMu_up[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][0]
+            weightMu_down[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][0]
+
+            weightMu[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][1]
+            weightMu_up[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][1]
+            weightMu_down[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][1]
+
+            weightMu[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][2]
+            weightMu_up[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][2]
+            weightMu_down[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][2]
+        if ep_ZmumuRecoil > 200:
+            weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(
+                ep_ZmumuRecoil, 'R')
+        tot_weight = weightMu[0]*common_weight*weightRecoiltrig
+
+    ele_wgt = [weightEle[0]*weightEleTrig, weightEle_up[0]*weightEleTrig_up, weightEle_down[0]*weightEleTrig_down]
+    ele_trig = weightEleTrig, weightEleTrig_up, weightEleTrig_down
+    ele_id =  [weightEle[1], weightEle_up[1], weightEle_down[1]]
+    ele_reco =  [weightEle[2], weightEle_up[2], weightEle_down[2]]
+    mu_wgt = [weightMu[0], weightMu_up[0], weightMu_down[0]]
+    mutrk_wgt = [weightMu[1], weightMu_up[1], weightMu_down[1]]
+    muID_wgt = [weightMu[2], weightMu_up[2], weightMu_down[2]]
+    met_wgt = [weightMETtrig, weightMETtrig_up, weightMETtrig_down]
+    recoil_wgt = [weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down]
+    return tot_weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt,ele_trig,ele_id,ele_reco,mutrk_wgt,muID_wgt
 
 dummy = -9999.0
 
@@ -285,6 +347,9 @@ def runbbdm(txtfile):
     df_out_TopmunuCR_1b = out.df_out_TopmunuCR_1b
     df_out_TopmunuCR_2b = out.df_out_TopmunuCR_2b
 
+    df_out_QCDCR_1b = out.df_out_QCDCR_1b
+    df_out_QCDCR_2b = out.df_out_QCDCR_2b
+
     h_total = TH1F('h_total', 'h_total', 2, 0, 2)
     h_total_mcweight = TH1F('h_total_mcweight', 'h_total_mcweight', 2, 0, 2)
     h_eventCounter = TH1F('h_eventCounter', 'h_eventCounter', 2, 0.5, 2.5)
@@ -324,6 +389,11 @@ def runbbdm(txtfile):
     h_reg_TopmunuCR_2b_cutFlow = TH1F(
         "h_reg_TopmunuCR_2b_cutFlow", "h_reg_TopmunuCR_2b_cutFlow", 11, 0, 11)
 
+    h_reg_QCDCR_1b_cutFlow = TH1F(
+        "h_reg_QCDCR_1b_cutFlow", "h_reg_QCDCR_1b_cutFlow", 7, 0, 7)
+    h_reg_QCDCR_2b_cutFlow = TH1F(
+        "h_reg_QCDCR_2b_cutFlow", "h_reg_QCDCR_2b_cutFlow", 7, 0, 7)
+
     for infl in infile_:
         f_tmp = TFile.Open(infl, 'READ')
         h_tmp = f_tmp.Get('h_total')
@@ -351,6 +421,8 @@ def runbbdm(txtfile):
     TopenuCR2bcount = 0.0
     TopmunuCR1bcount = 0.0
     TopmunuCR2bcount = 0.0
+    QCDCR1bcount = 0.0
+    QCDCR2bcount = 0.0
 
     allvars_bbDM = var.allvars_bbDM
     if era == '2018':
@@ -374,7 +446,7 @@ def runbbdm(txtfile):
             ep_isData, \
             ep_THINnJet, ep_THINjetPx, ep_THINjetPy, ep_THINjetPz, ep_THINjetEnergy, \
             ep_THINjetDeepCSV, ep_THINjetHadronFlavor, ep_THINjetNPV, \
-            ep_THINjetCorrUnc, ep_THINPUjetIDTight,\
+            ep_THINjetCorrUnc, ep_THINjetUncSources, ep_THINPUjetIDTight,\
             ep_THINjetNHadEF, ep_THINjetCHadEF, ep_THINjetCEmEF, ep_THINjetNEmEF,  \
             ep_THINjetCMulti, ep_THINjetNMultiplicity, \
             ep_nEle, ep_elePx, ep_elePy, ep_elePz, ep_eleEnergy, \
@@ -389,7 +461,7 @@ def runbbdm(txtfile):
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId,
                    df.st_prefiringweight, df.st_prefiringweightup, df.st_prefiringweightdown,
                    df.st_scaleWeightUP, df.st_scaleWeightDOWN, df.st_pdfWeightUP, df.st_pdfWeightDOWN,
-                   df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown,
+                   df.st_METXYCorr_Met, df.st_METXYCorr_MetPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown,
                    df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown,
                    df.st_pfMetCorrSig, df.st_pfpatCaloMETPt, df.st_pfpatCaloMETPhi,
                    df.st_pfTRKMETPt, df.st_pfTRKMETPhi,
@@ -399,7 +471,7 @@ def runbbdm(txtfile):
                    df.st_isData,
                    df.st_THINnJet, df.st_THINjetPx, df.st_THINjetPy, df.st_THINjetPz, df.st_THINjetEnergy,
                    df.st_THINjetDeepCSV, df.st_THINjetHadronFlavor, df.st_THINjetNPV,
-                   df.st_THINjetCorrUnc, df.st_THINPUjetIDTight,
+                   df.st_THINjetCorrUnc, df.st_THINjetUncSources, df.st_THINPUjetIDTight,
                    df.st_THINjetNHadEF, df.st_THINjetCHadEF, df.st_THINjetCEmEF, df.st_THINjetNEmEF,
                    df.st_THINjetCMulti, df.st_THINjetNMultiplicity,
                    df.st_nEle, df.st_elePx, df.st_elePy, df.st_elePz, df.st_eleEnergy,
@@ -433,6 +505,7 @@ def runbbdm(txtfile):
             ispreselR = False
 
             isSR1b = False
+            isQCDCR1b = False
             is1bCRWenu = False
             is1bCRWmunu = False
             is1bCRZee = False
@@ -441,6 +514,7 @@ def runbbdm(txtfile):
             is1bCRTopmunu = False
 
             isSR2b = False
+            isQCDCR2b = False
             is2bCRWenu = False
             is2bCRWmunu = False
             is2bCRZee = False
@@ -649,16 +723,15 @@ def runbbdm(txtfile):
             COMMON WEIGHT CALCULATION FOR ALL REGIONS
             --------------------------------------------------------------------------------
             '''
-            weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMET = weightRecoil = weightPrefire = -999.0
-            weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMET_up = weightRecoil_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = 1.0
-            weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMET_down = weightRecoil_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = 1.0
+            weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMETtrig = weightRecoiltrig = weightPrefire = -999.0
+            weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMETtrig_up = weightRecoiltrig_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = 1.0
+            weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMETtrig_down = weightRecoiltrig_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = 1.0
             if ep_isData:
-                weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMET = weightRecoil = weightPrefire = 1.0
-                weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMET_up = weightRecoil_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = 1.0
-                weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMET_down = weightRecoil_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = 1.0
+                weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMETtrig = weightRecoiltrig = weightPrefire = weightEleTrig= weightEleID= weightEleRECO= weightMuTRK= weightMuID = 1.0
+                weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMETtrig_up = weightRecoiltrig_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = weightEleTrig_up= weightEleID_up= weightEleRECO_up= weightMuTRK_up= weightMuID_up= 1.0
+                weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMETtrig_down = weightRecoiltrig_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = weightEleTrig_down= weightEleID_down= weightEleRECO_down= weightMuTRK_down= weightMuID_down = 1.0
             else:
-                weightB, weightB_up, weightB_down = wgt.getBTagSF(
-                    ep_THINnJet, ep_THINjetPt, ep_THINjetEta, ep_THINjetHadronFlavor, ep_THINjetDeepCSV, 'MWP')
+                weightB, weightB_up, weightB_down = wgt.getBTagSF(ep_THINnJet, ep_THINjetPt, ep_THINjetEta, ep_THINjetHadronFlavor, ep_THINjetDeepCSV, 'MWP')
                 weightPU, weightPU_up, weightPU_down  = wgt.puweight(ep_pu_nTrueInt)
                 weightscale_up  = ep_scaleWeightUP
                 weightpdf_up = ep_pdfWeightUP
@@ -690,29 +763,46 @@ def runbbdm(txtfile):
                 common_weight = weightB * weightEWK * weightQCD * \
                     weightTop * weightPU * weightPrefire
                 presel_weight = weightEWK * weightQCD * weightTop * weightPU * weightPrefire
-                weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt = weight_(
+                weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt, ele_trig,ele_id,ele_reco,mutrk_wgt,muID_wgt = weight_(
                     common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, ep_nEle_index, ep_elePt, ep_eleEta, ep_eleIsPTight, ep_nMu, ep_muPt, ep_muEta, ep_isTightMuon)
                 weightEle = ele_wgt[0]
                 weightMu = mu_wgt[0]
-                weightRecoil = recoil_wgt[0]
-                weightMET = met_wgt[0]
+                weightRecoiltrig = recoil_wgt[0]
+                weightMETtrig = met_wgt[0]
                 weightEle_up = ele_wgt[1]
                 weightMu_up = mu_wgt[1]
-                weightRecoil_up = recoil_wgt[1]
-                weightMET_up = met_wgt[1]
+                weightRecoiltrig_up = recoil_wgt[1]
+                weightMETtrig_up = met_wgt[1]
                 weightEle_down = ele_wgt[2]
                 weightMu_down = mu_wgt[2]
-                weightRecoil_down = recoil_wgt[2]
-                weightMET_down = met_wgt[2]
+                weightRecoiltrig_down = recoil_wgt[2]
+                weightMETtrig_down = met_wgt[2]
                 weightJEC_up = getJECWeight(ep_THINjetCorrUnc)[0]
                 weightJEC_down = getJECWeight(ep_THINjetCorrUnc)[1]
+                weightEleTrig = ele_trig[0]
+                weightEleID = ele_id[0]
+                weightEleRECO = ele_reco[0]
+                weightMuTRK = mutrk_wgt[0]
+                weightMuID = muID_wgt[0]
 
+                weightEleTrig_up = ele_trig[1]
+                weightEleID_up = ele_id[1]
+                weightEleRECO_up = ele_reco[1]
+                weightMuTRK_up = mutrk_wgt[1]
+                weightMuID_up = muID_wgt[1]
+
+                weightEleTrig_down = ele_trig[2]
+                weightEleID_down = ele_id[2]
+                weightEleRECO_down = ele_reco[2]
+                weightMuTRK_down = mutrk_wgt[2]
+                weightMuID_down = muID_wgt[2]
+            JECSourceUp, JECSourceDown = getJECSourceUnc(ep_THINnJet, ep_THINjetUncSources, index=False)
 
             ## applying triggers to data only
-            if not ep_isData:
-                eletrigdecision = True
-                mutrigdecision = True
-                mettrigdecision = True
+            # if not ep_isData:
+            #     eletrigdecision = True
+            #     mutrigdecision = True
+            #     mettrigdecision = True
             '''
             --------------------------------------------------------------------------------
             Preselection REGION
@@ -720,19 +810,19 @@ def runbbdm(txtfile):
             '''
             h_reg_preselR_cutFlow.AddBinContent(1, presel_weight)
             if mettrigdecision:
-                h_reg_preselR_cutFlow.AddBinContent(2, presel_weight*weightMET)
+                h_reg_preselR_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
                 if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
                     h_reg_preselR_cutFlow.AddBinContent(
-                       3, presel_weight*weightMET)
+                       3, presel_weight*weightMETtrig)
                     if True:
                         h_reg_preselR_cutFlow.AddBinContent(
-                           4, presel_weight*weightMET)
+                           4, presel_weight*weightMETtrig)
                         if (min_dPhi_jet_MET > 0.5):
                             h_reg_preselR_cutFlow.AddBinContent(
-                               5, presel_weight*weightMET)
+                               5, presel_weight*weightMETtrig)
                             if (ep_THINjetPt[0] > 50.):
                                 h_reg_preselR_cutFlow.AddBinContent(
-                                   6, presel_weight*weightMET)
+                                   6, presel_weight*weightMETtrig)
                                 if (ep_THINbjets_Cond[0]):
                                     h_reg_preselR_cutFlow.AddBinContent(
                                         7, weight)
@@ -773,26 +863,26 @@ def runbbdm(txtfile):
             h_reg_SR_1b_cutFlow.AddBinContent(1, presel_weight)
             h_reg_SR_2b_cutFlow.AddBinContent(1, presel_weight)
             if mettrigdecision:
-                h_reg_SR_1b_cutFlow.AddBinContent(2, presel_weight*weightMET)
-                h_reg_SR_2b_cutFlow.AddBinContent(2, presel_weight*weightMET)
+                h_reg_SR_1b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
+                h_reg_SR_2b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
                 if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
                    h_reg_SR_1b_cutFlow.AddBinContent(
-                       3, presel_weight*weightMET)
+                       3, presel_weight*weightMETtrig)
                    h_reg_SR_2b_cutFlow.AddBinContent(
-                       3, presel_weight*weightMET)
+                       3, presel_weight*weightMETtrig)
                    if (ep_nEle_index == 0) and (ep_nMu == 0) and (nPho == 0) and (ep_nTau_discBased_TightEleTightMuVeto == 0):
                        h_reg_SR_1b_cutFlow.AddBinContent(
-                           4, presel_weight*weightMET)
+                           4, presel_weight*weightMETtrig)
                        h_reg_SR_2b_cutFlow.AddBinContent(
-                           4, presel_weight*weightMET)
+                           4, presel_weight*weightMETtrig)
                        if (min_dPhi_jet_MET > 0.5):
                            h_reg_SR_1b_cutFlow.AddBinContent(
-                               5, presel_weight*weightMET)
+                               5, presel_weight*weightMETtrig)
                            h_reg_SR_2b_cutFlow.AddBinContent(
-                               5, presel_weight*weightMET)
+                               5, presel_weight*weightMETtrig)
                            if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
                                h_reg_SR_1b_cutFlow.AddBinContent(
-                                   6, presel_weight*weightMET)
+                                   6, presel_weight*weightMETtrig)
                                if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                    h_reg_SR_1b_cutFlow.AddBinContent(7, weight)
                                    isSR1b = True
@@ -823,13 +913,13 @@ def runbbdm(txtfile):
                                         Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
                            if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
                                 h_reg_SR_2b_cutFlow.AddBinContent(
-                                    6, presel_weight*weightMET)
+                                    6, presel_weight*weightMETtrig)
                                 if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                     h_reg_SR_2b_cutFlow.AddBinContent(7, weight)
                                     isSR2b = True
                                     SR2bcount += 1
-                                    rJet1PtMET = (
-                                        ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                    M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                    rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                     Jet2NHadEF = ep_THINjetNHadEF[1]
                                     Jet2CHadEF = ep_THINjetCHadEF[1]
                                     Jet2CEmEF = ep_THINjetCEmEF[1]
@@ -935,8 +1025,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         ZeeCR2bcount += 1
                                                         is2bCRZee = True
-                                                        rJet1PtMET = (
-                                                           ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         Jet2NHadEF = ep_THINjetNHadEF[1]
                                                         Jet2CHadEF = ep_THINjetCHadEF[1]
                                                         Jet2CEmEF = ep_THINjetCEmEF[1]
@@ -960,47 +1050,47 @@ def runbbdm(txtfile):
                 h_reg_ZmumuCR_2b_cutFlow.AddBinContent(1, presel_weight)
                 if mettrigdecision:
                     h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                        2, presel_weight*weightRecoil)
+                        2, presel_weight*weightRecoiltrig)
                     h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                        2, presel_weight*weightRecoil)
+                        2, presel_weight*weightRecoiltrig)
                     if (ep_nEle_index == 0) and (nPho == 0):
                         h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                            3, presel_weight*weightRecoil)
+                            3, presel_weight*weightRecoiltrig)
                         h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                            3, presel_weight*weightRecoil)
+                            3, presel_weight*weightRecoiltrig)
                         if (ep_nTau_discBased_TightEleTightMuVeto == 0):
                             h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                                4, presel_weight*weightRecoil*weightMu)
+                                4, presel_weight*weightRecoiltrig*weightMu)
                             h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                                4, presel_weight*weightRecoil*weightMu)
+                                4, presel_weight*weightRecoiltrig*weightMu)
                             if (ep_nMu == 2):
                                 h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                                    5, presel_weight*weightRecoil*weightMu)
+                                    5, presel_weight*weightRecoiltrig*weightMu)
                                 h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                                    5, presel_weight*weightRecoil*weightMu)
+                                    5, presel_weight*weightRecoiltrig*weightMu)
                                 if (ep_muPt[0] > minMuPt) and (ep_isTightMuon[0]):
                                     h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                                        6, presel_weight*weightRecoil*weightMu)
+                                        6, presel_weight*weightRecoiltrig*weightMu)
                                     h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                                        6, presel_weight*weightRecoil*weightMu)
+                                        6, presel_weight*weightRecoiltrig*weightMu)
                                     if (ep_ZmumuRecoil > 200. and delta_pfCaloZmumuCR < 0.5):
                                         h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                                            7, presel_weight*weightRecoil*weightMu)
+                                            7, presel_weight*weightRecoiltrig*weightMu)
                                         h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                                            7, presel_weight*weightRecoil*weightMu)
+                                            7, presel_weight*weightRecoiltrig*weightMu)
                                         if (min_dPhi_jet_MET > 0.5):
                                             h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                                                8, presel_weight*weightRecoil*weightMu)
+                                                8, presel_weight*weightRecoiltrig*weightMu)
                                             h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                                                8, presel_weight*weightRecoil*weightMu)
+                                                8, presel_weight*weightRecoiltrig*weightMu)
                                             if (ep_Zmumumass >= 70 and ep_Zmumumass <= 110):
                                                 h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                                                    9, presel_weight*weightRecoil*weightMu)
+                                                    9, presel_weight*weightRecoiltrig*weightMu)
                                                 h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                                                    9, presel_weight*weightRecoil*weightMu)
+                                                    9, presel_weight*weightRecoiltrig*weightMu)
                                                 if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
                                                     h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
-                                                        10, presel_weight*weightRecoil*weightMu)
+                                                        10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
@@ -1032,14 +1122,14 @@ def runbbdm(txtfile):
                                                             Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
                                                 if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
                                                     h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
-                                                        10, presel_weight*weightRecoil*weightMu)
+                                                        10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         ZmumuCR2count += 1
                                                         is2bCRZmumu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         Jet2NHadEF = ep_THINjetNHadEF[1]
                                                         Jet2CHadEF = ep_THINjetCHadEF[1]
                                                         Jet2CEmEF = ep_THINjetCEmEF[1]
@@ -1118,8 +1208,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         WenuCR2bcount += 1
                                                         is2bCRWenu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
                                                             isjet1EtaMatch = 1
@@ -1139,50 +1229,50 @@ def runbbdm(txtfile):
             if wmunu_cr:
                 h_reg_WmunuCR_1b_cutFlow.AddBinContent(1, presel_weight)
                 h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                    1, presel_weight*weightRecoil)
+                    1, presel_weight*weightRecoiltrig)
                 if mettrigdecision:
                     h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                        2, presel_weight*weightRecoil)
+                        2, presel_weight*weightRecoiltrig)
                     h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                        2, presel_weight*weightRecoil)
+                        2, presel_weight*weightRecoiltrig)
                     if (ep_nEle_index == 0) and nPho == 0:
                         h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                            3, presel_weight*weightRecoil)
+                            3, presel_weight*weightRecoiltrig)
                         h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                            3, presel_weight*weightRecoil)
+                            3, presel_weight*weightRecoiltrig)
                         if (ep_nTau_discBased_TightEleTightMuVeto == 0):
                             h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                                4, presel_weight*weightRecoil*weightMu)
+                                4, presel_weight*weightRecoiltrig*weightMu)
                             h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                                4, presel_weight*weightRecoil*weightMu)
+                                4, presel_weight*weightRecoiltrig*weightMu)
                             if (ep_nMu == 1):
                                 h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                                    5, presel_weight*weightRecoil*weightMu)
+                                    5, presel_weight*weightRecoiltrig*weightMu)
                                 h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                                    5, presel_weight*weightRecoil*weightMu)
+                                    5, presel_weight*weightRecoiltrig*weightMu)
                                 if (ep_muPt[0] > minMuPt) and (ep_isTightMuon[0]):
                                     h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                                        6, presel_weight*weightRecoil*weightMu)
+                                        6, presel_weight*weightRecoiltrig*weightMu)
                                     h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                                        6, presel_weight*weightRecoil*weightMu)
+                                        6, presel_weight*weightRecoiltrig*weightMu)
                                     if (ep_WmunuRecoil > 200. and ep_pfMetCorrPt > 100 and delta_pfCaloWmunuCR < 0.5):
                                         h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                                            7, presel_weight*weightRecoil*weightMu)
+                                            7, presel_weight*weightRecoiltrig*weightMu)
                                         h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                                            7, presel_weight*weightRecoil*weightMu)
+                                            7, presel_weight*weightRecoiltrig*weightMu)
                                         if (min_dPhi_jet_MET > 0.5):
                                             h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                                                8, presel_weight*weightRecoil*weightMu)
+                                                8, presel_weight*weightRecoiltrig*weightMu)
                                             h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                                                8, presel_weight*weightRecoil*weightMu)
+                                                8, presel_weight*weightRecoiltrig*weightMu)
                                             if (ep_Wmunumass >= 0 and ep_Wmunumass <= 160):
                                                 h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                                                    9, presel_weight*weightRecoil*weightMu)
+                                                    9, presel_weight*weightRecoiltrig*weightMu)
                                                 h_reg_WmunuCR_2b_cutFlow.AddBinContent(
-                                                    9, presel_weight*weightRecoil*weightMu)
+                                                    9, presel_weight*weightRecoiltrig*weightMu)
                                                 if (ep_THINnJet == 1) and (ep_THINjetPt[0] > 50.):
                                                     h_reg_WmunuCR_1b_cutFlow.AddBinContent(
-                                                        10, presel_weight*weightRecoil*weightMu)
+                                                        10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_WmunuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
@@ -1198,8 +1288,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         WmunuCR2bcount += 1
                                                         is2bCRWmunu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
                                                             isjet1EtaMatch = 1
@@ -1299,8 +1389,8 @@ def runbbdm(txtfile):
                                                             11, weight)
                                                         TopenuCR2bcount += 1
                                                         is2bCRTopenu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet3 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[2], ep_THINjetPy[2], ep_THINjetPz[2], ep_THINjetEnergy[2])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[2] > 0:
                                                             isjet2EtaMatch = 1
@@ -1322,47 +1412,47 @@ def runbbdm(txtfile):
                 h_reg_TopmunuCR_2b_cutFlow.AddBinContent(1, presel_weight)
                 if mettrigdecision:
                     h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                        2, presel_weight*weightRecoil)
+                        2, presel_weight*weightRecoiltrig)
                     h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                        2, presel_weight*weightRecoil)
+                        2, presel_weight*weightRecoiltrig)
                     if (ep_nEle_index == 0) and nPho == 0:
                         h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                            3, presel_weight*weightRecoil*weightMu)
+                            3, presel_weight*weightRecoiltrig*weightMu)
                         h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                            3, presel_weight*weightRecoil*weightMu)
+                            3, presel_weight*weightRecoiltrig*weightMu)
                         if (ep_nTau_discBased_TightEleTightMuVeto == 0):
                             h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                                4, presel_weight*weightRecoil*weightMu)
+                                4, presel_weight*weightRecoiltrig*weightMu)
                             h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                                4, presel_weight*weightRecoil*weightMu)
+                                4, presel_weight*weightRecoiltrig*weightMu)
                             if (ep_nMu == 1):
                                 h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                                    5, presel_weight*weightRecoil*weightMu)
+                                    5, presel_weight*weightRecoiltrig*weightMu)
                                 h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                                    5, presel_weight*weightRecoil*weightMu)
+                                    5, presel_weight*weightRecoiltrig*weightMu)
                                 if (ep_muPt[0] > minMuPt) and (ep_isTightMuon[0]):
                                     h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                                        6, presel_weight*weightRecoil*weightMu)
+                                        6, presel_weight*weightRecoiltrig*weightMu)
                                     h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                                        6, presel_weight*weightRecoil*weightMu)
+                                        6, presel_weight*weightRecoiltrig*weightMu)
                                     if (ep_WmunuRecoil > 200. and delta_pfCaloTopmunuCR < 0.5):
                                         h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                                            7, presel_weight*weightRecoil*weightMu)
+                                            7, presel_weight*weightRecoiltrig*weightMu)
                                         h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                                            7, presel_weight*weightRecoil*weightMu)
+                                            7, presel_weight*weightRecoiltrig*weightMu)
                                         if (min_dPhi_jet_MET > 0.5):
                                             h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                                                8, presel_weight*weightRecoil*weightMu)
+                                                8, presel_weight*weightRecoiltrig*weightMu)
                                             h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                                                8, presel_weight*weightRecoil*weightMu)
+                                                8, presel_weight*weightRecoiltrig*weightMu)
                                             if (ep_Wmunumass >= 0 and ep_Wmunumass <= 160):
                                                 h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                                                    9, presel_weight*weightRecoil*weightMu)
+                                                    9, presel_weight*weightRecoiltrig*weightMu)
                                                 h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                                                    9, presel_weight*weightRecoil*weightMu)
+                                                    9, presel_weight*weightRecoiltrig*weightMu)
                                                 if (ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
                                                     h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
-                                                        10, presel_weight*weightRecoil*weightMu)
+                                                        10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
@@ -1394,14 +1484,14 @@ def runbbdm(txtfile):
                                                             Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
                                                 if (ep_THINnJet > 2) and (ep_THINjetPt[0] > 50.):
                                                     h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
-                                                        10, presel_weight*weightRecoil*weightMu)
+                                                        10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         TopmunuCR2bcount += 1
                                                         is2bCRTopmunu = True
-                                                        rJet1PtMET = (
-                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                                        rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
                                                         M_Jet1Jet3 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[2], ep_THINjetPy[2], ep_THINjetPz[2], ep_THINjetEnergy[2])
                                                         if ep_THINjetEta[0]*ep_THINjetEta[2] > 0:
                                                             isjet2EtaMatch = 1
@@ -1413,6 +1503,86 @@ def runbbdm(txtfile):
                                                         Jet2NEmEF = ep_THINjetNEmEF[1]
                                                         Jet2CMulti = ep_THINjetCMulti[1]
                                                         Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
+            '''
+            --------------------------------------------------------------------------------
+            QCD REGION
+            --------------------------------------------------------------------------------
+            '''
+            h_reg_QCDCR_1b_cutFlow.AddBinContent(1, presel_weight)
+            h_reg_QCDCR_2b_cutFlow.AddBinContent(1, presel_weight)
+            if mettrigdecision:
+                h_reg_QCDCR_1b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
+                h_reg_QCDCR_2b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
+                if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
+                   h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                       3, presel_weight*weightMETtrig)
+                   h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                       3, presel_weight*weightMETtrig)
+                   if (ep_nEle_index == 0) and (ep_nMu == 0) and (nPho == 0) and (ep_nTau_discBased_TightEleTightMuVeto == 0):
+                       h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                           4, presel_weight*weightMETtrig)
+                       h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                           4, presel_weight*weightMETtrig)
+                       if (min_dPhi_jet_MET < 0.5):
+                           h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                               5, presel_weight*weightMETtrig)
+                           h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                               5, presel_weight*weightMETtrig)
+                           if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
+                               h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                                   6, presel_weight*weightMETtrig)
+                               if (ep_THINbjets_Cond[0]) and (nBjets == 1):
+                                   h_reg_QCDCR_1b_cutFlow.AddBinContent(7, weight)
+                                   isQCDCR1b = True
+                                   QCDCR1bcount += 1
+                                   rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                   if ep_THINnJet == 2:
+                                        Jet2Pt = ep_THINjetPt[1]
+                                        Jet2Eta = ep_THINjetEta[1]
+                                        Jet2Phi = ep_THINjetPhi[1]
+                                        Jet2deepCSV = ep_THINjetDeepCSV[1]
+                                        ratioPtJet21 = (
+                                            ep_THINjetPt[1]/ep_THINjetPt[0])
+                                        dPhiJet12 = DeltaPhi(
+                                            ep_THINjetPhi[0],ep_THINjetPhi[1])
+                                        dEtaJet12 = (
+                                            ep_THINjetEta[0]-ep_THINjetEta[1])
+                                        M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0],ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                        if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
+                                            isjet1EtaMatch = 1
+                                        if ep_THINjetEta[0]*ep_THINjetEta[1] < 0:
+                                            isjet1EtaMatch = -1
+                                        Jet2NHadEF = ep_THINjetNHadEF[1]
+                                        Jet2CHadEF = ep_THINjetCHadEF[1]
+                                        Jet2CEmEF = ep_THINjetCEmEF[1]
+                                        Jet2NEmEF = ep_THINjetNEmEF[1]
+                                        Jet2CMulti = ep_THINjetCMulti[1]
+                                        Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
+                           if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
+                                h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                                    6, presel_weight*weightMETtrig)
+                                if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
+                                    h_reg_QCDCR_2b_cutFlow.AddBinContent(7, weight)
+                                    isQCDCR2b = True
+                                    QCDCR2bcount += 1
+                                    M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
+                                    rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                    Jet2NHadEF = ep_THINjetNHadEF[1]
+                                    Jet2CHadEF = ep_THINjetCHadEF[1]
+                                    Jet2CEmEF = ep_THINjetCEmEF[1]
+                                    Jet2NEmEF = ep_THINjetNEmEF[1]
+                                    Jet2CMulti = ep_THINjetCMulti[1]
+                                    Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
+                                    if ep_THINnJet == 3:
+                                        Jet3Pt = ep_THINjetPt[2]
+                                        Jet3Eta = ep_THINjetEta[2]
+                                        Jet3Phi = ep_THINjetPhi[2]
+                                        Jet3deepCSV = ep_THINjetDeepCSV[2]
+                                        M_Jet1Jet3 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0],ep_THINjetPx[2], ep_THINjetPy[2], ep_THINjetPz[2], ep_THINjetEnergy[2])
+                                        if ep_THINjetEta[0]*ep_THINjetEta[2] > 0:
+                                            isjet2EtaMatch = 1
+                                        if ep_THINjetEta[0]*ep_THINjetEta[2] < 0:
+                                            isjet2EtaMatch = -1
             if ispreselR:
                 df_out_preselR = df_out_preselR.append({
                     'run': float(ep_runId),
@@ -1468,7 +1638,7 @@ def runbbdm(txtfile):
                     'dPhiJet12': float(dPhiJet12),
                     'dEtaJet12': float(dEtaJet12),
                     'weight': float(weight),
-                    'weightMET': float(weightMET),
+                    'weightMETtrig': float(weightMETtrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -1477,7 +1647,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightMET_up': float(weightMET_up),
+                    'weightMETtrig_up': float(weightMETtrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -1492,7 +1662,7 @@ def runbbdm(txtfile):
                     'MET_En_down': float(ep_pfMetUncJetEnDown),
                     'MET_Res_down': float(ep_pfMetUncJetResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightMET_down': float(weightMET_down),
+                    'weightMETtrig_down': float(weightMETtrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -1505,9 +1675,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('ispreselR')
@@ -1564,7 +1772,7 @@ def runbbdm(txtfile):
                     'dPhiJet12': float(dPhiJet12),
                     'dEtaJet12': float(dEtaJet12),
                     'weight': float(weight),
-                    'weightMET': float(weightMET),
+                    'weightMETtrig': float(weightMETtrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -1573,7 +1781,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightMET_up': float(weightMET_up),
+                    'weightMETtrig_up': float(weightMETtrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -1584,11 +1792,11 @@ def runbbdm(txtfile):
                     'weightPrefire_up': float(weightPrefire_up),
                     'weightJEC_up': float(weightJEC_up),
                     'MET_Res_up': float(ep_pfMetUncJetResUp),
-                    'MET_En_up': float(ep_pfMetUncJetEnUp),                   
+                    'MET_En_up': float(ep_pfMetUncJetEnUp),
                     'MET_En_down': float(ep_pfMetUncJetEnDown),
                     'MET_Res_down': float(ep_pfMetUncJetResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightMET_down': float(weightMET_down),
+                    'weightMETtrig_down': float(weightMETtrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -1601,9 +1809,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('isSR1b')
@@ -1646,6 +1892,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -1655,7 +1902,7 @@ def runbbdm(txtfile):
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'M_Jet1Jet3': float(M_Jet1Jet3),
                     'weight': float(weight),
-                    'weightMET': float(weightMET),
+                    'weightMETtrig': float(weightMETtrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -1664,7 +1911,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightMET_up': float(weightMET_up),
+                    'weightMETtrig_up': float(weightMETtrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -1679,7 +1926,7 @@ def runbbdm(txtfile):
                     'MET_En_down': float(ep_pfMetUncJetEnDown),
                     'MET_Res_down': float(ep_pfMetUncJetResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightMET_down': float(weightMET_down),
+                    'weightMETtrig_down': float(weightMETtrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -1692,9 +1939,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('isSR2b')
@@ -1764,7 +2049,7 @@ def runbbdm(txtfile):
                     'subleadingLepEta': float(ep_eleEta[1]),
                     'subleadingLepPhi': float(ep_elePhi[1]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -1773,7 +2058,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -1788,7 +2073,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_ZeeRecoilEnDown),
                     'Recoil_Res_down': float(ep_ZeeRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -1801,9 +2086,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is1bCRZee')
@@ -1853,6 +2176,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -1866,7 +2190,7 @@ def runbbdm(txtfile):
                     'subleadingLepEta': float(ep_eleEta[1]),
                     'subleadingLepPhi': float(ep_elePhi[1]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -1875,7 +2199,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -1890,7 +2214,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_ZeeRecoilEnDown),
                     'Recoil_Res_down': float(ep_ZeeRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -1903,9 +2227,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is2bCRZee')
@@ -1975,7 +2337,7 @@ def runbbdm(txtfile):
                     'subleadingLepEta': float(ep_muEta[1]),
                     'subleadingLepPhi': float(ep_muPhi[1]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -1984,7 +2346,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -1999,7 +2361,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_ZmumuRecoilEnDown),
                     'Recoil_Res_down': float(ep_ZmumuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2012,9 +2374,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is1bCRZmumu')
@@ -2064,6 +2464,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -2077,7 +2478,7 @@ def runbbdm(txtfile):
                     'subleadingLepEta': float(ep_muEta[1]),
                     'subleadingLepPhi': float(ep_muPhi[1]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2086,7 +2487,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2101,7 +2502,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_ZmumuRecoilEnDown),
                     'Recoil_Res_down': float(ep_ZmumuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2114,9 +2515,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is2bCRZmumu')
@@ -2177,7 +2616,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_eleEta[0]),
                     'leadingLepPhi': float(ep_elePhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2186,7 +2625,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2201,7 +2640,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WenuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WenuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2214,9 +2653,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is1bCRWenu')
@@ -2276,7 +2753,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_eleEta[0]),
                     'leadingLepPhi': float(ep_elePhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2285,7 +2762,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2300,7 +2777,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WenuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WenuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2313,9 +2790,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is2bCRWenu')
@@ -2377,7 +2892,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_muEta[0]),
                     'leadingLepPhi': float(ep_muPhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2386,7 +2901,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2401,7 +2916,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WmunuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WmunuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2414,9 +2929,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is1bCRWmunu')
@@ -2476,7 +3029,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_muEta[0]),
                     'leadingLepPhi': float(ep_muPhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2485,7 +3038,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2500,7 +3053,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WmunuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WmunuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2513,9 +3066,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is2bCRWmunu')
@@ -2581,7 +3172,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_eleEta[0]),
                     'leadingLepPhi': float(ep_elePhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2590,7 +3181,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2605,7 +3196,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WenuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WenuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2618,9 +3209,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is1bCRTopenu')
@@ -2670,6 +3299,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -2680,7 +3310,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_eleEta[0]),
                     'leadingLepPhi': float(ep_elePhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2689,7 +3319,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2704,7 +3334,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WenuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WenuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2717,9 +3347,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is2bCRTopenu')
@@ -2785,7 +3453,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_muEta[0]),
                     'leadingLepPhi': float(ep_muPhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2794,7 +3462,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2809,7 +3477,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WmunuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WmunuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2822,9 +3490,47 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is1bCRTopmunu')
@@ -2874,6 +3580,7 @@ def runbbdm(txtfile):
                     'Jet3Eta': float(Jet3Eta),
                     'Jet3Phi': float(Jet3Phi),
                     'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
                     'M_Jet1Jet3': float(M_Jet1Jet2),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -2884,7 +3591,7 @@ def runbbdm(txtfile):
                     'leadingLepEta': float(ep_muEta[0]),
                     'leadingLepPhi': float(ep_muPhi[0]),
                     'weight': float(weight),
-                    'weightRecoil': float(weightRecoil),
+                    'weightRecoiltrig': float(weightRecoiltrig),
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
@@ -2893,7 +3600,7 @@ def runbbdm(txtfile):
                     'weightTop': float(weightTop),
                     'weightPU': float(weightPU),
                     'weightPrefire': float(weightPrefire),
-                    'weightRecoil_up': float(weightRecoil_up),
+                    'weightRecoiltrig_up': float(weightRecoiltrig_up),
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
@@ -2908,7 +3615,7 @@ def runbbdm(txtfile):
                     'Recoil_En_down': float(ep_WmunuRecoilEnDown),
                     'Recoil_Res_down': float(ep_WmunuRecoilResDown),
                     'weightJEC_down': float(weightJEC_down),
-                    'weightRecoil_down': float(weightRecoil_down),
+                    'weightRecoiltrig_down': float(weightRecoiltrig_down),
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
@@ -2921,15 +3628,317 @@ def runbbdm(txtfile):
                     'weightscale_down':float(weightscale_down),
                     'weightpdf_down':float(weightpdf_down),
                     'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
                     'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
                 }, ignore_index = True)
             if istest:
                 print('is2bCRTopmunu')
 
+            if isQCDCR1b:
+                df_out_QCDCR_1b = df_out_QCDCR_1b.append({
+                    'run': float(ep_runId),
+                    'lumi': float(ep_lumiSection),
+                    'event': float(ep_eventId),
+                    'nPV': float(ep_THINjetNPV),
+                    'MET': float(ep_pfMetCorrPt),
+                    'METPhi': float(ep_pfMetCorrPhi),
+                    'pfMetCorrSig': float( ep_pfMetCorrSig),
+                    'pfpatCaloMETPt': float( ep_pfpatCaloMETPt),
+                    'pfpatCaloMETPhi': float( ep_pfpatCaloMETPhi),
+                    'pfTRKMETPt': float( ep_pfTRKMETPt),
+                    'pfTRKMETPhi': float( ep_pfTRKMETPhi),
+                    'delta_pfCalo': float(delta_pfCaloSR),
+                    'dPhi_jetMET': float(min_dPhi_jet_MET),
+                    'JetwithEta4p5': float(JetwithEta4p5),
+                    'NTau': float(ep_nTau_discBased_TightEleTightMuVeto),
+                    'NEle': float(ep_nEle_index),
+                    'NMu': float(ep_nMu),
+                    'nPho': float(nPho),
+                    'Njets_PassID': float(ep_THINnJet),
+                    'Nbjets_PassID': float(nBjets),
+                    'Jet1Pt': float(ep_THINjetPt[0]),
+                    'Jet1Eta': float(ep_THINjetEta[0]),
+                    'Jet1Phi': float(ep_THINjetPhi[0]),
+                    'Jet1deepCSV': float(ep_THINjetDeepCSV[0]),
+                    'Jet1NHadEF':float(ep_THINjetNHadEF[0]),
+                    'Jet1CHadEF':float(ep_THINjetCHadEF[0]),
+                    'Jet1CEmEF':float(ep_THINjetCEmEF[0]),
+                    'Jet1NEmEF':float(ep_THINjetNEmEF[0]),
+                    'Jet1CMulti':float(ep_THINjetCMulti[0]),
+                    'Jet1NMultiplicity':float(ep_THINjetNMultiplicity[0]),
+                    'Jet2Pt': float(Jet2Pt),
+                    'Jet2Eta': float(Jet2Eta),
+                    'Jet2Phi': float(Jet2Phi),
+                    'Jet2deepCSV': float(Jet2deepCSV),
+                    'Jet2NHadEF':float(Jet2NHadEF),
+                    'Jet2CHadEF':float(Jet2CHadEF),
+                    'Jet2CEmEF':float(Jet2CEmEF),
+                    'Jet2NEmEF':float(Jet2NEmEF),
+                    'Jet2CMulti':float(Jet2CMulti),
+                    'Jet2NMultiplicity':float(Jet2NMultiplicity),
+                    'Jet3Pt': float(dummy),
+                    'Jet3Eta': float(dummy),
+                    'Jet3Phi': float(dummy),
+                    'Jet3deepCSV': float(dummy),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
+                    'isjet1EtaMatch': float(isjet1EtaMatch),
+                    'ratioPtJet21': float(ratioPtJet21),
+                    'rJet1PtMET': float(rJet1PtMET),
+                    'dPhiJet12': float(dPhiJet12),
+                    'dEtaJet12': float(dEtaJet12),
+                    'weight': float(weight),
+                    'weightMETtrig': float(weightMETtrig),
+                    'weightEle': float(weightEle),
+                    'weightMu': float(weightMu),
+                    'weightB': float(weightB),
+                    'weightEWK': float(weightEWK),
+                    'weightQCD': float(weightQCD),
+                    'weightTop': float(weightTop),
+                    'weightPU': float(weightPU),
+                    'weightPrefire': float(weightPrefire),
+                    'weightMETtrig_up': float(weightMETtrig_up),
+                    'weightEle_up': float(weightEle_up),
+                    'weightMu_up': float(weightMu_up),
+                    'weightB_up': float(weightB_up),
+                    'weightEWK_up': float(weightEWK_up),
+                    'weightQCD_up': float(weightQCD_up),
+                    'weightTop_up': float(weightTop_up),
+                    'weightPU_up': float(weightPU_up),
+                    'weightPrefire_up': float(weightPrefire_up),
+                    'weightJEC_up': float(weightJEC_up),
+                    'MET_Res_up': float(ep_pfMetUncJetResUp),
+                    'MET_En_up': float(ep_pfMetUncJetEnUp),
+                    'MET_En_down': float(ep_pfMetUncJetEnDown),
+                    'MET_Res_down': float(ep_pfMetUncJetResDown),
+                    'weightJEC_down': float(weightJEC_down),
+                    'weightMETtrig_down': float(weightMETtrig_down),
+                    'weightEle_down': float(weightEle_down),
+                    'weightMu_down': float(weightMu_down),
+                    'weightB_down': float(weightB_down),
+                    'weightEWK_down': float(weightEWK_down),
+                    'weightQCD_down': float(weightQCD_down),
+                    'weightTop_down': float(weightTop_down),
+                    'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
+                    'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
+                    'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
+                    'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
+                    'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
+                }, ignore_index = True)
+            if istest:
+                print('isQCDCR1b')
+            if isQCDCR2b:
+                df_out_QCDCR_2b = df_out_QCDCR_2b.append({
+                    'run': float(ep_runId),
+                    'lumi': float(ep_lumiSection),
+                    'event': float(ep_eventId),
+                    'nPV': float(ep_THINjetNPV),
+                    'MET': float(ep_pfMetCorrPt),
+                    'METPhi': float(ep_pfMetCorrPhi),
+                    'pfMetCorrSig': float( ep_pfMetCorrSig),
+                    'pfpatCaloMETPt': float( ep_pfpatCaloMETPt),
+                    'pfpatCaloMETPhi': float( ep_pfpatCaloMETPhi),
+                    'pfTRKMETPt': float( ep_pfTRKMETPt),
+                    'pfTRKMETPhi': float( ep_pfTRKMETPhi),
+                    'delta_pfCalo': float(delta_pfCaloSR),
+                    'dPhi_jetMET': float(min_dPhi_jet_MET),
+                    'JetwithEta4p5': float(JetwithEta4p5),
+                    'NEle': float(ep_nEle_index),
+                    'NMu': float(ep_nMu),
+                    'nPho': float(nPho),
+                    'Njets_PassID': float(ep_THINnJet),
+                    'Nbjets_PassID': float(nBjets),
+                    'Jet1Pt': float(ep_THINjetPt[0]),
+                    'Jet1Eta': float(ep_THINjetEta[0]),
+                    'Jet1Phi': float(ep_THINjetPhi[0]),
+                    'Jet1deepCSV': float(ep_THINjetDeepCSV[0]),
+                    'Jet1NHadEF':float(ep_THINjetNHadEF[0]),
+                    'Jet1CHadEF':float(ep_THINjetCHadEF[0]),
+                    'Jet1CEmEF':float(ep_THINjetCEmEF[0]),
+                    'Jet1NEmEF':float(ep_THINjetNEmEF[0]),
+                    'Jet1CMulti':float(ep_THINjetCMulti[0]),
+                    'Jet1NMultiplicity':float(ep_THINjetNMultiplicity[0]),
+                    'Jet2Pt': float(ep_THINjetPt[1]),
+                    'Jet2Eta': float(ep_THINjetEta[1]),
+                    'Jet2Phi': float(ep_THINjetPhi[1]),
+                    'Jet2deepCSV': float(ep_THINjetDeepCSV[1]),
+                    'Jet3Pt': float(Jet3Pt),
+                    'Jet3Eta': float(Jet3Eta),
+                    'Jet3Phi': float(Jet3Phi),
+                    'Jet3deepCSV': float(Jet3deepCSV),
+                    'M_Jet1Jet2': float(M_Jet1Jet2),
+                    'M_Jet1Jet3': float(M_Jet1Jet2),
+                    'isjet2EtaMatch': float(isjet2EtaMatch),
+                    'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
+                    'rJet1PtMET': float(rJet1PtMET),
+                    'dPhiJet12': float(DeltaPhi(ep_THINjetPhi[0],ep_THINjetPhi[1])),
+                    'dEtaJet12': float(ep_THINjetEta[0] - ep_THINjetEta[1]),
+                    'isjet2EtaMatch': float(isjet2EtaMatch),
+                    'M_Jet1Jet3': float(M_Jet1Jet3),
+                    'weight': float(weight),
+                    'weightMETtrig': float(weightMETtrig),
+                    'weightEle': float(weightEle),
+                    'weightMu': float(weightMu),
+                    'weightB': float(weightB),
+                    'weightEWK': float(weightEWK),
+                    'weightQCD': float(weightQCD),
+                    'weightTop': float(weightTop),
+                    'weightPU': float(weightPU),
+                    'weightPrefire': float(weightPrefire),
+                    'weightMETtrig_up': float(weightMETtrig_up),
+                    'weightEle_up': float(weightEle_up),
+                    'weightMu_up': float(weightMu_up),
+                    'weightB_up': float(weightB_up),
+                    'weightEWK_up': float(weightEWK_up),
+                    'weightQCD_up': float(weightQCD_up),
+                    'weightTop_up': float(weightTop_up),
+                    'weightPU_up': float(weightPU_up),
+                    'weightPrefire_up': float(weightPrefire_up),
+                    'weightJEC_up': float(weightJEC_up),
+                    'MET_Res_up': float(ep_pfMetUncJetResUp),
+                    'MET_En_up': float(ep_pfMetUncJetEnUp),
+                    'MET_En_down': float(ep_pfMetUncJetEnDown),
+                    'MET_Res_down': float(ep_pfMetUncJetResDown),
+                    'weightJEC_down': float(weightJEC_down),
+                    'weightMETtrig_down': float(weightMETtrig_down),
+                    'weightEle_down': float(weightEle_down),
+                    'weightMu_down': float(weightMu_down),
+                    'weightB_down': float(weightB_down),
+                    'weightEWK_down': float(weightEWK_down),
+                    'weightQCD_down': float(weightQCD_down),
+                    'weightTop_down': float(weightTop_down),
+                    'weightPU_down': float(weightPU_down),
+                    'weightscale_up':float(weightscale_up),
+                    'weightpdf_up':float(weightpdf_up),
+                    'weightscale_down':float(weightscale_down),
+                    'weightpdf_down':float(weightpdf_down),
+                    'weightPrefire_down': float(weightPrefire_down),
+                    'weightEleTrig' : float(weightEleTrig),
+                    'weightEleID' : float(weightEleID),
+                    'weightEleRECO' : float(weightEleRECO),
+                    'weightMuTRK' : float(weightMuTRK),
+                    'weightMuID' : float(weightMuID),
+                    'weightEleTrig_up' : float(weightEleTrig_up),
+                    'weightEleID_up' : float(weightEleID_up),
+                    'weightEleRECO_up' : float(weightEleRECO_up),
+                    'weightMuTRK_up' : float(weightMuTRK_up),
+                    'weightMuID_up' : float(weightMuID_up),
+                    'weightEleTrig_down' : float(weightEleTrig_down),
+                    'weightEleID_down' : float(weightEleID_down),
+                    'weightEleRECO_down' : float(weightEleRECO_down),
+                    'weightMuTRK_down' : float(weightMuTRK_down),
+                    'weightMuID_down' : float(weightMuID_down),
+                    'weightscale_down' : float(weightscale_down),
+                    'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
+                    'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
+                    'ismetphiBasedHemEvent2': int(ep_ismetphiBasedHemEvent2),
+                    'weightJECAbsoluteUp':float(JECSourceUp['Absolute']),
+                    'weightJECAbsolute_yearUp':float(JECSourceUp['Absolute_year']),
+                    'weightJECBBEC1Up':float(JECSourceUp['BBEC1']),
+                    'weightJECBBEC1_yearUp':float(JECSourceUp['BBEC1_year']),
+                    'weightJECEC2Up':float(JECSourceUp['EC2']),
+                    'weightJECEC2_yearUp':float(JECSourceUp['EC2_year']),
+                    'weightJECFlavorQCDUp':float(JECSourceUp['FlavorQCD']),
+                    'weightJECHFUp':float(JECSourceUp['HF']),
+                    'weightJECHF_yearUp':float(JECSourceUp['HF_year']),
+                    'weightJECRelativeBalUp':float(JECSourceUp['RelativeBal']),
+                    'weightJECRelativeSample_yearUp':float(JECSourceUp['RelativeSample_year']),
+                    'weightJECAbsoluteDown':float(JECSourceDown['Absolute']),
+                    'weightJECAbsolute_yearDown':float(JECSourceDown['Absolute_year']),
+                    'weightJECBBEC1Down':float(JECSourceDown['BBEC1']),
+                    'weightJECBBEC1_yearDown':float(JECSourceDown['BBEC1_year']),
+                    'weightJECEC2Down':float(JECSourceDown['EC2']),
+                    'weightJECEC2_yearDown':float(JECSourceDown['EC2_year']),
+                    'weightJECFlavorQCDDown':float(JECSourceDown['FlavorQCD']),
+                    'weightJECHFDown':float(JECSourceDown['HF']),
+                    'weightJECHF_yearDown':float(JECSourceDown['HF_year']),
+                    'weightJECRelativeBalDown':float(JECSourceDown['RelativeBal']),
+                    'weightJECRelativeSample_yearDown':float(JECSourceDown['RelativeSample_year']),
+                }, ignore_index = True)
+            if istest:
+                print('isQCDCR2b')
     outfilenameis = outfilename
-    for df in [df_out_preselR, df_out_SR_1b, df_out_SR_2b, df_out_ZeeCR_1b, df_out_ZeeCR_2b, df_out_ZmumuCR_1b, df_out_ZmumuCR_2b, df_out_WenuCR_1b, df_out_WenuCR_2b, df_out_WmunuCR_1b, df_out_WmunuCR_2b, df_out_TopenuCR_1b, df_out_TopenuCR_2b, df_out_TopmunuCR_1b, df_out_TopmunuCR_2b]:
+    for df in [df_out_preselR, df_out_SR_1b, df_out_SR_2b, df_out_ZeeCR_1b, df_out_ZeeCR_2b, df_out_ZmumuCR_1b, df_out_ZmumuCR_2b, df_out_WenuCR_1b, df_out_WenuCR_2b, df_out_WmunuCR_1b, df_out_WmunuCR_2b, df_out_TopenuCR_1b, df_out_TopenuCR_2b, df_out_TopmunuCR_1b, df_out_TopmunuCR_2b, df_out_QCDCR_1b, df_out_QCDCR_2b]:
         if df.empty:
             for col in df.columns:
                 df[col] = dummyArr
@@ -2954,6 +3963,9 @@ def runbbdm(txtfile):
     df_out_TopmunuCR_1b.to_root(outfilenameis, key='bbDM_TopmunuCR_1b', mode='a')
     df_out_TopmunuCR_2b.to_root(outfilenameis, key='bbDM_TopmunuCR_2b', mode='a')
 
+    df_out_QCDCR_1b.to_root(outfilenameis, key='bbDM_QCDCR_1b', mode='a')
+    df_out_QCDCR_2b.to_root(outfilenameis, key='bbDM_QCDCR_2b', mode='a')
+
     print('\n============SR cutflow============')
     print('SR1bcount', SR1bcount, 'SR2bcount', SR2bcount)
     print('============SR cutflow============')
@@ -2967,10 +3979,12 @@ def runbbdm(txtfile):
     print('WmunuCR1bcount', WmunuCR1bcount, 'WmunuCR2bcount', WmunuCR2bcount)
 
     print('\n============Top cutflow============')
-    print('TopenuCR1bcount', TopenuCR1bcount,
-          'TopenuCR2bcount', TopenuCR2bcount)
-    print('TopmunuCR1bcount', TopmunuCR1bcount,
-          'TopmunuCR2bcount', TopmunuCR2bcount)
+    print('TopenuCR1bcount', TopenuCR1bcount, 'TopenuCR2bcount', TopenuCR2bcount)
+    print('TopmunuCR1bcount', TopmunuCR1bcount, 'TopmunuCR2bcount', TopmunuCR2bcount)
+
+    print('\n============QCD cutflow============')
+    print('QCDCR1bcount', QCDCR1bcount, 'QCDCR2bcount', QCDCR2bcount)
+
 
     cfsr_list = {1: 'presel', 2: 'trigger', 3: 'MET',
                  4: 'nLep', 5: 'min_dPhi', 6: 'nJet', 7: 'nBjets'}
@@ -2981,6 +3995,8 @@ def runbbdm(txtfile):
         h_reg_preselR_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
         h_reg_SR_1b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
         h_reg_SR_2b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
+        h_reg_QCDCR_1b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
+        h_reg_QCDCR_2b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
     for i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]:
         h_reg_ZeeCR_1b_cutFlow.GetXaxis().SetBinLabel(i, cfcr_list[i])
         h_reg_ZeeCR_2b_cutFlow.GetXaxis().SetBinLabel(i, cfcr_list[i])
@@ -3009,6 +4025,8 @@ def runbbdm(txtfile):
     h_reg_TopenuCR_2b_cutFlow.SetEntries(1)
     h_reg_TopmunuCR_1b_cutFlow.SetEntries(1)
     h_reg_TopmunuCR_2b_cutFlow.SetEntries(1)
+    h_reg_QCDCR_1b_cutFlow.SetEntries(1)
+    h_reg_QCDCR_2b_cutFlow.SetEntries(1)
     print('===============================\n')
     print("output written to ", outfilename)
     outfile = TFile(outfilenameis, 'UPDATE')
@@ -3031,6 +4049,8 @@ def runbbdm(txtfile):
     h_reg_TopenuCR_2b_cutFlow.Write()
     h_reg_TopmunuCR_1b_cutFlow.Write()
     h_reg_TopmunuCR_2b_cutFlow.Write()
+    h_reg_QCDCR_1b_cutFlow.Write()
+    h_reg_QCDCR_2b_cutFlow.Write()
     outfile.Write()
     outfile.Close()
 
