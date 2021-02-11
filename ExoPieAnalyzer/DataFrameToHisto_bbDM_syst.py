@@ -750,11 +750,6 @@ def runFile(trees, filename):
             df['dPhiTrk_pfMET'] = DeltaPhi(df.METPhi, df.pfTRKMETPhi)
             df['dPhiCalo_pfMET'] = DeltaPhi(df.METPhi, df.pfpatCaloMETPhi)
             df['weightcentral'] = 1
-            df['weightpdf'] = 1
-            # if 'weightscale_up' not in df: df['weightscale_up'] = 1
-            # if 'weightscale_down' not in df: df['weightscale_down'] = 1
-            # if 'weightpdf_up' not in df: df['weightpdf_up'] = 1
-            # if 'weightpdf_down' not in df: df['weightpdf_down'] = 1
             HistWrtter(df, outfilename, tree, mode)
         else:
             emptyHistWritter(tree, outfilename, mode)
