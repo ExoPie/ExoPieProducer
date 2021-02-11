@@ -53,9 +53,9 @@ bbv06.05.00 * added calo met variables
 
 bbv06.05.01 * adding the delta(metPhi, lep phi)
 	* abs(jet eta) < 2.5
-	* added a jet count for jeteta < 4.5 
+	* added a jet count for jeteta < 4.5
 
-bbv07.00.00 * shifting back to st_pfMetCorrPt 
+bbv07.00.00 * shifting back to st_pfMetCorrPt
 			*fixing bbv06.05.01 issue of not properly selecting the jets with abs(jet eta) < 2.5
 
 bbv07.00.01 * fixed btag application
@@ -63,13 +63,15 @@ bbv07.00.01 * fixed btag application
 
 bbv07.02.00 * added functionality to run on single file\
 			* change the name of configs directory
-			* added the hem variables 
+			* added the hem variables
 			* included the PUjetID but not applied
 
-bbv07.04.00 * using fixed skim with met instead of smear_met for event selection 
+bbv07.04.00 * using fixed skim with met instead of smear_met for event selection
 
 bbv07.04.01 * using different tag efficiency for different samples for 2016
 
 bbv07.04.02 * using one file for btag efficiency for 2016
 
 bbv08.00.00 * with Met XY correction and pdf systematics
+
+bbv12.00.00 * it contains 11 JEC and individual systematics for electron and muon and updated top pt reweighting function and QCD CR
