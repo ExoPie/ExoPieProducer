@@ -20,7 +20,7 @@ import glob
 from multiprocessing import Process
 import multiprocessing as mp
 
-dummyArr = numpy.array([0.0], dtype=numpy.float64)
+dummyArr = numpy.array([-9999.0], dtype=numpy.float64)
 
 isCondor = True
 
@@ -150,22 +150,22 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
     tot_weight = 1.0
     weightMETtrig = 1.0
     weightEle = [1.0,1.0,1.0]
-    weightMu = [1.0,1.0,1.0]
+    weightMu = [1.0,1.0,1.0,1.0]
     weightRecoiltrig = 1.0
     weightEleTrig = 1.0
     weightMETtrig_up = 1.0
     weightEle_up = [1.0,1.0,1.0]
-    weightMu_up = [1.0,1.0,1.0]
+    weightMu_up = [1.0,1.0,1.0,1.0]
     weightRecoiltrig_up = 1.0
     weightEleTrig_up = 1.0
     weightMETtrig_down = 1.0
     weightEle_down = [1.0,1.0,1.0]
-    weightMu_down = [1.0,1.0,1.0]
+    weightMu_down = [1.0,1.0,1.0,1.0]
     weightRecoiltrig_down = 1.0
     weightEleTrig_down = 1.0
 
     if (nEle == 0 and nMu == 0):
-        if ep_pfMetCorrPt > 200:
+        if ep_pfMetCorrPt > 250:
             weightMETtrig, weightMETtrig_up, weightMETtrig_down = wgt.getMETtrig_First(
                 ep_pfMetCorrPt, 'R')
         tot_weight = weightMETtrig*common_weight
@@ -231,7 +231,7 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
     if (nEle == 0 and nMu == 1):
         weightMu, weightMu_up, weightMu_down = wgt.mu_weight(
             ep_muPt[0], ep_muEta[0], 'T')
-        if ep_WmunuRecoil > 200:
+        if ep_WmunuRecoil > 250:
             weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(
                 ep_WmunuRecoil, 'R')
         tot_weight = weightMu[0]*common_weight*weightRecoiltrig
@@ -257,6 +257,14 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
                 1][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][2]
             weightMu_down[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
                 2][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][2]
+
+            weightMu[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][3]
+            weightMu_up[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][3]
+            weightMu_down[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][3]
+
         else:
             weightMu[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
                 0][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][0]
@@ -278,7 +286,14 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
                 1][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][2]
             weightMu_down[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
                 2][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][2]
-        if ep_ZmumuRecoil > 200:
+
+            weightMu[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                0][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][3]
+            weightMu_up[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                1][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][3]
+            weightMu_down[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
+                2][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][3]
+        if ep_ZmumuRecoil > 250:
             weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(
                 ep_ZmumuRecoil, 'R')
         tot_weight = weightMu[0]*common_weight*weightRecoiltrig
@@ -288,11 +303,12 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
     ele_id =  [weightEle[1], weightEle_up[1], weightEle_down[1]]
     ele_reco =  [weightEle[2], weightEle_up[2], weightEle_down[2]]
     mu_wgt = [weightMu[0], weightMu_up[0], weightMu_down[0]]
-    mutrk_wgt = [weightMu[1], weightMu_up[1], weightMu_down[1]]
-    muID_wgt = [weightMu[2], weightMu_up[2], weightMu_down[2]]
+    muID_wgt = [weightMu[1], weightMu_up[1], weightMu_down[1]]
+    muISO_wgt = [weightMu[2], weightMu_up[2], weightMu_down[2]]
+    mutrk_wgt = [weightMu[3], weightMu_up[3], weightMu_down[3]]
     met_wgt = [weightMETtrig, weightMETtrig_up, weightMETtrig_down]
     recoil_wgt = [weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down]
-    return tot_weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt,ele_trig,ele_id,ele_reco,mutrk_wgt,muID_wgt
+    return tot_weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt, ele_trig,ele_id,ele_reco,mutrk_wgt,muID_wgt,muISO_wgt
 
 dummy = -9999.0
 
@@ -426,10 +442,9 @@ def runbbdm(txtfile):
 
     allvars_bbDM = var.allvars_bbDM
     if era == '2018':
-       allvars_bbDM.append('st_isak4JetBasedHemEvent')
-       allvars_bbDM.append('st_ismetphiBasedHemEvent1')
-       allvars_bbDM.append('st_ismetphiBasedHemEvent2')
-
+        allvars_bbDM.append('st_isak4JetBasedHemEvent')
+        allvars_bbDM.append('st_ismetphiBasedHemEvent1')
+        allvars_bbDM.append('st_ismetphiBasedHemEvent2')
     for df in read_root(filename, 'outTree', columns=allvars_bbDM, chunksize=125000):
         if era == '2016' or era == '2017':
             df['st_isak4JetBasedHemEvent'] = False
@@ -501,7 +516,6 @@ def runbbdm(txtfile):
             else:
                 ep_ismetphiBasedHemEvent1 = 0
 
-            #if (ep_pfMetCorrPt <= 200.0) and (ep_ZeeRecoil <= 200.0) and (ep_ZmumuRecoil <= 200.0) and (ep_WenuRecoil <= 200.0) and (ep_WmunuRecoil <= 200.0) : continue
             ispreselR = False
 
             isSR1b = False
@@ -538,8 +552,7 @@ def runbbdm(txtfile):
             ep_nEle_ = [ij for ij in range(ep_nEle) if (ep_eleIsPassLoose[ij])]
             ep_nEle_index = len(ep_nEle_)
             ep_elePt = [getPt(ep_elePx[ij], ep_elePy[ij]) for ij in ep_nEle_]
-            ep_eleEta = [getEta(ep_elePx[ij], ep_elePy[ij],
-                                ep_elePz[ij]) for ij in ep_nEle_]
+            ep_eleEta = [getEta(ep_elePx[ij], ep_elePy[ij], ep_elePz[ij]) for ij in ep_nEle_]
             ep_elePhi = [getPhi(ep_elePx[ij], ep_elePy[ij]) for ij in ep_nEle_]
             ep_eleIsPTight = [ep_eleIsPassTight[ij] for ij in ep_nEle_]
             if era == "2016":
@@ -553,10 +566,8 @@ def runbbdm(txtfile):
             -------------------------------------------------------------------------------
             '''
             ep_muPt = [getPt(ep_muPx[ij], ep_muPy[ij]) for ij in range(ep_nMu)]
-            ep_muEta = [getEta(ep_muPx[ij], ep_muPy[ij], ep_muPz[ij])
-                        for ij in range(ep_nMu)]
-            ep_muPhi = [getPhi(ep_muPx[ij], ep_muPy[ij])
-                        for ij in range(ep_nMu)]
+            ep_muEta = [getEta(ep_muPx[ij], ep_muPy[ij], ep_muPz[ij]) for ij in range(ep_nMu)]
+            ep_muPhi = [getPhi(ep_muPx[ij], ep_muPy[ij]) for ij in range(ep_nMu)]
             minMuPt = 30.0
             '''
 
@@ -564,12 +575,9 @@ def runbbdm(txtfile):
             photon VARS
             -------------------------------------------------------------------------------
             '''
-            ep_phoPt = [getPt(ep_phoPx[ij], ep_phoPy[ij])
-                        for ij in range(ep_nPho)]
-            ep_phoEta = [getEta(ep_phoPx[ij], ep_phoPy[ij], ep_phoPz[ij])
-                         for ij in range(ep_nPho)]
-            ep_phoPhi = [getPhi(ep_phoPx[ij], ep_phoPy[ij])
-                         for ij in range(ep_nPho)]
+            ep_phoPt = [getPt(ep_phoPx[ij], ep_phoPy[ij]) for ij in range(ep_nPho)]
+            ep_phoEta = [getEta(ep_phoPx[ij], ep_phoPy[ij], ep_phoPz[ij]) for ij in range(ep_nPho)]
+            ep_phoPhi = [getPhi(ep_phoPx[ij], ep_phoPy[ij]) for ij in range(ep_nPho)]
             nPho = ep_nPho
 
             '''
@@ -676,7 +684,7 @@ def runbbdm(txtfile):
             ep_WmunuRecoilEnDown, ep_WmunuRecoil_dPhiEnDown, ep_WmunumassEnDown = getRecoil.WRecoil_Phi_Wmass(
                 ep_nMu, ep_muPt, ep_muPhi, ep_muPx, ep_muPy, ep_pfMetUncJetEnDown, ep_pfMetCorrPhi)
 
-            if (ep_pfMetCorrPt <= 200.0) and (ep_ZeeRecoil <= 200.0) and (ep_ZmumuRecoil <= 200.0) and (ep_WenuRecoil <= 200.0) and (ep_WmunuRecoil <= 200.0):
+            if (ep_pfMetCorrPt < 250.0) and (ep_ZeeRecoil < 250.0) and (ep_ZmumuRecoil < 250.0) and (ep_WenuRecoil < 250.0) and (ep_WmunuRecoil < 250.0):
                 continue
 
             '''
@@ -723,15 +731,15 @@ def runbbdm(txtfile):
             COMMON WEIGHT CALCULATION FOR ALL REGIONS
             --------------------------------------------------------------------------------
             '''
-            weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMETtrig = weightRecoiltrig = weightPrefire = -999.0
+            weight = presel_weight = weightPU = weightB = weightFakeB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMETtrig = weightRecoiltrig = weightPrefire = -999.0
             weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMETtrig_up = weightRecoiltrig_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = 1.0
             weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMETtrig_down = weightRecoiltrig_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = 1.0
             if ep_isData:
-                weight = presel_weight = weightPU = weightB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMETtrig = weightRecoiltrig = weightPrefire = weightEleTrig= weightEleID= weightEleRECO= weightMuTRK= weightMuID = 1.0
-                weightB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMETtrig_up = weightRecoiltrig_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = weightEleTrig_up= weightEleID_up= weightEleRECO_up= weightMuTRK_up= weightMuID_up= 1.0
-                weightB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMETtrig_down = weightRecoiltrig_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = weightEleTrig_down= weightEleID_down= weightEleRECO_down= weightMuTRK_down= weightMuID_down = 1.0
+                weight = presel_weight = weightPU = weightB = weightFakeB = weightEWK = weightQCD = weightTop = weightEleTrig = weightEle = weightMu = weightMETtrig = weightRecoiltrig = weightPrefire = weightEleTrig= weightEleID= weightEleRECO= weightMuTRK= weightMuID = weightMuISO = 1.0
+                weightB_up = weightFakeB_up = weightEWK_up = weightQCD_up = weightTop_up = weightJEC_up = weightEleTrig_up = weightEle_up = weightMu_up = weightMETtrig_up = weightRecoiltrig_up = weightPU_up = weightJEC_up = weightPrefire_up = weightscale_up = weightpdf_up = weightEleTrig_up= weightEleID_up= weightEleRECO_up= weightMuTRK_up= weightMuID_up = weightMuISO_up = 1.0
+                weightB_down = weightFakeB_down = weightEWK_down = weightQCD_down = weightTop_down = weightJEC_down = weightEleTrig_down = weightEle_down = weightMu_down = weightMETtrig_down = weightRecoiltrig_down = weightPU_down = weightJEC_down = weightPrefire_down = weightscale_down = weightpdf_down = weightEleTrig_down= weightEleID_down= weightEleRECO_down= weightMuTRK_down= weightMuID_down = weightMuISO_down =1.0
             else:
-                weightB, weightB_up, weightB_down = wgt.getBTagSF(ep_THINnJet, ep_THINjetPt, ep_THINjetEta, ep_THINjetHadronFlavor, ep_THINjetDeepCSV, 'MWP')
+                [weightB, weightFakeB], [weightB_up, weightFakeB_up], [weightB_down, weightFakeB_down] = wgt.getBTagSF(ep_THINnJet, ep_THINjetPt, ep_THINjetEta, ep_THINjetHadronFlavor, ep_THINjetDeepCSV, 'MWP')
                 weightPU, weightPU_up, weightPU_down  = wgt.puweight(ep_pu_nTrueInt)
                 weightscale_up  = ep_scaleWeightUP
                 weightpdf_up = ep_pdfWeightUP
@@ -760,49 +768,23 @@ def runbbdm(txtfile):
                 weightPrefire = ep_prefiringweight
                 weightPrefire_up = ep_prefiringweightup
                 weightPrefire_down = ep_prefiringweightdown
-                common_weight = weightB * weightEWK * weightQCD * \
-                    weightTop * weightPU * weightPrefire
+                common_weight = weightB * weightFakeB * weightEWK * weightQCD * weightTop * weightPU * weightPrefire
                 presel_weight = weightEWK * weightQCD * weightTop * weightPU * weightPrefire
-                weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt, ele_trig,ele_id,ele_reco,mutrk_wgt,muID_wgt = weight_(
+                weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt, ele_trig,ele_id,ele_reco,mutrk_wgt, muID_wgt, muISO_wgt = weight_(
                     common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, ep_nEle_index, ep_elePt, ep_eleEta, ep_eleIsPTight, ep_nMu, ep_muPt, ep_muEta, ep_isTightMuon)
-                weightEle = ele_wgt[0]
-                weightMu = mu_wgt[0]
-                weightRecoiltrig = recoil_wgt[0]
-                weightMETtrig = met_wgt[0]
-                weightEle_up = ele_wgt[1]
-                weightMu_up = mu_wgt[1]
-                weightRecoiltrig_up = recoil_wgt[1]
-                weightMETtrig_up = met_wgt[1]
-                weightEle_down = ele_wgt[2]
-                weightMu_down = mu_wgt[2]
-                weightRecoiltrig_down = recoil_wgt[2]
-                weightMETtrig_down = met_wgt[2]
-                weightJEC_up = getJECWeight(ep_THINjetCorrUnc)[0]
-                weightJEC_down = getJECWeight(ep_THINjetCorrUnc)[1]
-                weightEleTrig = ele_trig[0]
-                weightEleID = ele_id[0]
-                weightEleRECO = ele_reco[0]
-                weightMuTRK = mutrk_wgt[0]
-                weightMuID = muID_wgt[0]
-
-                weightEleTrig_up = ele_trig[1]
-                weightEleID_up = ele_id[1]
-                weightEleRECO_up = ele_reco[1]
-                weightMuTRK_up = mutrk_wgt[1]
-                weightMuID_up = muID_wgt[1]
-
-                weightEleTrig_down = ele_trig[2]
-                weightEleID_down = ele_id[2]
-                weightEleRECO_down = ele_reco[2]
-                weightMuTRK_down = mutrk_wgt[2]
-                weightMuID_down = muID_wgt[2]
+                weightEle,weightEle_up, weightEle_down= ele_wgt
+                weightMu,weightMu_up,weightMu_down = mu_wgt
+                weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = recoil_wgt
+                weightMETtrig, weightMETtrig_up, weightMETtrig_down = met_wgt
+                weightJEC_up, weightJEC_down = getJECWeight(ep_THINjetCorrUnc)
+                weightEleTrig, weightEleTrig_up, weightEleTrig_down = ele_trig
+                weightEleID, weightEleID_up,weightEleID_down  = ele_id
+                weightEleRECO, weightEleRECO_up, weightEleRECO_down = ele_reco
+                weightMuTRK, weightMuTRK_up, weightMuTRK_down = mutrk_wgt
+                weightMuID, weightMuID_up, weightMuID_down = muID_wgt
+                weightMuISO, weightMuISO_up, weightMuISO_down = muISO_wgt
             JECSourceUp, JECSourceDown = getJECSourceUnc(ep_THINnJet, ep_THINjetUncSources, index=False)
 
-            ## applying triggers to data only
-            # if not ep_isData:
-            #     eletrigdecision = True
-            #     mutrigdecision = True
-            #     mettrigdecision = True
             '''
             --------------------------------------------------------------------------------
             Preselection REGION
@@ -811,18 +793,18 @@ def runbbdm(txtfile):
             h_reg_preselR_cutFlow.AddBinContent(1, presel_weight)
             if mettrigdecision:
                 h_reg_preselR_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
-                if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
+                if (ep_pfMetCorrPt > 250. and delta_pfCaloSR < 0.5):
                     h_reg_preselR_cutFlow.AddBinContent(
-                       3, presel_weight*weightMETtrig)
+                        3, presel_weight*weightMETtrig)
                     if True:
                         h_reg_preselR_cutFlow.AddBinContent(
-                           4, presel_weight*weightMETtrig)
+                            4, presel_weight*weightMETtrig)
                         if (min_dPhi_jet_MET > 0.5):
                             h_reg_preselR_cutFlow.AddBinContent(
-                               5, presel_weight*weightMETtrig)
-                            if (ep_THINjetPt[0] > 50.):
+                                5, presel_weight*weightMETtrig)
+                            if (ep_THINjetPt[0] > 100.):
                                 h_reg_preselR_cutFlow.AddBinContent(
-                                   6, presel_weight*weightMETtrig)
+                                    6, presel_weight*weightMETtrig)
                                 if (ep_THINbjets_Cond[0]):
                                     h_reg_preselR_cutFlow.AddBinContent(
                                         7, weight)
@@ -851,9 +833,9 @@ def runbbdm(txtfile):
                                     if ep_THINnJet >= 3 :
                                         M_Jet1Jet3 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[2], ep_THINjetPy[2], ep_THINjetPz[2], ep_THINjetEnergy[2])
                                         if ep_THINjetEta[0]*ep_THINjetEta[2] > 0:
-                                           isjet2EtaMatch = 1
+                                            isjet2EtaMatch = 1
                                         if ep_THINjetEta[0]*ep_THINjetEta[2] < 0:
-                                           isjet2EtaMatch = -1
+                                            isjet2EtaMatch = -1
 
             '''
             --------------------------------------------------------------------------------
@@ -865,31 +847,31 @@ def runbbdm(txtfile):
             if mettrigdecision:
                 h_reg_SR_1b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
                 h_reg_SR_2b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
-                if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
-                   h_reg_SR_1b_cutFlow.AddBinContent(
-                       3, presel_weight*weightMETtrig)
-                   h_reg_SR_2b_cutFlow.AddBinContent(
-                       3, presel_weight*weightMETtrig)
-                   if (ep_nEle_index == 0) and (ep_nMu == 0) and (nPho == 0) and (ep_nTau_discBased_TightEleTightMuVeto == 0):
-                       h_reg_SR_1b_cutFlow.AddBinContent(
-                           4, presel_weight*weightMETtrig)
-                       h_reg_SR_2b_cutFlow.AddBinContent(
-                           4, presel_weight*weightMETtrig)
-                       if (min_dPhi_jet_MET > 0.5):
-                           h_reg_SR_1b_cutFlow.AddBinContent(
-                               5, presel_weight*weightMETtrig)
-                           h_reg_SR_2b_cutFlow.AddBinContent(
-                               5, presel_weight*weightMETtrig)
-                           if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
-                               h_reg_SR_1b_cutFlow.AddBinContent(
-                                   6, presel_weight*weightMETtrig)
-                               if (ep_THINbjets_Cond[0]) and (nBjets == 1):
-                                   h_reg_SR_1b_cutFlow.AddBinContent(7, weight)
-                                   isSR1b = True
-                                   SR1bcount += 1
-                                   rJet1PtMET = (
-                                       ep_THINjetPt[0]/ep_pfMetCorrPt)
-                                   if ep_THINnJet == 2:
+                if (ep_pfMetCorrPt > 250. and delta_pfCaloSR < 0.5):
+                    h_reg_SR_1b_cutFlow.AddBinContent(
+                        3, presel_weight*weightMETtrig)
+                    h_reg_SR_2b_cutFlow.AddBinContent(
+                        3, presel_weight*weightMETtrig)
+                    if (ep_nEle_index == 0) and (ep_nMu == 0) and (nPho == 0) and (ep_nTau_discBased_TightEleTightMuVeto == 0):
+                        h_reg_SR_1b_cutFlow.AddBinContent(
+                            4, presel_weight*weightMETtrig)
+                        h_reg_SR_2b_cutFlow.AddBinContent(
+                            4, presel_weight*weightMETtrig)
+                        if (min_dPhi_jet_MET > 0.5):
+                            h_reg_SR_1b_cutFlow.AddBinContent(
+                                5, presel_weight*weightMETtrig)
+                            h_reg_SR_2b_cutFlow.AddBinContent(
+                                5, presel_weight*weightMETtrig)
+                            if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
+                                h_reg_SR_1b_cutFlow.AddBinContent(
+                                    6, presel_weight*weightMETtrig)
+                                if (ep_THINbjets_Cond[0]) and (nBjets == 1):
+                                    h_reg_SR_1b_cutFlow.AddBinContent(7, weight)
+                                    isSR1b = True
+                                    SR1bcount += 1
+                                    rJet1PtMET = (
+                                        ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                    if ep_THINnJet == 2:
                                         Jet2Pt = ep_THINjetPt[1]
                                         Jet2Eta = ep_THINjetEta[1]
                                         Jet2Phi = ep_THINjetPhi[1]
@@ -911,7 +893,7 @@ def runbbdm(txtfile):
                                         Jet2NEmEF = ep_THINjetNEmEF[1]
                                         Jet2CMulti = ep_THINjetCMulti[1]
                                         Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
-                           if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
+                            if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                 h_reg_SR_2b_cutFlow.AddBinContent(
                                     6, presel_weight*weightMETtrig)
                                 if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
@@ -961,41 +943,41 @@ def runbbdm(txtfile):
                             h_reg_ZeeCR_2b_cutFlow.AddBinContent(
                                 4, presel_weight*weightEleTrig*weightEle)
                             if (ep_nEle_index == 2) and nPho == 0:
-                               h_reg_ZeeCR_1b_cutFlow.AddBinContent(
-                                   5, presel_weight*weightEleTrig*weightEle)
-                               h_reg_ZeeCR_2b_cutFlow.AddBinContent(
-                                   5, presel_weight*weightEleTrig*weightEle)
-                               if (ep_elePt[0] > minElePt) and (ep_eleIsPTight[0]):
-                                   h_reg_ZeeCR_1b_cutFlow.AddBinContent(
-                                       6, presel_weight*weightEleTrig*weightEle)
-                                   h_reg_ZeeCR_2b_cutFlow.AddBinContent(
-                                       6, presel_weight*weightEleTrig*weightEle)
-                                   if (ep_ZeeRecoil > 200. and delta_pfCaloZeeCR < 0.5):
-                                       h_reg_ZeeCR_1b_cutFlow.AddBinContent(
-                                           7, presel_weight*weightEleTrig*weightEle)
-                                       h_reg_ZeeCR_2b_cutFlow.AddBinContent(
-                                           7, presel_weight*weightEleTrig*weightEle)
-                                       if (min_dPhi_jet_MET > 0.5):
-                                           h_reg_ZeeCR_1b_cutFlow.AddBinContent(
-                                               8, presel_weight*weightEleTrig*weightEle)
-                                           h_reg_ZeeCR_2b_cutFlow.AddBinContent(
-                                               8, presel_weight*weightEleTrig*weightEle)
-                                           if (ep_Zeemass >= 70 and ep_Zeemass <= 110):
-                                               h_reg_ZeeCR_1b_cutFlow.AddBinContent(
-                                                   9, presel_weight*weightEleTrig*weightEle)
-                                               h_reg_ZeeCR_2b_cutFlow.AddBinContent(
-                                                   9, presel_weight*weightEleTrig*weightEle)
-                                               if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
-                                                   h_reg_ZeeCR_1b_cutFlow.AddBinContent(
-                                                       10, presel_weight*weightEleTrig*weightEle)
-                                                   if (ep_THINbjets_Cond[0]) and (nBjets == 1):
-                                                       h_reg_ZeeCR_1b_cutFlow.AddBinContent(
-                                                           11, weight)
-                                                       ZeeCR1bcount += 1
-                                                       rJet1PtMET = (
-                                                           ep_THINjetPt[0]/ep_pfMetCorrPt)
-                                                       is1bCRZee = True
-                                                       if ep_THINnJet == 2:
+                                h_reg_ZeeCR_1b_cutFlow.AddBinContent(
+                                    5, presel_weight*weightEleTrig*weightEle)
+                                h_reg_ZeeCR_2b_cutFlow.AddBinContent(
+                                    5, presel_weight*weightEleTrig*weightEle)
+                                if (ep_elePt[0] > minElePt) and (ep_eleIsPTight[0]):
+                                    h_reg_ZeeCR_1b_cutFlow.AddBinContent(
+                                        6, presel_weight*weightEleTrig*weightEle)
+                                    h_reg_ZeeCR_2b_cutFlow.AddBinContent(
+                                        6, presel_weight*weightEleTrig*weightEle)
+                                    if (ep_ZeeRecoil > 250. and delta_pfCaloZeeCR < 0.5):
+                                        h_reg_ZeeCR_1b_cutFlow.AddBinContent(
+                                            7, presel_weight*weightEleTrig*weightEle)
+                                        h_reg_ZeeCR_2b_cutFlow.AddBinContent(
+                                            7, presel_weight*weightEleTrig*weightEle)
+                                        if (min_dPhi_jet_MET > 0.5):
+                                            h_reg_ZeeCR_1b_cutFlow.AddBinContent(
+                                                8, presel_weight*weightEleTrig*weightEle)
+                                            h_reg_ZeeCR_2b_cutFlow.AddBinContent(
+                                                8, presel_weight*weightEleTrig*weightEle)
+                                            if (ep_Zeemass >= 70 and ep_Zeemass <= 110):
+                                                h_reg_ZeeCR_1b_cutFlow.AddBinContent(
+                                                    9, presel_weight*weightEleTrig*weightEle)
+                                                h_reg_ZeeCR_2b_cutFlow.AddBinContent(
+                                                    9, presel_weight*weightEleTrig*weightEle)
+                                                if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
+                                                    h_reg_ZeeCR_1b_cutFlow.AddBinContent(
+                                                        10, presel_weight*weightEleTrig*weightEle)
+                                                    if (ep_THINbjets_Cond[0]) and (nBjets == 1):
+                                                        h_reg_ZeeCR_1b_cutFlow.AddBinContent(
+                                                            11, weight)
+                                                        ZeeCR1bcount += 1
+                                                        rJet1PtMET = (
+                                                            ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                                        is1bCRZee = True
+                                                        if ep_THINnJet == 2:
                                                             Jet2Pt = ep_THINjetPt[1]
                                                             Jet2Eta = ep_THINjetEta[1]
                                                             Jet2Phi = ep_THINjetPhi[1]
@@ -1017,10 +999,10 @@ def runbbdm(txtfile):
                                                             Jet2NEmEF = ep_THINjetNEmEF[1]
                                                             Jet2CMulti = ep_THINjetCMulti[1]
                                                             Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
-                                               if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
-                                                   h_reg_ZeeCR_2b_cutFlow.AddBinContent(
-                                                       10, presel_weight*weightEleTrig*weightEle)
-                                                   if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
+                                                if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
+                                                    h_reg_ZeeCR_2b_cutFlow.AddBinContent(
+                                                        10, presel_weight*weightEleTrig*weightEle)
+                                                    if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_ZeeCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         ZeeCR2bcount += 1
@@ -1073,7 +1055,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightRecoiltrig*weightMu)
                                     h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightRecoiltrig*weightMu)
-                                    if (ep_ZmumuRecoil > 200. and delta_pfCaloZmumuCR < 0.5):
+                                    if (ep_ZmumuRecoil > 250. and delta_pfCaloZmumuCR < 0.5):
                                         h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightRecoiltrig*weightMu)
                                         h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
@@ -1088,7 +1070,7 @@ def runbbdm(txtfile):
                                                     9, presel_weight*weightRecoiltrig*weightMu)
                                                 h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
                                                     9, presel_weight*weightRecoiltrig*weightMu)
-                                                if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
@@ -1113,14 +1095,14 @@ def runbbdm(txtfile):
                                                             if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
                                                                 isjet1EtaMatch = 1
                                                             if ep_THINjetEta[0]*ep_THINjetEta[1] < 0:
-                                                               isjet1EtaMatch = -1
+                                                                isjet1EtaMatch = -1
                                                             Jet2NHadEF = ep_THINjetNHadEF[1]
                                                             Jet2CHadEF = ep_THINjetCHadEF[1]
                                                             Jet2CEmEF = ep_THINjetCEmEF[1]
                                                             Jet2NEmEF = ep_THINjetNEmEF[1]
                                                             Jet2CMulti = ep_THINjetCMulti[1]
                                                             Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
-                                                if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
@@ -1175,7 +1157,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightEleTrig*weightEle)
                                     h_reg_WenuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightEleTrig*weightEle)
-                                    if (ep_WenuRecoil > 200. and ep_pfMetCorrPt > 100 and delta_pfCaloWenuCR < 0.5):
+                                    if (ep_WenuRecoil > 250. and ep_pfMetCorrPt > 100 and delta_pfCaloWenuCR < 0.5):
                                         h_reg_WenuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightEleTrig*weightEle)
                                         h_reg_WenuCR_2b_cutFlow.AddBinContent(
@@ -1190,7 +1172,7 @@ def runbbdm(txtfile):
                                                     9, presel_weight*weightEleTrig*weightEle)
                                                 h_reg_WenuCR_2b_cutFlow.AddBinContent(
                                                     9, presel_weight*weightEleTrig*weightEle)
-                                                if (ep_THINnJet == 1) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet == 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WenuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightEleTrig*weightEle)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
@@ -1200,7 +1182,7 @@ def runbbdm(txtfile):
                                                         is1bCRWenu = True
                                                         rJet1PtMET = (
                                                             ep_THINjetPt[0]/ep_pfMetCorrPt)
-                                                if (ep_THINnJet == 2) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet == 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WenuCR_2b_cutFlow.AddBinContent(
                                                         10, weight)
                                                     if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
@@ -1255,7 +1237,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightRecoiltrig*weightMu)
                                     h_reg_WmunuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightRecoiltrig*weightMu)
-                                    if (ep_WmunuRecoil > 200. and ep_pfMetCorrPt > 100 and delta_pfCaloWmunuCR < 0.5):
+                                    if (ep_WmunuRecoil > 250. and ep_pfMetCorrPt > 100 and delta_pfCaloWmunuCR < 0.5):
                                         h_reg_WmunuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightRecoiltrig*weightMu)
                                         h_reg_WmunuCR_2b_cutFlow.AddBinContent(
@@ -1270,7 +1252,7 @@ def runbbdm(txtfile):
                                                     9, presel_weight*weightRecoiltrig*weightMu)
                                                 h_reg_WmunuCR_2b_cutFlow.AddBinContent(
                                                     9, presel_weight*weightRecoiltrig*weightMu)
-                                                if (ep_THINnJet == 1) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet == 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WmunuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
@@ -1280,7 +1262,7 @@ def runbbdm(txtfile):
                                                         is1bCRWmunu = True
                                                         rJet1PtMET = (
                                                             ep_THINjetPt[0]/ep_pfMetCorrPt)
-                                                if (ep_THINnJet == 2) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet == 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WmunuCR_2b_cutFlow.AddBinContent(
                                                         10, weight)
                                                     if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
@@ -1334,7 +1316,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightEleTrig*weightEle)
                                     h_reg_TopenuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightEleTrig*weightEle)
-                                    if (ep_WenuRecoil > 200. and delta_pfCaloTopenuCR < 0.5):
+                                    if (ep_WenuRecoil > 250. and delta_pfCaloTopenuCR < 0.5):
                                         h_reg_TopenuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightEleTrig*weightEle)
                                         h_reg_TopenuCR_2b_cutFlow.AddBinContent(
@@ -1349,7 +1331,7 @@ def runbbdm(txtfile):
                                                     9, presel_weight*weightEleTrig*weightEle)
                                                 h_reg_TopenuCR_2b_cutFlow.AddBinContent(
                                                     9, presel_weight*weightEleTrig*weightEle)
-                                                if (ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopenuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightEleTrig*weightEle)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
@@ -1381,7 +1363,7 @@ def runbbdm(txtfile):
                                                             Jet2NEmEF = ep_THINjetNEmEF[1]
                                                             Jet2CMulti = ep_THINjetCMulti[1]
                                                             Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
-                                                if (ep_THINnJet > 2) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet > 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopenuCR_2b_cutFlow.AddBinContent(
                                                         10, weight)
                                                     if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
@@ -1435,7 +1417,7 @@ def runbbdm(txtfile):
                                         6, presel_weight*weightRecoiltrig*weightMu)
                                     h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
                                         6, presel_weight*weightRecoiltrig*weightMu)
-                                    if (ep_WmunuRecoil > 200. and delta_pfCaloTopmunuCR < 0.5):
+                                    if (ep_WmunuRecoil > 250. and delta_pfCaloTopmunuCR < 0.5):
                                         h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
                                             7, presel_weight*weightRecoiltrig*weightMu)
                                         h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
@@ -1450,7 +1432,7 @@ def runbbdm(txtfile):
                                                     9, presel_weight*weightRecoiltrig*weightMu)
                                                 h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
                                                     9, presel_weight*weightRecoiltrig*weightMu)
-                                                if (ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and (nBjets == 1):
@@ -1466,11 +1448,11 @@ def runbbdm(txtfile):
                                                             Jet2Phi = ep_THINjetPhi[1]
                                                             Jet2deepCSV = ep_THINjetDeepCSV[1]
                                                             ratioPtJet21 = (
-                                                               ep_THINjetPt[1]/ep_THINjetPt[0])
+                                                                ep_THINjetPt[1]/ep_THINjetPt[0])
                                                             dPhiJet12 = DeltaPhi(
-                                                               ep_THINjetPhi[0],ep_THINjetPhi[1])
+                                                                ep_THINjetPhi[0],ep_THINjetPhi[1])
                                                             dEtaJet12 = (
-                                                               ep_THINjetEta[0]-ep_THINjetEta[1])
+                                                                ep_THINjetEta[0]-ep_THINjetEta[1])
                                                             M_Jet1Jet2 = InvMass(ep_THINjetPx[0], ep_THINjetPy[0], ep_THINjetPz[0], ep_THINjetEnergy[0], ep_THINjetPx[1], ep_THINjetPy[1], ep_THINjetPz[1], ep_THINjetEnergy[1])
                                                             if ep_THINjetEta[0]*ep_THINjetEta[1] > 0:
                                                                 isjet1EtaMatch = 1
@@ -1482,7 +1464,7 @@ def runbbdm(txtfile):
                                                             Jet2NEmEF = ep_THINjetNEmEF[1]
                                                             Jet2CMulti = ep_THINjetCMulti[1]
                                                             Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
-                                                if (ep_THINnJet > 2) and (ep_THINjetPt[0] > 50.):
+                                                if (ep_THINnJet > 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
                                                     if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
@@ -1513,30 +1495,29 @@ def runbbdm(txtfile):
             if mettrigdecision:
                 h_reg_QCDCR_1b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
                 h_reg_QCDCR_2b_cutFlow.AddBinContent(2, presel_weight*weightMETtrig)
-                if (ep_pfMetCorrPt > 200. and delta_pfCaloSR < 0.5):
-                   h_reg_QCDCR_1b_cutFlow.AddBinContent(
-                       3, presel_weight*weightMETtrig)
-                   h_reg_QCDCR_2b_cutFlow.AddBinContent(
-                       3, presel_weight*weightMETtrig)
-                   if (ep_nEle_index == 0) and (ep_nMu == 0) and (nPho == 0) and (ep_nTau_discBased_TightEleTightMuVeto == 0):
-                       h_reg_QCDCR_1b_cutFlow.AddBinContent(
-                           4, presel_weight*weightMETtrig)
-                       h_reg_QCDCR_2b_cutFlow.AddBinContent(
-                           4, presel_weight*weightMETtrig)
-                       if (min_dPhi_jet_MET < 0.5):
-                           h_reg_QCDCR_1b_cutFlow.AddBinContent(
-                               5, presel_weight*weightMETtrig)
-                           h_reg_QCDCR_2b_cutFlow.AddBinContent(
-                               5, presel_weight*weightMETtrig)
-                           if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 50.):
-                               h_reg_QCDCR_1b_cutFlow.AddBinContent(
-                                   6, presel_weight*weightMETtrig)
-                               if (ep_THINbjets_Cond[0]) and (nBjets == 1):
-                                   h_reg_QCDCR_1b_cutFlow.AddBinContent(7, weight)
-                                   isQCDCR1b = True
-                                   QCDCR1bcount += 1
-                                   rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
-                                   if ep_THINnJet == 2:
+                if (ep_pfMetCorrPt > 250. and delta_pfCaloSR < 0.5):
+                    h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                        3, presel_weight*weightMETtrig)
+                    h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                        3, presel_weight*weightMETtrig)
+                    if (ep_nEle_index == 0) and (ep_nMu == 0) and (nPho == 0) and (ep_nTau_discBased_TightEleTightMuVeto == 0):
+                        h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                            4, presel_weight*weightMETtrig)
+                        h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                            4, presel_weight*weightMETtrig)
+                        if (min_dPhi_jet_MET < 0.5):
+                            h_reg_QCDCR_1b_cutFlow.AddBinContent(
+                                5, presel_weight*weightMETtrig)
+                            h_reg_QCDCR_2b_cutFlow.AddBinContent(
+                                5, presel_weight*weightMETtrig)
+                            if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
+                                h_reg_QCDCR_1b_cutFlow.AddBinContent(6, presel_weight*weightMETtrig)
+                                if (ep_THINbjets_Cond[0]) and (nBjets == 1):
+                                    h_reg_QCDCR_1b_cutFlow.AddBinContent(7, weight)
+                                    isQCDCR1b = True
+                                    QCDCR1bcount += 1
+                                    rJet1PtMET = (ep_THINjetPt[0]/ep_pfMetCorrPt)
+                                    if ep_THINnJet == 2:
                                         Jet2Pt = ep_THINjetPt[1]
                                         Jet2Eta = ep_THINjetEta[1]
                                         Jet2Phi = ep_THINjetPhi[1]
@@ -1558,7 +1539,7 @@ def runbbdm(txtfile):
                                         Jet2NEmEF = ep_THINjetNEmEF[1]
                                         Jet2CMulti = ep_THINjetCMulti[1]
                                         Jet2NMultiplicity = ep_THINjetNMultiplicity[1]
-                           if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 50.):
+                            if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                 h_reg_QCDCR_2b_cutFlow.AddBinContent(
                                     6, presel_weight*weightMETtrig)
                                 if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
@@ -1642,6 +1623,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -1651,6 +1633,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -1666,6 +1649,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -1680,16 +1664,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -1776,6 +1763,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -1785,6 +1773,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -1800,6 +1789,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -1814,16 +1804,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -1906,6 +1899,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -1915,6 +1909,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -1930,6 +1925,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -1944,16 +1940,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2053,6 +2052,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -2062,6 +2062,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -2077,6 +2078,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -2091,16 +2093,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2194,6 +2199,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -2203,6 +2209,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -2218,6 +2225,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -2232,16 +2240,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2341,6 +2352,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -2350,6 +2362,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -2365,6 +2378,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -2379,16 +2393,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2482,6 +2499,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -2491,6 +2509,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -2506,6 +2525,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -2520,16 +2540,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2620,6 +2643,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -2629,6 +2653,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -2644,6 +2669,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -2658,16 +2684,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2757,6 +2786,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -2766,6 +2796,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -2781,6 +2812,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -2795,16 +2827,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -2896,6 +2931,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -2905,6 +2941,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -2920,6 +2957,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -2934,16 +2972,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -3033,6 +3074,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -3042,6 +3084,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -3057,6 +3100,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -3071,16 +3115,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -3176,6 +3223,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -3185,6 +3233,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -3200,6 +3249,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -3214,16 +3264,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -3314,6 +3367,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -3323,6 +3377,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -3338,6 +3393,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -3352,16 +3408,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -3457,6 +3516,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -3466,6 +3526,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -3481,6 +3542,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -3495,16 +3557,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -3595,6 +3660,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -3604,6 +3670,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -3619,6 +3686,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -3633,16 +3701,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -3672,7 +3743,6 @@ def runbbdm(txtfile):
                 }, ignore_index = True)
             if istest:
                 print('is2bCRTopmunu')
-
             if isQCDCR1b:
                 df_out_QCDCR_1b = df_out_QCDCR_1b.append({
                     'run': float(ep_runId),
@@ -3730,6 +3800,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -3739,6 +3810,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -3754,6 +3826,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -3768,16 +3841,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
@@ -3860,6 +3936,7 @@ def runbbdm(txtfile):
                     'weightEle': float(weightEle),
                     'weightMu': float(weightMu),
                     'weightB': float(weightB),
+                    'weightFakeB': float(weightFakeB),
                     'weightEWK': float(weightEWK),
                     'weightQCD': float(weightQCD),
                     'weightTop': float(weightTop),
@@ -3869,6 +3946,7 @@ def runbbdm(txtfile):
                     'weightEle_up': float(weightEle_up),
                     'weightMu_up': float(weightMu_up),
                     'weightB_up': float(weightB_up),
+                    'weightFakeB_up': float(weightFakeB_up),
                     'weightEWK_up': float(weightEWK_up),
                     'weightQCD_up': float(weightQCD_up),
                     'weightTop_up': float(weightTop_up),
@@ -3884,6 +3962,7 @@ def runbbdm(txtfile):
                     'weightEle_down': float(weightEle_down),
                     'weightMu_down': float(weightMu_down),
                     'weightB_down': float(weightB_down),
+                    'weightFakeB_down': float(weightFakeB_down),
                     'weightEWK_down': float(weightEWK_down),
                     'weightQCD_down': float(weightQCD_down),
                     'weightTop_down': float(weightTop_down),
@@ -3898,16 +3977,19 @@ def runbbdm(txtfile):
                     'weightEleRECO' : float(weightEleRECO),
                     'weightMuTRK' : float(weightMuTRK),
                     'weightMuID' : float(weightMuID),
+                    'weightMuISO' : float(weightMuISO),
                     'weightEleTrig_up' : float(weightEleTrig_up),
                     'weightEleID_up' : float(weightEleID_up),
                     'weightEleRECO_up' : float(weightEleRECO_up),
                     'weightMuTRK_up' : float(weightMuTRK_up),
                     'weightMuID_up' : float(weightMuID_up),
+                    'weightMuISO_up' : float(weightMuISO_up),
                     'weightEleTrig_down' : float(weightEleTrig_down),
                     'weightEleID_down' : float(weightEleID_down),
                     'weightEleRECO_down' : float(weightEleRECO_down),
                     'weightMuTRK_down' : float(weightMuTRK_down),
                     'weightMuID_down' : float(weightMuID_down),
+                    'weightMuISO_down' : float(weightMuISO_down),
                     'weightscale_down' : float(weightscale_down),
                     'isak4JetBasedHemEvent': int(ep_isak4JetBasedHemEvent),
                     'ismetphiBasedHemEvent1': int(ep_ismetphiBasedHemEvent1),
