@@ -660,6 +660,7 @@ def runbbdm(txtfile):
             Jet2NMultiplicity = dummy
             dPhi_lep1_MET = dummy
             dPhi_lep2_MET = dummy
+            prod_cat = dummy
 
             '''
             -------------------------------------------------------------------------------
