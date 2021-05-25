@@ -169,11 +169,11 @@ def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
         h_list.append(VarToHist(df["MET"], df["weight"], df["weightTop"], df["weightTop_up"],  "h_reg_"+reg+"_MET_CMSyear_TopUp", [750,250,1000]))
         h_list.append(VarToHist(df["MET"], df["weight"], df["weightTop"], df["weightTop_down"],  "h_reg_"+reg+"_MET_CMSyear_TopDown", [750,250,1000]))
         # MET Trigger SYSTEMATICS
-        h_list.append(VarToHist(df["MET"], df["weight"], df["weightMETtrig"], df["weightMETtrig_up"],  "h_reg_"+reg+"_MET_CMSyear_trig_metUp", [750,250,1000]))
-        h_list.append(VarToHist(df["MET"], df["weight"], df["weightMETtrig"], df["weightMETtrig_down"],  "h_reg_"+reg+"_MET_CMSyear_trig_metDown", [750,250,1000]))
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightMETtrig"], df["weightMETtrig_up"],  "h_reg_"+reg+"_MET_CMSyear_METtrigUp", [750,250,1000]))
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightMETtrig"], df["weightMETtrig_down"],  "h_reg_"+reg+"_MET_CMSyear_METtrigDown", [750,250,1000]))
         # LEPTON WEIGHT SYSTEMATICS
-        h_list.append(VarToHist(df["MET"], df["weight"], df["weightEleTrig"], df["weightEleTrig_up"], "h_reg_"+reg+"_MET_CMSyear_trig_eleUp", [750,250,1000]))
-        h_list.append(VarToHist(df["MET"], df["weight"], df["weightEleTrig"], df["weightEleTrig_down"], "h_reg_"+reg+"_MET_CMSyear_trig_eleDown", [750,250,1000]))
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightEleTrig"], df["weightEleTrig_up"], "h_reg_"+reg+"_MET_CMSyear_EletrigUp", [750,250,1000]))
+        h_list.append(VarToHist(df["MET"], df["weight"], df["weightEleTrig"], df["weightEleTrig_down"], "h_reg_"+reg+"_MET_CMSyear_EletrigDown", [750,250,1000]))
         h_list.append(VarToHist(df["MET"], df["weight"], df["weightEleID"], df["weightEleID_up"], "h_reg_"+reg+"_MET_CMSyear_EleIDUp", [750,250,1000]))
         h_list.append(VarToHist(df["MET"], df["weight"], df["weightEleID"], df["weightEleID_down"], "h_reg_"+reg+"_MET_CMSyear_EleIDDown", [750,250,1000]))
         h_list.append(VarToHist(df["MET"], df["weight"], df["weightEleRECO"], df["weightEleRECO_up"], "h_reg_"+reg+"_MET_CMSyear_EleRECOUp", [750,250,1000]))
@@ -297,11 +297,11 @@ def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
         h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightTop"], df["weightTop_up"],  "h_reg_"+reg+"_Recoil_CMSyear_TopUp", [750,250,1000]))
         h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightTop"], df["weightTop_down"],  "h_reg_"+reg+"_Recoil_CMSyear_TopDown", [750,250,1000]))
         # MET Trigger SYSTEMATICS
-        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightRecoiltrig"], df["weightRecoiltrig_up"],  "h_reg_"+reg+"_Recoil_CMSyear_trig_metUp", [750,250,1000]))
-        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightRecoiltrig"], df["weightRecoiltrig_down"],  "h_reg_"+reg+"_Recoil_CMSyear_trig_metDown", [750,250,1000]))
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightRecoiltrig"], df["weightRecoiltrig_up"],  "h_reg_"+reg+"_Recoil_CMSyear_METtrigUp", [750,250,1000]))
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightRecoiltrig"], df["weightRecoiltrig_down"],  "h_reg_"+reg+"_Recoil_CMSyear_METtrigDown", [750,250,1000]))
         # LEPTON WEIGHT SYSTEMATICS
-        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightEleTrig"], df["weightEleTrig_up"], "h_reg_"+reg+"_Recoil_CMSyear_trig_eleUp", [750,250,1000]))
-        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightEleTrig"], df["weightEleTrig_down"], "h_reg_"+reg+"_Recoil_CMSyear_trig_eleDown", [750,250,1000]))
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightEleTrig"], df["weightEleTrig_up"], "h_reg_"+reg+"_Recoil_CMSyear_EletrigUp", [750,250,1000]))
+        h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightEleTrig"], df["weightEleTrig_down"], "h_reg_"+reg+"_Recoil_CMSyear_EletrigDown", [750,250,1000]))
         h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightEleID"], df["weightEleID_up"], "h_reg_"+reg+"_Recoil_CMSyear_EleIDUp", [750,250,1000]))
         h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightEleID"], df["weightEleID_down"], "h_reg_"+reg+"_Recoil_CMSyear_EleIDDown", [750,250,1000]))
         h_list.append(VarToHist(df["Recoil"], df["weight"], df["weightEleRECO"], df["weightEleRECO_up"], "h_reg_"+reg+"_Recoil_CMSyear_EleRECOUp", [750,250,1000]))
@@ -448,11 +448,11 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
         h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_TopUp", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_TopDown", [750,250,1000]))
         # MET Trigger SYSTEMATICS
-        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_trig_metUp", [750,250,1000]))
-        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_trig_metDown", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_METtrigUp", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_METtrigDown", [750,250,1000]))
         # LEPTON WEIGHT SYSTEMATICS
-        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_trig_eleUp", [750,250,1000]))
-        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_trig_eleDown", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_EletrigUp", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_EletrigDown", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_EleIDUp", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_EleIDDown", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_MET_CMSyear_EleRECOUp", [750,250,1000]))
@@ -578,11 +578,11 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
         h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_TopUp", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_TopDown", [750,250,1000]))
         # MET Trigger SYSTEMATICS
-        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_trig_metUp", [750,250,1000]))
-        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_trig_metDown", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_METtrigUp", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_METtrigDown", [750,250,1000]))
         # LEPTON WEIGHT SYSTEMATICS
-        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_trig_eleUp", [750,250,1000]))
-        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_trig_eleDown", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_EletrigUp", [750,250,1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_EletrigDown", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_EleIDUp", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_EleIDDown", [750,250,1000]))
         h_list.append(SetHist("h_reg_"+reg+"_Recoil_CMSyear_EleRECOUp", [750,250,1000]))
