@@ -34,8 +34,8 @@ def getXsec(samplename):
     if 'WJetsToLNu_HT-400To600'   in samplename: Xsec  =	57.91
     if 'WJetsToLNu_HT-600To800'   in samplename: Xsec  =	12.93
     if 'WJetsToLNu_HT-800To1200'   in samplename: Xsec  =	5.395
-    if 'WW_TuneCP5_13TeV'   in samplename: Xsec  =	75.9
-    if 'WZ_TuneCP5_13TeV'   in samplename: Xsec  =	27.57
+    if 'WW'   in samplename: Xsec  =	75.9
+    if 'WZ'   in samplename: Xsec  =	27.57
     if 'ZJetsToNuNu_HT-100To200'   in samplename: Xsec  =	304.5
     if 'ZJetsToNuNu_HT-1200To2500'   in samplename: Xsec  =	0.343
     if 'ZJetsToNuNu_HT-200To400'   in samplename: Xsec  =	91.85
@@ -43,11 +43,10 @@ def getXsec(samplename):
     if 'ZJetsToNuNu_HT-400To600'   in samplename: Xsec  =	13.11
     if 'ZJetsToNuNu_HT-600To800'   in samplename: Xsec  =	3.257
     if 'ZJetsToNuNu_HT-800To1200'   in samplename: Xsec  =	1.499
-    if 'ZZ_TuneCP5'   in samplename: Xsec  =	12.14
-
+    if 'ZZ'   in samplename: Xsec  =	12.14
     if 'ggZH_HToBB_ZToNuNu_M125'  in samplename: Xsec = 0.01222
     if 'ggZH_HToBB_ZToLL_M125'    in samplename: Xsec = 0.006185
-    if 'WminusH_HToBB_WToQQ_M125' in samplename: Xsec = 0.3654
+    if 'WminusH_HToBB' in samplename: Xsec = 0.3654
     if 'WplusH_HToBB_WToLNu_M125' in samplename: Xsec = 0.2819
     if 'ZH_HToBB_ZToLL_M125'      in samplename and 'ggZH_HToBB_ZToLL_M125' not in samplename:   Xsec = 0.07924
     if 'ZH_HToBB_ZToNuNu_M125'    in samplename and 'ggZH_HToBB_ZToNuNu_M125' not in samplename: Xsec = 0.1565

@@ -75,3 +75,7 @@ bbv07.04.02 * using one file for btag efficiency for 2016
 bbv08.00.00 * with Met XY correction and pdf systematics
 
 bbv12.00.00 * it contains 11 JEC and individual systematics for electron and muon and updated top pt reweighting function and QCD CR
+
+bbv12.00.01 * keeping Jet1Pt > 100 GeV as default instead of 50 GeV and updated names of weights in dataframe
+
+bbv12.00.02 * separate weight for ID and ISO, also added fake b weight and MET>250
