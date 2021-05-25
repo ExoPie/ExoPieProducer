@@ -163,8 +163,8 @@ def CustomiseRatio(h1,h2,h3,titleX):
     h1.Draw("P e1")
     h2.Draw("P e1 same")
     h3.Draw("P e1 same")
-    h1.SetMinimum(-0.2)
-    h1.SetMaximum(2.2)
+    h1.SetMinimum(0.849)
+    h1.SetMaximum(1.159)
     h1.GetXaxis().SetTitle(titleX)
     h1.GetXaxis().SetTitleSize(0.16)
     h1.GetXaxis().SetLabelSize(0.14)
@@ -177,22 +177,23 @@ ROOT.gStyle.SetOptTitle(0)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch(True)
 #ROOT.gStyle.SetGridStyle(2)
-uncertfile = open("uncert_v17_07_04_00.txt", "w")
-uncertfile_binwise = open("uncert_binwise_v17_07_04_00.py", "w")
+uncertfile = open("v17_12-00-02_firstBinDiff30.txt", "w")
+uncertfile_binwise = open("v17_12-00-02_firstBinDiff30.py", "w")
 uncertfile_binwise.write("syst_dict = {")
-CRSRPath = '/Users/ptiwari/cernBox/Documents/ExoPieCapper/plots_norm/v17_07_04_00/bbDMRoot'
-for jetprop in ['weightB','weightEWK','weightTop','weightMET','weightEle','weightMu','weightPU','weightJEC','Res','En']:
+CRSRPath = '/Users/ptiwari/cernBox/Documents/ExoPieCapper/plots_norm/v17_12-00-02_firstBinDiff30/bbDMRoot'
+for jetprop in ['CMSyear_eff_b', 'CMSyear_fake_b', 'EWK', 'CMSyear_Top', 'CMSyear_trig_met', 'CMSyear_trig_ele', 'CMSyear_EleID', 'CMSyear_EleRECO', 'CMSyear_MuID', 'CMSyear_MuISO', 'CMSyear_MuTRK', 'CMSyear_PU', 'JECAbsolute', 'JECAbsolute_year', 'JECBBEC1', 'JECBBEC1_year', 'JECEC2', 'JECEC2_year', 'JECFlavorQCD', 'JECHF', 'JECHF_year', 'JECRelativeBal', 'JECRelativeSample_year', 'En']:
     for reg in ['SR_1b','SR_2b','ZmumuCR_1b','ZmumuCR_2b','TopmunuCR_1b','TopmunuCR_2b','WmunuCR_1b','WmunuCR_2b','ZeeCR_1b','ZeeCR_2b','TopenuCR_1b','TopenuCR_2b','WenuCR_1b','WenuCR_2b']:
         if 'SR' in reg:
             miss_En = 'MET'
-            if jetprop=='weightEle' or jetprop=='weightMu': continue
+            if 'CMSyear_Ele' in jetprop or 'CMSyear_Mu' in jetprop or 'CMSyear_trig_ele' in jetprop:
+                continue
         else:
             miss_En = 'Recoil'
-            if jetprop == 'weightMET': jetprop='weightRecoil'
+
         #try:
-        for syst in ['up','down']:
-            exec("systematics_"+reg+"_"+miss_En+"_"+jetprop+"_"+syst+"_file = ROOT.TFile('"+CRSRPath+"/h_reg_"+reg+"_"+miss_En+"_"+jetprop+"_"+syst+".root')")
-            exec(jetprop+"_syst_"+reg+"_"+miss_En+"_"+syst+" = systematics_"+reg+"_"+miss_En+"_"+jetprop+"_"+syst+"_file.Get('bkgSum')")
+        for syst in ['Up','Down']:
+            exec("systematics_"+reg+"_"+miss_En+"_"+jetprop+syst+"_file = ROOT.TFile('"+CRSRPath+"/h_reg_"+reg+"_"+miss_En+"_"+jetprop+syst+".root')")
+            exec(jetprop+"_syst_"+reg+"_"+miss_En+syst+" = systematics_"+reg+"_"+miss_En+"_"+jetprop+syst+"_file.Get('bkgSum')")
 
         exec("central_"+reg+"_"+jetprop+"_file = ROOT.TFile('"+CRSRPath+"/h_reg_"+reg+"_"+miss_En+".root')")
         exec(jetprop+"_syst_"+reg+"_"+miss_En+"_central = central_"+reg+"_"+jetprop+"_file.Get('bkgSum')")
@@ -217,45 +218,45 @@ for jetprop in ['weightB','weightEWK','weightTop','weightMET','weightEle','weigh
         c1_1.SetGrid(1)
         c1_1.Draw()
         c1_1.cd()
-        exec("CustomiseHistogram("+jetprop+"_syst_"+reg+"_"+miss_En+"_up, titleX, titleY, colors['up'], 1,'Up')")
-        exec("CustomiseHistogram("+jetprop+"_syst_"+reg+"_"+miss_En+"_down, titleX, titleY, colors['down'], 1,'Down')")
+        exec("CustomiseHistogram("+jetprop+"_syst_"+reg+"_"+miss_En+"Up, titleX, titleY, colors['up'], 1,'Up')")
+        exec("CustomiseHistogram("+jetprop+"_syst_"+reg+"_"+miss_En+"Down, titleX, titleY, colors['down'], 1,'Down')")
         exec("CustomiseHistogram("+jetprop+"_syst_"+reg+"_"+miss_En+"_central, titleX, titleY, colors['central'], 1,'Central')")
 
-        exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_up.Integral()")
-        exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_down.Integral()")
+        exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Up.Integral()")
+        exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Down.Integral()")
         exec("centralUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_central.Integral()")
 
         uncertfile.write(jetprop+"_syst_"+reg+"_"+miss_En+": ")
         uncertfile.write(str((max(abs(upUnc-centralUnc),abs(centralUnc-downUnc))/centralUnc)*100)+"\n")
         # uncertfile_binwise.write("\'"+jetprop+"_syst_"+reg+"_"+miss_En+"_UP\':[")
         # for i in [1,2,3,4]:
-        #     exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_up.GetBinContent("+str(i)+")")
-        #     exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_down.GetBinContent("+str(i)+")")
+        #     exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Up.GetBinContent("+str(i)+")")
+        #     exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Down.GetBinContent("+str(i)+")")
         #     exec("centralUnc = "+jetprop+"_syst_" +reg+"_"+miss_En+"_central.GetBinContent("+str(i)+")")
         #     uncertfile_binwise.write(str((abs(upUnc-centralUnc)/centralUnc)*100)+",")
         # uncertfile_binwise.write(']\n')
         # uncertfile_binwise.write("\'"+jetprop+"_syst_"+reg+"_"+miss_En+"_DOWN\':[")
         # for i in [1,2,3,4]:
-        #     exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_up.GetBinContent("+str(i)+")")
-        #     exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_down.GetBinContent("+str(i)+")")
+        #     exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Up.GetBinContent("+str(i)+")")
+        #     exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Down.GetBinContent("+str(i)+")")
         #     exec("centralUnc = "+jetprop+"_syst_" +reg+"_"+miss_En+"_central.GetBinContent("+str(i)+")")
         #     uncertfile_binwise.write(str((abs(centralUnc-downUnc)/centralUnc)*100)+",")
         uncertfile_binwise.write("\'"+jetprop+"_syst_"+reg+"_"+miss_En+"\':[")
         for i in [1,2,3,4]:
-            exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_up.GetBinContent("+str(i)+")")
-            exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"_down.GetBinContent("+str(i)+")")
+            exec("upUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Up.GetBinContent("+str(i)+")")
+            exec("downUnc = "+jetprop+"_syst_"+reg+"_"+miss_En+"Down.GetBinContent("+str(i)+")")
             exec("centralUnc = "+jetprop+"_syst_" +reg+"_"+miss_En+"_central.GetBinContent("+str(i)+")")
             uncertfile_binwise.write(str((max(abs(upUnc-centralUnc), abs(centralUnc-downUnc))/centralUnc)*1)+",")
         uncertfile_binwise.write('],\n')
 
-        exec(jetprop+"_syst_"+reg+"_"+miss_En+"_up.Draw()")
-        exec(jetprop+"_syst_"+reg+"_"+miss_En+"_down.Draw('same')")
+        exec(jetprop+"_syst_"+reg+"_"+miss_En+"Up.Draw()")
+        exec(jetprop+"_syst_"+reg+"_"+miss_En+"Down.Draw('same')")
         exec(jetprop+"_syst_"+reg+"_"+miss_En+"_central.Draw('same')")
 
         leg  = SetLegend([0.7, 0.75, 0.95, 0.9],ncol=1)
-        exec("leg.AddEntry("+jetprop+"_syst_"+reg+"_"+miss_En+"_up, 'Up' , 'l')")
+        exec("leg.AddEntry("+jetprop+"_syst_"+reg+"_"+miss_En+"Up, 'Up' , 'l')")
         exec("leg.AddEntry("+jetprop+"_syst_"+reg+"_"+miss_En+"_central, 'Central' , 'l')")
-        exec("leg.AddEntry("+jetprop+"_syst_"+reg+"_"+miss_En+"_down, 'Down' , 'l')")
+        exec("leg.AddEntry("+jetprop+"_syst_"+reg+"_"+miss_En+"Down, 'Down' , 'l')")
         leg.Draw("same")
 
         #texcms.Draw("same")
@@ -265,18 +266,18 @@ for jetprop in ['weightB','weightEWK','weightTop','weightMET','weightEle','weigh
         latex1.SetTextSize(0.06)
         latex1.SetTextAlign(31)
         latex1.SetTextAlign(11)
-        latex1.DrawLatex(0.30, .80, jetprop+'_'+reg)
-        
+        latex1.DrawLatex(0.30, .80, jetprop+'_bkgSum_'+reg)
+
         pt = drawenergy1D(True, text_="Internal", data=True)
         for ipt in pt:
             ipt.Draw()
 
-        exec(jetprop+"_syst_"+reg+"_"+miss_En+"_up.GetXaxis().SetRangeUser(200, 1000)")
-        exec(jetprop+"_syst_"+reg+"_"+miss_En+"_down.GetXaxis().SetRangeUser(200, 1000)")
-        exec(jetprop+"_syst_"+reg+"_"+miss_En+"_central.GetXaxis().SetRangeUser(200, 1000)")
+        exec(jetprop+"_syst_"+reg+"_"+miss_En+"Up.GetXaxis().SetRangeUser(250, 1000)")
+        exec(jetprop+"_syst_"+reg+"_"+miss_En+"Down.GetXaxis().SetRangeUser(250, 1000)")
+        exec(jetprop+"_syst_"+reg+"_"+miss_En+"_central.GetXaxis().SetRangeUser(250, 1000)")
 
-        exec("ratioUp = "+jetprop+"_syst_"+reg+"_"+miss_En+"_up.Clone()")
-        exec("ratioDown = "+jetprop+"_syst_"+reg+"_"+miss_En+"_down.Clone()")
+        exec("ratioUp = "+jetprop+"_syst_"+reg+"_"+miss_En+"Up.Clone()")
+        exec("ratioDown = "+jetprop+"_syst_"+reg+"_"+miss_En+"Down.Clone()")
         exec("ratioCentral = "+jetprop+"_syst_"+reg+"_"+miss_En+"_central.Clone()")
 
         exec("ratioUp.Divide("+jetprop+"_syst_"+reg+"_"+miss_En+"_central)")
@@ -313,6 +314,6 @@ for jetprop in ['weightB','weightEWK','weightTop','weightMET','weightEle','weigh
         exec("c1.SaveAs('syst_plots/"+datestr+'_'+str(options.year)+"/bbDMPng/"+reg+"/"+jetprop+"_syst_"+reg+"_"+miss_En+".png')")
         c1.Close()
         exec("central_"+reg+"_"+jetprop+"_file.Close()")
-        exec("systematics_"+reg+"_"+miss_En+"_"+jetprop+"_up_file.Close()")
-        exec("systematics_"+reg+"_"+miss_En+"_"+jetprop+"_down_file.Close()")
+        exec("systematics_"+reg+"_"+miss_En+"_"+jetprop+"Up_file.Close()")
+        exec("systematics_"+reg+"_"+miss_En+"_"+jetprop+"Down_file.Close()")
 uncertfile_binwise.write('}')
