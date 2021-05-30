@@ -2365,8 +2365,6 @@ def runbbdm(txtfile):
                     'eta_Jet1Jet2': float(eta_Jet1Jet2),
                     'phi_Jet1Jet2': float(phi_Jet1Jet2),
                     'dRJet12': float(dRJet12),
-                    'M_Jet1Jet3': float(M_Jet1Jet3),
-                    'dPhiJet13': float(dPhiJet13),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
                     'rJet1PtMET': float(rJet1PtMET),
@@ -5106,7 +5104,6 @@ def runbbdm(txtfile):
                     'eta_Jet1Jet2': float(eta_Jet1Jet2),
                     'phi_Jet1Jet2': float(phi_Jet1Jet2),
                     'dRJet12': float(dRJet12),
-                    'M_Jet1Jet3': float(M_Jet1Jet3),
                     'dPhiJet13': float(dPhiJet13),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'ratioPtJet21': float(ep_THINjetPt[1] / ep_THINjetPt[0]),
@@ -5115,7 +5112,6 @@ def runbbdm(txtfile):
                     'dEtaJet12': float(ep_THINjetEta[0] - ep_THINjetEta[1]),
                     'isjet2EtaMatch': float(isjet2EtaMatch),
                     'M_Jet1Jet3': float(M_Jet1Jet3),
-                    'dPhiJet13': float(dPhiJet13),
                     'weight': float(weight),
                     'weightMETtrig': float(weightMETtrig),
                     'weightEle': float(weightEle),
@@ -5205,7 +5201,7 @@ def runbbdm(txtfile):
             if istest:
                 print('isQCDCR2b')
     outfilenameis = outfilename
-    for df in [df_out_preselR, df_out_SR_1b, df_out_SR_2b, df_out_ZeeCR_1b, df_out_ZeeCR_2b, df_out_ZmumuCR_1b, df_out_ZmumuCR_2b, df_out_WenuCR_1b, df_out_WenuCR_2b, df_out_WmunuCR_1b, df_out_WmunuCR_2b, df_out_TopenuCR_1b, df_out_TopenuCR_2b, df_out_TopmunuCR_1b, df_out_TopmunuCR_2b, df_out_QCDCR_1b, df_out_QCDCR_2b]:
+    for df in [df_out_preselR, df_out_SR_1b, df_out_SR_2b, df_out_ZeeCR_1b, df_out_ZeeCR_2b, df_out_ZmumuCR_1b, df_out_ZmumuCR_2b, df_out_ZeeCR_2j, df_out_ZeeCR_3j, df_out_ZmumuCR_2j, df_out_ZmumuCR_3j,df_out_WenuCR_1b, df_out_WenuCR_2b, df_out_WmunuCR_1b, df_out_WmunuCR_2b, df_out_TopenuCR_1b, df_out_TopenuCR_2b, df_out_TopmunuCR_1b, df_out_TopmunuCR_2b, df_out_QCDCR_1b, df_out_QCDCR_2b]:
         if df.empty:
             for col in df.columns:
                 df[col] = dummyArr
