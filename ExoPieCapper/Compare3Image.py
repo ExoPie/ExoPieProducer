@@ -10,7 +10,7 @@ import PIL.ImageDraw
 import PIL.ImageFont
 
 ##to run
-## python CompareImageSideSide.py -f firstDir -s secondDir --f_txt firstDirTxt --s_txt secondDirTxt
+## python Compare3Image.py -f firstDir -s secondDir -t thirdDir --f_txt firstDirTxt --s_txt secondDirTxt --t_txt thirdDirTxt
 
 usage = "usage: %prog [options] arg1 arg2"
 parser = optparse.OptionParser(usage)
