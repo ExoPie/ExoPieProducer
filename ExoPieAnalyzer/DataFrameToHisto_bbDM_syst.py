@@ -2,7 +2,7 @@ from ROOT import TFile, TTree, TH1F, TH1D, TH1, TCanvas, TChain, TGraphAsymmErro
 import ROOT as ROOT
 import argparse
 from array import array
-import numpy as numpy
+import numpy as np
 from root_pandas import read_root
 from pandas import Series
 import time
@@ -19,7 +19,7 @@ start = time.time()
 
 
 def Phi_mpi_pi(x):
-    kPI = numpy.array(3.14159265)
+    kPI = np.array(3.14159265)
     kPI = kPI.repeat(len(x))
     kTWOPI = 2 * kPI
     while ((x.any() >= kPI).any()):
@@ -309,6 +309,7 @@ def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
         h_list.append(VarToHist(df[limit_varCR], df["weight"], df["weightPrefire"], df["weightPrefire_down"],  "h_reg_"+reg+"_"+limit_varCR+"_CMSyear_prefireUp", mainBin))
 
         ###########################
+        h_list.append(VarToHist(df["dPhiJet1Lep1"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_dPhiJet1Lep1", [15, 0, 5]))
         h_list.append(VarToHist(df["dPhi_lep1_MET"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_dPhi_lep1_MET", [15, 0, 5]))
         h_list.append(VarToHist(df["dPhi_lep2_MET"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_dPhi_lep2_MET", [15, 0, 5]))
         h_list.append(VarToHist(df["Jet1Pt"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_Jet1Pt", [50, 30, 1000]))
@@ -589,6 +590,7 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_CMSyear_prefireDown", mainBin))
         h_list.append(SetHist("h_reg_" + reg +"_"+limit_varCR+"_CMSyear_prefireUp", mainBin))
 
+        h_list.append(SetHist("h_reg_"+reg+"_dPhiJet1Lep1", [15, 0, 5]))
         h_list.append(SetHist("h_reg_"+reg+"_dPhi_lep1_MET", [15, 0, 5]))
         h_list.append(SetHist("h_reg_"+reg+"_dPhi_lep2_MET", [15, 0, 5]))
         h_list.append(SetHist("h_reg_"+reg+"_Jet1Pt", [50, 30, 1000]))
@@ -668,7 +670,7 @@ START MAKING HISTOGRAMS
 ---------------------------------------------------------------
 '''
 
-# trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDCR_1b', 'bbDM_QCDCR_2b']
+# trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDCR_1b', 'bbDM_QCDCR_2b']
 
 trees = ['bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDCR_1b', 'bbDM_QCDCR_2b']
 
@@ -718,12 +720,17 @@ def runFile(trees, filename):
             mode = "UPDATE"
         if nent > 0:
             df = read_root(filename, tree)
+            df['del_minus'] = df.dPhi_jetMET - df.dPhiJet12
+            df['del_plus'] = abs(df.dPhi_jetMET + df.dPhiJet12 - np.pi)
+            df['costheta_star'] = abs(np.tanh(df.dEtaJet12.div(2)))
             score = addbdtscore(filename,tree)
             df["bdtscore"]=score
             df['dPhiTrk_pfMET'] = DeltaPhi(df.METPhi, df.pfTRKMETPhi)
             df['dPhiCalo_pfMET'] = DeltaPhi(df.METPhi, df.pfpatCaloMETPhi)
             df['weightcentral'] = 1.0
             df = df[df.Jet1Pt > 0.0]
+            if ('SR' not in tree) or ('QCDCR' not in tree) or ('preselR' not in tree):
+                df['dPhiJet1Lep1'] = DeltaPhi(df.Jet1Phi, df.leadingLepPhi)
             HistWrtter(df, outfilename, tree, mode)
         else:
             emptyHistWritter(tree, outfilename, mode)
