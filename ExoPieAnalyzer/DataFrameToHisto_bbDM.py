@@ -1,10 +1,8 @@
-from ROOT import TFile, TTree, TH1F, TH1D, TH1, TCanvas, TChain, TGraphAsymmErrors, TMath, TH2D, TLorentzVector, AddressOf, gROOT, TNamed
 import ROOT as ROOT
 import argparse
 from array import array
 import numpy as np
 from root_pandas import read_root
-from pandas import Series
 import time
 import glob
 import multiprocessing as mp
@@ -68,13 +66,13 @@ filename = 'OutputFiles/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythi
 
 
 def SetHist(HISTNAME, binning):
-    h = TH1F()
+    h = ROOT.TH1F()
     if len(binning) == 3:
-        h = TH1F(HISTNAME, HISTNAME, binning[0], binning[1], binning[2])
+        h = ROOT.TH1F(HISTNAME, HISTNAME, binning[0], binning[1], binning[2])
     else:
         nBins = len(binning) - 1
-        # h = TH1F(HISTNAME, HISTNAME, binning[0], binning[1], binning[2])  ## make it variable binning histogram
-        h = TH1F(HISTNAME, HISTNAME, nBins, array('d', binning))
+        # h = ROOT.TH1F(HISTNAME, HISTNAME, binning[0], binning[1], binning[2])  ## make it variable binning histogram
+        h = ROOT.TH1F(HISTNAME, HISTNAME, nBins, array('d', binning))
     return h
 
 
@@ -100,14 +98,13 @@ def getBinRange(nBins, xlow, xhigh):
     return binRange
 
 # def HistWrtter(df, inFile,treeName, mode="UPDATE"):
-# limit_varSR = 'MET'; limit_varCR = 'Recoil'; mainBin = [750,250,1000]
-limit_varSR = limit_varCR = 'bdtscore'; mainBin = [200, -1, 1]
-def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
-    h_list = []
+def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mode="UPDATE"):
     if 'preselR' in treeName:
         reg = treeName.split('_')[1]
     else:
         reg = treeName.split('_')[1] + '_' + treeName.split('_')[2]
+    h_list = []
+
     if ('SR' in reg) or ('preselR' in reg) or ('QCDCR' in reg):
         # CENTRAL AND SYSTEMATICS FOR MET HISTOGRAM
         h_list.append(VarToHist(df[limit_varSR], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR, mainBin))
@@ -228,6 +225,7 @@ def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
             h_list.append(VarToHist(df["isjet1EtaMatch"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_isjet1EtaMatch", [3, -1, 1]))
             h_list.append(VarToHist(df["M_Jet1Jet2"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_M_Jet1Jet2", [100, 0, 2000]))
         elif ('SR_2b' in reg):
+            h_list.append(VarToHist(df['MET'], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_MET", [750,250,1000]))
             h_list.append(VarToHist(df["isjet2EtaMatch"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_isjet2EtaMatch", [3, -1, 1]))
             h_list.append(VarToHist(df["M_Jet1Jet3"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_M_Jet1Jet3", [100, 0, 2000]))
         elif ('preselR' in reg):
@@ -375,15 +373,16 @@ def HistWrtter(df, outfilename, treeName, mode="UPDATE"):
             h_list.append(VarToHist(df["isjet1EtaMatch"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_isjet1EtaMatch", [3, -1, 1]))
             h_list.append(VarToHist(df["M_Jet1Jet2"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_M_Jet1Jet2", [100, 0, 2000]))
         elif ('2b' in reg or '3j' in reg):
+            h_list.append(VarToHist(df['Recoil'], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_Recoil", [750,250,1000]))
             h_list.append(VarToHist(df["isjet2EtaMatch"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_isjet2EtaMatch", [3, -1, 1]))
             h_list.append(VarToHist(df["M_Jet1Jet3"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_M_Jet1Jet3", [100, 0, 2000]))
     #outfilename = 'Output_'+inFile.split('/')[-1]
-    fout = TFile(outfilename, mode)
+    fout = ROOT.TFile(outfilename, mode)
     for ih in h_list:
         ih.Write()
 
 
-def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
+def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, mode="UPDATE"):
     h_list = []
     if 'preselR' in treeName:
         reg = treeName.split('_')[1]
@@ -391,7 +390,6 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
         reg = treeName.split('_')[1] + '_' + treeName.split('_')[2]
     if ('SR' in reg) or ('preselR' in reg) or ('QCDCR' in reg):
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR,mainBin))
-
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_eff_bUp",mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_eff_bDown", mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_fake_bUp",mainBin))
@@ -511,6 +509,7 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
             h_list.append(SetHist("h_reg_"+reg+"_isjet1EtaMatch", [3, -1, 1]))
             h_list.append(SetHist("h_reg_"+reg+"_M_Jet1Jet2", [100, 0, 2000]))
         elif ('SR_2b' in reg):
+            h_list.append(SetHist("h_reg_"+reg+"_MET", [750, 250, 1000]))
             h_list.append(SetHist("h_reg_"+reg+"_isjet2EtaMatch", [3, -1, 1]))
             h_list.append(SetHist("h_reg_"+reg+"_M_Jet1Jet3", [100, 0, 2000]))
         elif ('preselR' in reg):
@@ -655,11 +654,12 @@ def emptyHistWritter(treeName, outfilename, mode="UPDATE"):
             h_list.append(SetHist("h_reg_"+reg+"_isjet1EtaMatch", [3, -1, 1]))
             h_list.append(SetHist("h_reg_"+reg+"_M_Jet1Jet2", [100, 0, 2000]))
         elif ('2b' in reg or '3j' in reg):
+            h_list.append(SetHist("h_reg_"+reg+"_Recoil", [750, 250, 1000]))
             h_list.append(SetHist("h_reg_"+reg+"_isjet2EtaMatch", [3, -1, 1]))
             h_list.append(SetHist("h_reg_"+reg+"_M_Jet1Jet3", [100, 0, 2000]))
         h_list.append(SetHist("h_reg_"+reg+"_rJet1PtMET", [50, 0, 50]))
         h_list.append(SetHist("h_reg_"+reg+"_delta_pfCalo", [15, 0, 1.5]))
-    fout = TFile(outfilename, mode)
+    fout = ROOT.TFile(outfilename, mode)
     for ih in h_list:
         ih.Write()
 
@@ -670,9 +670,8 @@ START MAKING HISTOGRAMS
 ---------------------------------------------------------------
 '''
 
-# trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDCR_1b', 'bbDM_QCDCR_2b']
+trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDCR_1b', 'bbDM_QCDCR_2b']
 
-trees = ['bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDCR_1b', 'bbDM_QCDCR_2b']
 
 # inputFilename=infile
 filename = infile
@@ -681,7 +680,7 @@ ApplyWeight = True
 
 def runFile(trees, filename):
     tf = ROOT.TFile(filename)
-    # h_reg_preselR_cutFlow = tf.Get('h_reg_preselR_cutFlow')
+    h_reg_preselR_cutFlow = tf.Get('h_reg_preselR_cutFlow')
     h_reg_SR_1b_cutFlow = tf.Get('h_reg_SR_1b_cutFlow')
     h_reg_SR_2b_cutFlow = tf.Get('h_reg_SR_2b_cutFlow')
     h_reg_ZeeCR_1b_cutFlow = tf.Get('h_reg_ZeeCR_1b_cutFlow')
@@ -692,9 +691,9 @@ def runFile(trees, filename):
     h_reg_ZeeCR_3j_cutFlow = tf.Get('h_reg_ZeeCR_3j_cutFlow')
     h_reg_ZmumuCR_2j_cutFlow = tf.Get('h_reg_ZmumuCR_2j_cutFlow')
     h_reg_ZmumuCR_3j_cutFlow = tf.Get('h_reg_ZmumuCR_3j_cutFlow')
-    # h_reg_WenuCR_1b_cutFlow = tf.Get('h_reg_WenuCR_1b_cutFlow')
+    h_reg_WenuCR_1b_cutFlow = tf.Get('h_reg_WenuCR_1b_cutFlow')
     h_reg_WenuCR_2b_cutFlow = tf.Get('h_reg_WenuCR_2b_cutFlow')
-    # h_reg_WmunuCR_1b_cutFlow = tf.Get('h_reg_WmunuCR_1b_cutFlow')
+    h_reg_WmunuCR_1b_cutFlow = tf.Get('h_reg_WmunuCR_1b_cutFlow')
     h_reg_WmunuCR_2b_cutFlow = tf.Get('h_reg_WmunuCR_2b_cutFlow')
     h_reg_TopenuCR_1b_cutFlow = tf.Get('h_reg_TopenuCR_1b_cutFlow')
     h_reg_TopenuCR_2b_cutFlow = tf.Get('h_reg_TopenuCR_2b_cutFlow')
@@ -710,8 +709,14 @@ def runFile(trees, filename):
     print('ApplyWeight', ApplyWeight)
     h_total = tf.Get('h_total')
     h_total_weight = tf.Get('h_total_mcweight')
-    outfilename = outputdir + '/' + 'Output_' + filename.split('/')[-1]
+    outfilename = outputdir + '/Output_' +filename.split('/')[-1]
     for index, tree in enumerate(trees):
+        # limit_varSR = 'MET'; limit_varCR = 'Recoil'; mainBin = [750,250,1000]
+        # limit_varSR = limit_varCR = 'bdtscore'; mainBin = [200, -1, 1]
+        if '_1b' in tree or 'presel' in tree or '_2j' in tree :
+            limit_varSR = 'MET'; limit_varCR = 'Recoil'; mainBin = [750,250,1000]
+        elif '_2b' in tree or '_3j' in tree:
+            limit_varSR = limit_varCR = 'ctsValue'; mainBin = [200, 0, 1]
         tt = tf.Get(tree)
         nent = tt.GetEntries()
         if index == 0:
@@ -720,22 +725,24 @@ def runFile(trees, filename):
             mode = "UPDATE"
         if nent > 0:
             df = read_root(filename, tree)
-            df['del_minus'] = df.dPhi_jetMET - df.dPhiJet12
-            df['del_plus'] = abs(df.dPhi_jetMET + df.dPhiJet12 - np.pi)
-            df['costheta_star'] = abs(np.tanh(df.dEtaJet12.div(2)))
-            score = addbdtscore(filename,tree)
-            df["bdtscore"]=score
+            # score = addbdtscore(filename,tree)
+            # df["bdtscore"]=score
+            #df['del_minus'] = df.dPhi_jetMET - df.dPhiJet12
+            #df['del_plus'] = abs(df.dPhi_jetMET + df.dPhiJet12 - np.pi)
+            if ('_2b' in tree) or ('_3j' in tree):
+                df['ctsValue'] = abs(np.tanh(df.dEtaJet12.div(2)))
             df['dPhiTrk_pfMET'] = DeltaPhi(df.METPhi, df.pfTRKMETPhi)
             df['dPhiCalo_pfMET'] = DeltaPhi(df.METPhi, df.pfpatCaloMETPhi)
             df['weightcentral'] = 1.0
             df = df[df.Jet1Pt > 0.0]
-            if ('SR' not in tree) or ('QCDCR' not in tree) or ('preselR' not in tree):
+            if ('SR' not in tree) and ('QCDCR' not in tree) and ('preselR' not in tree):
                 df['dPhiJet1Lep1'] = DeltaPhi(df.Jet1Phi, df.leadingLepPhi)
-            HistWrtter(df, outfilename, tree, mode)
+            # df = df[df.isak4JetBasedHemEvent == 0] #### only uncomment it for 2018 CD Era
+            HistWrtter(df, outfilename, tree, limit_varSR, limit_varCR, mainBin, mode)
         else:
-            emptyHistWritter(tree, outfilename, mode)
-    f = TFile(outfilename, "UPDATE")
-    # h_reg_preselR_cutFlow.Write()
+            emptyHistWritter(tree, outfilename, limit_varSR, limit_varCR, mainBin, mode)
+    f = ROOT.TFile(outfilename, "UPDATE")
+    h_reg_preselR_cutFlow.Write()
     h_reg_SR_1b_cutFlow.Write()
     h_reg_SR_2b_cutFlow.Write()
     h_reg_ZeeCR_1b_cutFlow.Write()
@@ -746,9 +753,9 @@ def runFile(trees, filename):
     h_reg_ZeeCR_3j_cutFlow.Write()
     h_reg_ZmumuCR_2j_cutFlow.Write()
     h_reg_ZmumuCR_3j_cutFlow.Write()
-    # h_reg_WenuCR_1b_cutFlow.Write()
+    h_reg_WenuCR_1b_cutFlow.Write()
     h_reg_WenuCR_2b_cutFlow.Write()
-    # h_reg_WmunuCR_1b_cutFlow.Write()
+    h_reg_WmunuCR_1b_cutFlow.Write()
     h_reg_WmunuCR_2b_cutFlow.Write()
     h_reg_TopenuCR_1b_cutFlow.Write()
     h_reg_TopenuCR_2b_cutFlow.Write()
