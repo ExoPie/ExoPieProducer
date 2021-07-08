@@ -796,8 +796,8 @@ def runbbdm(txtfile):
                 weightPrefire = ep_prefiringweight
                 weightPrefire_up = ep_prefiringweightup
                 weightPrefire_down = ep_prefiringweightdown
-                common_weight = weightB * weightFakeB * weightEWK * weightQCD * weightTop * weightPU * weightPrefire
-                presel_weight = weightEWK * weightQCD * weightTop * weightPU * weightPrefire
+                common_weight = ep_mcweight * weightB * weightFakeB * weightEWK * weightQCD * weightTop * weightPU * weightPrefire
+                presel_weight = ep_mcweight * weightEWK * weightQCD * weightTop * weightPU * weightPrefire
                 weight, weightEleTrig, ele_wgt, mu_wgt, recoil_wgt, met_wgt, ele_trig,ele_id,ele_reco,mutrk_wgt, muID_wgt, muISO_wgt = weight_(
                     common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, ep_nEle_index, ep_elePt, ep_eleEta, ep_eleIsPTight, ep_nMu, ep_muPt, ep_muEta, ep_isTightMuon)
                 weightEle,weightEle_up, weightEle_down= ele_wgt
