@@ -81,3 +81,5 @@ bbv12.00.01 * keeping Jet1Pt > 100 GeV as default instead of 50 GeV and updated 
 bbv12.00.02 * separate weight for ID and ISO, also added fake b weight and MET>250
 
 bbv12.00.03 * added various variables for bdt.
+
+bbv12.00.04 * photons cleaned against jets

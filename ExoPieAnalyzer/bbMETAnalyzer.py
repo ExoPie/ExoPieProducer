@@ -600,15 +600,13 @@ def runbbdm(txtfile):
             ep_phoPt = [getPt(ep_phoPx[ij], ep_phoPy[ij]) for ij in range(ep_nPho)]
             ep_phoEta = [getEta(ep_phoPx[ij], ep_phoPy[ij], ep_phoPz[ij]) for ij in range(ep_nPho)]
             ep_phoPhi = [getPhi(ep_phoPx[ij], ep_phoPy[ij]) for ij in range(ep_nPho)]
-            nPho = ep_nPho
+            # nPho = ep_nPho
 
             '''
             -------------------------------------------------------------------------------
             THIN JET VARS
             -------------------------------------------------------------------------------
             '''
-            # ep_THINjetPt = [getPt(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
-            # ep_THINjetPhi = [getPhi(ep_THINjetPx[ij], ep_THINjetPy[ij]) for ij in range(ep_THINnJet)]
             ep_THINjetEta_ = [getEta(ep_THINjetPx[ij], ep_THINjetPy[ij], ep_THINjetPz[ij]) for ij in range(ep_THINnJet)]
 
             JetwithEta4p5 = ep_THINnJet
@@ -630,6 +628,14 @@ def runbbdm(txtfile):
             JetHT = sum(ep_THINjetPt)
             min_dPhi_jet_MET = min(
                 [DeltaPhi(jet_phi, ep_pfMetCorrPhi) for jet_phi in ep_THINjetPhi])
+
+            pho_pt15_eta2p5 = boolutil.logical_and2((ep_phoPt > 15.0), (numpy.abs(ep_phoEta) < 2.5))
+            jet_pt30_eta2p5 = boolutil.logical_and2((ep_THINjetPt > 30.0), (numpy.abs(ep_THINjetEta) < 2.5))
+            pass_pho_index_cleaned=[]
+            if ep_nPho > 0:
+                cleanedPhoton = anautil.jetcleaning(pho_pt15_eta2p5, jet_pt30_eta2p5, ep_phoEta, ep_THINjetEta, ep_phoPhi, ep_THINjetPhi, 0.4)
+                pass_pho_index_cleaned = boolutil.WhereIsTrue(cleanedPhoton)
+            nPho = len(pass_pho_index_cleaned)
 
             Jet2Pt = dummy
             Jet2Eta = dummy
