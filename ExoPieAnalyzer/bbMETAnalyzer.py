@@ -839,7 +839,7 @@ def runbbdm(txtfile):
                             if (ep_THINjetPt[0] > 100.):
                                 h_reg_preselR_cutFlow.AddBinContent(
                                     6, presel_weight*weightMETtrig)
-                                if (nBjets<=2):
+                                if (ep_THINbjets_Cond[0]):
                                     h_reg_preselR_cutFlow.AddBinContent(
                                         7, weight)
                                     ispreselR = True
@@ -914,7 +914,7 @@ def runbbdm(txtfile):
                             if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
                                 h_reg_SR_1b_cutFlow.AddBinContent(
                                     6, presel_weight*weightMETtrig)
-                                if (nBjets == 1):
+                                if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                     h_reg_SR_1b_cutFlow.AddBinContent(7, weight)
                                     isSR1b = True
                                     SR1bcount += 1
@@ -955,7 +955,7 @@ def runbbdm(txtfile):
                             if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                 h_reg_SR_2b_cutFlow.AddBinContent(
                                     6, presel_weight*weightMETtrig)
-                                if (nBjets == 2):
+                                if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                     h_reg_SR_2b_cutFlow.AddBinContent(7, weight)
                                     isSR2b = True
                                     SR2bcount += 1
@@ -1044,7 +1044,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_ZeeCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightEleTrig*weightEle)
-                                                    if (nBjets == 1):
+                                                    if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_ZeeCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         ZeeCR1bcount += 1
@@ -1086,7 +1086,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_ZeeCR_2b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightEleTrig*weightEle)
-                                                    if (nBjets == 2):
+                                                    if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_ZeeCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         ZeeCR2bcount += 1
@@ -1172,7 +1172,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
-                                                    if (nBjets == 1):
+                                                    if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_ZmumuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         ZmumuCR1bcount += 1
@@ -1214,7 +1214,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
-                                                    if (nBjets == 2):
+                                                    if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_ZmumuCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         ZmumuCR2bcount += 1
@@ -1552,7 +1552,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet == 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WenuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightEleTrig*weightEle)
-                                                    if (nBjets == 1):
+                                                    if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_WenuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         WenuCR1bcount += 1
@@ -1562,7 +1562,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet == 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WenuCR_2b_cutFlow.AddBinContent(
                                                         10, weight)
-                                                    if (nBjets == 2):
+                                                    if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_WenuCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         WenuCR2bcount += 1
@@ -1641,7 +1641,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet == 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WmunuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
-                                                    if (nBjets == 1):
+                                                    if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_WmunuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         WmunuCR1bcount += 1
@@ -1651,7 +1651,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet == 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_WmunuCR_2b_cutFlow.AddBinContent(
                                                         10, weight)
-                                                    if (nBjets == 2):
+                                                    if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_WmunuCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         WmunuCR2bcount += 1
@@ -1729,7 +1729,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopenuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightEleTrig*weightEle)
-                                                    if (nBjets == 1):
+                                                    if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_TopenuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         TopenuCR1bcount += 1
@@ -1771,7 +1771,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet > 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopenuCR_2b_cutFlow.AddBinContent(
                                                         10, weight)
-                                                    if (nBjets == 2):
+                                                    if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_TopenuCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         TopenuCR2bcount += 1
@@ -1855,7 +1855,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
-                                                    if (nBjets == 1):
+                                                    if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                                         h_reg_TopmunuCR_1b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         TopmunuCR1bcount += 1
@@ -1897,7 +1897,7 @@ def runbbdm(txtfile):
                                                 if (ep_THINnJet > 2) and (ep_THINjetPt[0] > 100.):
                                                     h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
                                                         10, presel_weight*weightRecoiltrig*weightMu)
-                                                    if (nBjets == 2):
+                                                    if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                                         h_reg_TopmunuCR_2b_cutFlow.AddBinContent(
                                                             11, weight)
                                                         TopmunuCR2bcount += 1
@@ -1957,7 +1957,7 @@ def runbbdm(txtfile):
                                 5, presel_weight*weightMETtrig)
                             if (ep_THINnJet <= 2) and (ep_THINjetPt[0] > 100.):
                                 h_reg_QCDCR_1b_cutFlow.AddBinContent(6, presel_weight*weightMETtrig)
-                                if (nBjets == 1):
+                                if (ep_THINbjets_Cond[0]) and (nBjets == 1):
                                     h_reg_QCDCR_1b_cutFlow.AddBinContent(7, weight)
                                     isQCDCR1b = True
                                     QCDCR1bcount += 1
@@ -1997,7 +1997,7 @@ def runbbdm(txtfile):
                             if (ep_THINnJet <= 3 and ep_THINnJet > 1) and (ep_THINjetPt[0] > 100.):
                                 h_reg_QCDCR_2b_cutFlow.AddBinContent(
                                     6, presel_weight*weightMETtrig)
-                                if (nBjets == 2):
+                                if (ep_THINbjets_Cond[0]) and ep_THINbjets_Cond[1] and (nBjets == 2):
                                     h_reg_QCDCR_2b_cutFlow.AddBinContent(7, weight)
                                     isQCDCR2b = True
                                     QCDCR2bcount += 1
