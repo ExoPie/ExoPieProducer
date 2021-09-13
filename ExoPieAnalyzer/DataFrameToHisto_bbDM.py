@@ -7,7 +7,7 @@ import time
 import glob
 import multiprocessing as mp
 from functools import partial
-from readpickle import addbdtscore
+# from readpickle import addbdtscore
 # import matplotlib
 # import matplotlib.pyplot as plt
 # matplotlib.use('pdf')
@@ -176,6 +176,7 @@ def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mod
         # Prefire Systematics
         h_list.append(VarToHist(df[limit_varSR], df["weight"], df["weightPrefire"], df["weightPrefire_up"],  "h_reg_"+reg+"_"+limit_varSR+"_CMSyear_prefireDown", mainBin))
         h_list.append(VarToHist(df[limit_varSR], df["weight"], df["weightPrefire"], df["weightPrefire_down"],  "h_reg_"+reg+"_"+limit_varSR+"_CMSyear_prefireUp", mainBin))
+        h_list.append(VarToHist(df["prod_cat"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_prod_cat", [3, 0, 3]))
         h_list.append(VarToHist(df["Njets_PassID"],  df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_nJets", [10, 0, 10]))
         h_list.append(VarToHist(df["Nbjets_PassID"],  df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_nBJets", [10, 0, 10]))
         h_list.append(VarToHist(df["NEle"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_NEle", [10, 0, 10]))
@@ -361,6 +362,7 @@ def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mod
             h_list.append(VarToHist(df["subleadingLepEta"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_lep2_eta", [30, -2.5, 2.5]))
             h_list.append(VarToHist(df["subleadingLepPhi"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_lep2_Phi", [30, -3.14, 3.14]))
         if ('WmunuCR_1b' not in reg) and ('WenuCR_1b' not in reg):
+            h_list.append(VarToHist(df["prod_cat"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_prod_cat", [3, 0, 3]))
             h_list.append(VarToHist(df["ratioPtJet21"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_ratioPtJet21", [20, 0, 1]))
             h_list.append(VarToHist(df["dPhiJet12"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_dPhiJet12", [15, -8, 8]))
             h_list.append(VarToHist(df["dEtaJet12"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_dEtaJet12", [15, -8, 8]))
@@ -459,6 +461,7 @@ def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, m
         h_list.append(SetHist("h_reg_" + reg +"_"+limit_varSR+"_CMSyear_prefireDown", mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_prefireUp", mainBin))
 
+        h_list.append(SetHist("h_reg_"+reg+"_prod_cat",   [3, 0, 3]))
         h_list.append(SetHist("h_reg_"+reg+"_nJets", [10, 0, 10]))
         h_list.append(SetHist("h_reg_"+reg+"_nBJets", [10, 0, 10]))
         h_list.append(SetHist("h_reg_"+reg+"_NEle", [10, 0, 10]))
@@ -519,6 +522,7 @@ def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, m
             h_list.append(SetHist("h_reg_"+reg+"_M_Jet1Jet3", [100, 0, 2000]))
     else:
         h_list.append(SetHist("h_reg_"+reg+"_MET",   [30, 0, 1000]))
+        h_list.append(SetHist("h_reg_"+reg+"_prod_cat",   [3, 0, 3]))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR,mainBin))
         # btag SYSTEMATICS
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_CMSyear_eff_bUp", mainBin))
