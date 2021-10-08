@@ -105,7 +105,7 @@ def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mod
         reg = treeName.split('_')[1] + '_' + treeName.split('_')[2]
     h_list = []
 
-    if ('SR' in reg) or ('preselR' in reg) or ('QCDCR' in reg):
+    if ('SR' in reg) or ('preselR' in reg) or ('QCD' in reg):
         # CENTRAL AND SYSTEMATICS FOR MET HISTOGRAM
         h_list.append(VarToHist(df[limit_varSR], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR, mainBin))
         # B-TAG SYSTEMATICS
@@ -209,7 +209,7 @@ def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mod
         h_list.append(VarToHist(df["Jet1NMultiplicity"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_Jet1NMultiplicity", [15, 0, 50]))
         h_list.append(VarToHist(df["nPV"], df["weight"], df["weightPU"], df["weight"], "h_reg_"+reg+"_nPV", [70, 0, 70]))
         h_list.append(VarToHist(df["nPV"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_PUnPV", [70, 0, 70]))
-        if 'QCDCR' in reg:
+        if 'QCD' in reg:
             h_list.append(VarToHist(df["dPhi_jetMET"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_min_dPhi", [15, 0.0, 0.5]))
         else:
             h_list.append(VarToHist(df["dPhi_jetMET"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_min_dPhi", [15, 0.5, 3.2]))
@@ -390,7 +390,7 @@ def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, m
         reg = treeName.split('_')[1]
     else:
         reg = treeName.split('_')[1] + '_' + treeName.split('_')[2]
-    if ('SR' in reg) or ('preselR' in reg) or ('QCDCR' in reg):
+    if ('SR' in reg) or ('preselR' in reg) or ('QCD' in reg):
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR,mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_eff_bUp",mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_eff_bDown", mainBin))
@@ -482,7 +482,7 @@ def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, m
         h_list.append(SetHist("h_reg_"+reg+"_Jet1NEmEF", [15, 0, 1.1]))
         h_list.append(SetHist("h_reg_"+reg+"_Jet1CMulti", [15, 0, 50]))
         h_list.append(SetHist("h_reg_"+reg+"_Jet1NMultiplicity", [15, 0, 50]))
-        if 'QCDCR' in reg:
+        if 'QCD' in reg:
             h_list.append(SetHist("h_reg_"+reg+"_min_dPhi", [15, 0.0, 0.5]))
         else:
             h_list.append(SetHist("h_reg_"+reg+"_min_dPhi", [15, 0.5, 3.2]))
@@ -674,7 +674,7 @@ START MAKING HISTOGRAMS
 ---------------------------------------------------------------
 '''
 
-trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDCR_1b', 'bbDM_QCDCR_2b']
+trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDbCR_1b', 'bbDM_QCDbCR_2b', 'bbDM_QCDaCR_1b', 'bbDM_QCDaCR_2b', 'bbDM_QCDcCR_1b', 'bbDM_QCDcCR_2b']
 
 
 # inputFilename=infile
@@ -703,8 +703,12 @@ def runFile(trees, filename):
     h_reg_TopenuCR_2b_cutFlow = tf.Get('h_reg_TopenuCR_2b_cutFlow')
     h_reg_TopmunuCR_1b_cutFlow = tf.Get('h_reg_TopmunuCR_1b_cutFlow')
     h_reg_TopmunuCR_2b_cutFlow = tf.Get('h_reg_TopmunuCR_2b_cutFlow')
-    h_reg_QCDCR_1b_cutFlow = tf.Get('h_reg_QCDCR_1b_cutFlow')
-    h_reg_QCDCR_2b_cutFlow = tf.Get('h_reg_QCDCR_2b_cutFlow')
+    h_reg_QCDbCR_1b_cutFlow = tf.Get('h_reg_QCDbCR_1b_cutFlow')
+    h_reg_QCDbCR_2b_cutFlow = tf.Get('h_reg_QCDbCR_2b_cutFlow')
+    h_reg_QCDaCR_1b_cutFlow = tf.Get('h_reg_QCDaCR_1b_cutFlow')
+    h_reg_QCDaCR_2b_cutFlow = tf.Get('h_reg_QCDaCR_2b_cutFlow')
+    h_reg_QCDcCR_1b_cutFlow = tf.Get('h_reg_QCDcCR_1b_cutFlow')
+    h_reg_QCDcCR_2b_cutFlow = tf.Get('h_reg_QCDcCR_2b_cutFlow')
     global ApplyWeight
     if ('SingleElectron' in filename.split('/')[-1]) or ('MET' in filename.split('/')[-1]) or('EGamma' in filename.split('/')[-1]):
         ApplyWeight = False
@@ -739,7 +743,7 @@ def runFile(trees, filename):
             df['dPhiCalo_pfMET'] = DeltaPhi(df.METPhi, df.pfpatCaloMETPhi)
             df['weightcentral'] = 1.0
             df = df[df.Jet1Pt > 0.0]
-            if ('SR' not in tree) and ('QCDCR' not in tree) and ('preselR' not in tree):
+            if ('SR' not in tree) and ('QCD' not in tree) and ('preselR' not in tree):
                 df['dPhiJet1Lep1'] = DeltaPhi(df.Jet1Phi, df.leadingLepPhi)
             # df = df[df.isak4JetBasedHemEvent == 0] #### only uncomment it for 2018 CD Era
             HistWrtter(df, outfilename, tree, limit_varSR, limit_varCR, mainBin, mode)
@@ -765,8 +769,12 @@ def runFile(trees, filename):
     h_reg_TopenuCR_2b_cutFlow.Write()
     h_reg_TopmunuCR_1b_cutFlow.Write()
     h_reg_TopmunuCR_2b_cutFlow.Write()
-    h_reg_QCDCR_1b_cutFlow.Write()
-    h_reg_QCDCR_2b_cutFlow.Write()
+    h_reg_QCDbCR_1b_cutFlow.Write()
+    h_reg_QCDbCR_2b_cutFlow.Write()
+    h_reg_QCDaCR_1b_cutFlow.Write()
+    h_reg_QCDaCR_2b_cutFlow.Write()
+    h_reg_QCDcCR_1b_cutFlow.Write()
+    h_reg_QCDcCR_2b_cutFlow.Write()
     h_total_weight.Write()
     h_total.Write()
 

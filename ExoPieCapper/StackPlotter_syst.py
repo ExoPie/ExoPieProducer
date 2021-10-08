@@ -326,9 +326,9 @@ def makeplot(loc, hist, titleX, XMIN, XMAX, Rebin, ISLOG, NORATIOPLOT, reg, varB
         histolabel = "t#bar{t}(#mu#nu)+2b CR"
     elif 'TopenuCR_2b' in hist:
         histolabel = "t#bar{t}(e#nu)+2b CR"
-    elif '_QCDCR_1b' in hist:
+    elif '_QCDbCR_1b' in hist:
         histolabel = "QCD(1b)"
-    elif '_QCDCR_2b' in hist:
+    elif '_QCDbCR_2b' in hist:
         histolabel = "QCD(2b)"
     else:
         histolabel = "testing"
@@ -1149,7 +1149,7 @@ regions = []
 PUreg = []
 if makeMuCHplots:
     regions += ['preselR', 'SR_1b', 'SR_2b','ZmumuCR_1b', 'ZmumuCR_2b',
-                'TopmunuCR_1b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WmunuCR_2b', 'QCDCR_1b', 'QCDCR_2b']
+                'TopmunuCR_1b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WmunuCR_2b', 'QCDbCR_1b', 'QCDbCR_2b']
 if makeEleCHplots:
     regions += ['ZeeCR_1b', 'ZeeCR_2b', 'TopenuCR_1b',
                 'TopenuCR_2b', 'WenuCR_1b', 'WenuCR_2b']
