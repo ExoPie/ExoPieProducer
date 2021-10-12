@@ -78,6 +78,21 @@ sampList2016 = {'SingleElectron-Run2016B-17Jul2018_ver2-v1',
                 'DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
                 'DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
                 'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',
+                'WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToNuNu_PtZ-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToNuNu_PtZ-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToNuNu_PtZ-400To650_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToNuNu_PtZ-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToNuNu_PtZ-650ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8',
                 'ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1',
                 'ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1',
                 'ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1',
@@ -134,6 +149,12 @@ sampList2017 = {'MET-Run2017B-31Mar2018-v1',
                 'DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8',
                 'DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8',
                 'DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8',
+                'DYJetsToLL_Pt-0To50_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-400To650_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-650ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8',
                 'WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8',
                 'WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8',
                 'WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8',
@@ -209,20 +230,50 @@ sampList2017 = {'MET-Run2017B-31Mar2018-v1',
                 '_ma_700_mA_1200',
                 '_ma_750_mA_1200',
                 '_ma_1000_mA_1200',
-                '_ma_10_mA_1',
-                '_ma_50_mA_1',
-                '_ma_100_mA_1',
-                '_ma_150_mA_1',
-                '_ma_200_mA_1',
-                '_ma_250_mA_1',
-                '_ma_300_mA_1',
-                '_ma_350_mA_1',
-                '_ma_400_mA_1',
-                '_ma_450_mA_1',
-                '_ma_500_mA_1',
-                '_ma_700_mA_1',
-                '_ma_750_mA_1',
-                '_ma_1000_mA_1'}
+                '_MPhi10_',
+                '_MPhi50_',
+                '_MPhi100_',
+                '_MPhi150_',
+                '_MPhi200_',
+                '_MPhi250_',
+                '_MPhi300_',
+                '_MPhi350_',
+                '_MPhi400_',
+                '_MPhi450_',
+                '_MPhi500_',
+                '_MPhi700_',
+                '_MPhi750_',
+                '_MPhi1000_',
+                'DY1JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY1JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY1JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY1JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY1JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY2JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z1JetsToNuNu_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z1JetsToNuNu_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z1JetsToNuNu_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z1JetsToNuNu_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z2JetsToNuNU_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z2JetsToNuNu_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z2JetsToNuNu_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z2JetsToNuNu_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W1JetsToLNu_LHEWpT_0-50_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W1JetsToLNu_LHEWpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W2JetsToLNu_LHEWpT_0-50_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'W2JetsToLNu_LHEWpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                }
 
 sampList2018 = {'ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8',
                 'ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8',
@@ -317,20 +368,36 @@ sampList2018 = {'ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8',
                 '_ma_700_mA_1200',
                 '_ma_750_mA_1200',
                 '_ma_1000_mA_1200',
-                '_ma_10_mA_1',
-                '_ma_50_mA_1',
-                '_ma_100_mA_1',
-                '_ma_150_mA_1',
-                '_ma_200_mA_1',
-                '_ma_250_mA_1',
-                '_ma_300_mA_1',
-                '_ma_350_mA_1',
-                '_ma_400_mA_1',
-                '_ma_450_mA_1',
-                '_ma_500_mA_1',
-                '_ma_700_mA_1',
-                '_ma_750_mA_1',
-                '_ma_1000_mA_1'}
+                '_MPhi10_',
+                '_MPhi50_',
+                '_MPhi100_',
+                '_MPhi150_',
+                '_MPhi200_',
+                '_MPhi250_',
+                '_MPhi300_',
+                '_MPhi350_',
+                '_MPhi400_',
+                '_MPhi450_',
+                '_MPhi500_',
+                '_MPhi700_',
+                '_MPhi750_',
+                '_MPhi1000_',
+                'Z1JetsToNuNu_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z1JetsToNuNu_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z1JetsToNuNu_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'Z1JetsToNuNu_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8',
+                'WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-0To50_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-400To650_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                'DYJetsToLL_Pt-650ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8',
+                }
 
 
 if options.year == '2016':
@@ -347,7 +414,7 @@ else:
     sys.exit()
 
 
-outDir = 'analysis_histo_'+histVersion
+outDir = histVersion
 for fl in sampList:
     if not bool(glob.glob(inDir+'/*'+fl+'*')):
         continue
@@ -358,12 +425,12 @@ for fl in sampList:
     if 'mA_1200' in fl or 'mA_600' in fl:
         command = "hadd "+outDir + \
             "/bbDM_2HDMa_LO_5f_TuneCP3_13TeV_madgraph_pythia8"+fl+".root "+filestr
-    elif 'mA_1' in fl:
-        fl_ = fl.replace('ma', 'mphi').replace('mA', 'mchi')
-        filestr_ = filestr.replace('*.root', '_*.root')
-        command = "hadd "+outDir + \
-            "/bbDM_DMSimp_pseudo_NLO_TuneCP5_13TeV_amcatnlo_pythia8"+fl_+".root "+filestr_
+    elif '_MPhi' in fl:
+        fl_ = fl.replace('MPhi', 'mphi_')
+        command = "hadd "+outDir+"/bbDM_DMSimp_pseudo_NLO_TuneCP5_13TeV_amcatnlo_pythia8" + \
+            fl_+"mchi_1.root "+filestr
     else:
         command = "hadd "+outDir+"/"+fl+".root "+filestr
+    #print(command)
     os.system(command)
 print("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\n+=+=+=+=+=+=+ DONE +=+=+=+=+=+=+\n+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+")

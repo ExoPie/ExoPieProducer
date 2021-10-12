@@ -10,7 +10,7 @@ import PIL.ImageDraw
 import PIL.ImageFont
 
 ##to run
-## python Compare3Image.py -f firstDir -s secondDir -t thirdDir --f_txt firstDirTxt --s_txt secondDirTxt --t_txt thirdDirTxt
+## python CompareImageSideSide.py -f firstDir -s secondDir --f_txt firstDirTxt --s_txt secondDirTxt
 
 usage = "usage: %prog [options] arg1 arg2"
 parser = optparse.OptionParser(usage)
@@ -24,13 +24,9 @@ parser.add_option("-z", "--t_txt", dest="ThirdDirTxt", default="thirdDirTxt")
 
 (options, args) = parser.parse_args()
 
-# regions = ['preselR', 'SR_1b', 'SR_2b', 'ZmumuCR_1b', 'ZmumuCR_2b', 'ZeeCR_1b', 'ZeeCR_2b',
-#            'TopenuCR_1b', 'TopenuCR_2b','TopmunuCR_1b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WmunuCR_2b', 'WenuCR_1b', 'WenuCR_2b']
-regions = ['SR_1b', 'SR_2b', 'ZmumuCR_1b', 'ZmumuCR_2b', 'ZeeCR_1b', 'ZeeCR_2b',
-           'TopenuCR_1b', 'TopenuCR_2b', 'TopmunuCR_1b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WmunuCR_2b', 'WenuCR_1b', 'WenuCR_2b']
-# regions = ['ZmumuCR_1b', 'ZmumuCR_2b']
+regions = ['SR_1b', 'SR_2b', 'ZmumuCR_2j', 'ZmumuCR_3j', 'ZeeCR_2j', 'ZeeCR_3j', 'TopenuCR_2b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WenuCR_1b']
 list_comp = []
-tobe_comp = ['Recoil_log', '_MET']
+tobe_comp = ['ctsValue_log','cutFlow_log','delta_pfCalo_log','dEtaJet12_log','dPhi_lep1_MET_log','dPhi_lep2_MET_log','dPhiJet12_log','isjet2EtaMatch_log','Jet1CEmEF_log','Jet1CHadEF_log','Jet1CMulti_log','Jet1deepCSV_log','Jet1Eta_log','Jet1NEmEF_log','Jet1NHadEF_log','Jet1NMultiplicity_log','Jet1Phi_log','Jet1Pt_log','Jet2CEmEF_log','Jet2CHadEF_log','Jet2CMulti_log','Jet2deepCSV_log','Jet2Eta_log','Jet2NEmEF_log','Jet2NHadEF_log','Jet2NMultiplicity_log','Jet2Phi_log','Jet2Pt_log','lep1_Phi_log','lep1_pT_log','lep2_pT_log','M_Jet1Jet3_log','MET_log','METPhi_log','min_dPhi_log','NEle_log','nJets_log','NMu_log','nPho_log','nPV','NTau_log','PUnPV','ratioPtJet21_log','rJet1PtMET_log','Zmass','ZpT_log','Recoil']
 # tobe_comp = ['Jet1Phi', 'METPhi']
 # tobe_comp = ['Recoil']
 # tobe_comp = ['NTau']

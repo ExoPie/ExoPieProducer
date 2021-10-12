@@ -24,16 +24,13 @@ parser.add_option("-z", "--t_txt", dest="ThirdDirTxt", default="thirdDirTxt")
 
 (options, args) = parser.parse_args()
 
-# regions = ['preselR', 'SR_1b', 'SR_2b', 'ZmumuCR_1b', 'ZmumuCR_2b', 'ZeeCR_1b', 'ZeeCR_2b',
-#            'TopenuCR_1b', 'TopenuCR_2b','TopmunuCR_1b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WmunuCR_2b', 'WenuCR_1b', 'WenuCR_2b']
-regions = ['SR_1b', 'SR_2b', 'ZmumuCR_1b', 'ZmumuCR_2b', 'ZeeCR_1b', 'ZeeCR_2b',
-           'TopenuCR_1b', 'TopenuCR_2b', 'TopmunuCR_1b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WmunuCR_2b', 'WenuCR_1b', 'WenuCR_2b']
-# regions = ['ZmumuCR_1b', 'ZmumuCR_2b']
+
+regions = ['SR_1b', 'SR_2b', 'ZmumuCR_2j', 'ZmumuCR_3j', 'ZeeCR_2j', 'ZeeCR_3j', 'TopenuCR_2b', 'TopmunuCR_2b', 'WmunuCR_1b', 'WenuCR_1b', ]
+# regions = ['SR_1b', 'SR_2b',]
+# regions = ['QCDbCR_1b', 'QCDbCR_2b']
 list_comp = []
-# tobe_comp = ['Recoil_log', 'Jet1Pt_log', 'NTau', 'lep2_pT','_MET']
-tobe_comp = ['Jet1Phi', 'METPhi']
-# tobe_comp = ['Recoil']
-# tobe_comp = ['NTau']
+# tobe_comp = ['ctsValue_log', 'MET_log','Recoil']
+tobe_comp = ['ctsValue_log','cutFlow_log','delta_pfCalo_log','dEtaJet12_log','dPhi_lep1_MET_log','dPhi_lep2_MET_log','dPhiJet12_log','isjet2EtaMatch_log','Jet1CEmEF_log','Jet1CHadEF_log','Jet1CMulti_log','Jet1deepCSV_log','Jet1Eta_log','Jet1NEmEF_log','Jet1NHadEF_log','Jet1NMultiplicity_log','Jet1Phi_log','Jet1Pt_log','Jet2CEmEF_log','Jet2CHadEF_log','Jet2CMulti_log','Jet2deepCSV_log','Jet2Eta_log','Jet2NEmEF_log','Jet2NHadEF_log','Jet2NMultiplicity_log','Jet2Phi_log','Jet2Pt_log','lep1_Phi_log','lep1_pT_log','lep2_pT_log','M_Jet1Jet3_log','MET_log','METPhi_log','min_dPhi_log','NEle_log','nJets_log','NMu_log','nPho_log','nPV','NTau_log','PUnPV','ratioPtJet21_log','rJet1PtMET_log','Zmass','ZpT_log','Recoil']
 for reg in regions:
     listfiles_1 = [f for f in os.listdir(options.FirstDir+'/bbDMPng/'+reg)]
     listfiles_2 = [f for f in os.listdir(options.SecondDir+'/bbDMPng/'+reg)]
@@ -51,7 +48,7 @@ for reg in regions:
     for i in listfiles_1:
 
         if (i in listfiles_1 and i in listfiles_2) and [hist for hist in tobe_comp if(hist in i)]:
-            im_list = [options.FirstDir+'/bbDMPng/'+reg+'/' +i, options.SecondDir+'/bbDMPng/'+reg+'/'+i]
+            im_list = [options.FirstDir+'/bbDMPng/'+reg+'/' + i, options.SecondDir+'/bbDMPng/'+reg+'/'+i]
             list_temp.append(im_list)
         else:
             continue
@@ -73,8 +70,8 @@ for im in list_comp:
     # draw[0].text((350, 200), options.FirstDirTxt, font=fonts, fill=(0, 0, 0))
     # draw[1].text((300, 200), options.SecondDirTxt, font=fonts, fill=(0, 0, 0))
     color = 'rgb(255, 0, 0)'
-    draw[0].text((110, 120), options.FirstDirTxt, font=fonts, fill=color)
-    draw[1].text((110, 120), options.SecondDirTxt, font=fonts, fill=color)
+    draw[0].text((120, 50), options.FirstDirTxt, font=fonts, fill=color)
+    draw[1].text((120, 50), options.SecondDirTxt, font=fonts, fill=color)
 
     # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
     min_shape = sorted([(np.sum(i.size), i.size) for i in imgs])[0][1]
@@ -86,5 +83,6 @@ for im in list_comp:
     image_name = (im[1].split('/')[-1]).split('.')[0]
     print(reg_name, image_name)
     imgs_comb.save('compared_files/bbDMPng/'+reg_name+'/'+image_name+'.png', optimize=True, quality=100)
-    imgs_comb.save('compared_files/bbDMPdf/'+reg_name+'/'+image_name+'.pdf', optimize=True, quality=100)
-    imgs_comb.save('compared_files/allFiles/'+image_name+'.png', optimize=True, quality=20)
+    imgs_comb.save('compared_files/bbDMPdf/'+reg_name+'/'+image_name+'.pdf', optimize=True, quality=1000)
+    imgs_comb.save('compared_files/allFiles/'+image_name+'.png', optimize=True, quality=100)
+    imgs_comb.save('compared_files/allFiles/'+image_name+'.pdf', optimize=True, quality=100)

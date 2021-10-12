@@ -52,4 +52,18 @@ def getSigXsec_official(sig_name):
     if 'ma_400_mA_600'in sig_name: Xsec =0.04518
     if 'ma_450_mA_600'in sig_name: Xsec =0.03419
     if 'ma_500_mA_600'in sig_name: Xsec =0.02596
+    if 'mphi_10_mchi_1' in sig_name: Xsec = 0.01208000
+    if 'mphi_50_mchi_1' in sig_name: Xsec = 0.00710200
+    if 'mphi_100_mchi_1' in sig_name: Xsec = 0.00446900
+    if 'mphi_150_mchi_1' in sig_name: Xsec = 0.00298100
+    if 'mphi_200_mchi_1' in sig_name: Xsec = 0.00186400
+    if 'mphi_250_mchi_1' in sig_name: Xsec = 0.00113800
+    if 'mphi_300_mchi_1' in sig_name: Xsec = 0.00079840
+    if 'mphi_350_mchi_1' in sig_name: Xsec = 0.00039440
+    if 'mphi_400_mchi_1' in sig_name: Xsec = 0.00019620
+    if 'mphi_450_mchi_1' in sig_name: Xsec = 0.00011120
+    if 'mphi_500_mchi_1' in sig_name: Xsec = 0.00008467
+    if 'mphi_700_mchi_1' in sig_name: Xsec = 0.00002900
+    if 'mphi_750_mchi_1' in sig_name: Xsec = 0.00002412
+    if 'mphi_1000_mchi_1' in sig_name: Xsec = 0.00000660
     return Xsec

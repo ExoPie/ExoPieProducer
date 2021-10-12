@@ -27,7 +27,6 @@ def getSigXsec(sig_name):
     return Xsec
 
 def getSigXsec_official(sig_name):
-    if 'ma_400_mA_1200' in sig_name: Xsec =  0.03766
     if 'ma_10_mA_1200' in sig_name: Xsec =  0.9053
     if 'ma_100_mA_1200' in sig_name: Xsec =  0.4096
     if 'ma_1000_mA_1200' in sig_name: Xsec =  0.001415
@@ -37,7 +36,7 @@ def getSigXsec_official(sig_name):
     if 'ma_300_mA_1200' in sig_name: Xsec =  0.076770
     if 'ma_350_mA_1200' in sig_name: Xsec =  0.052710
     if 'ma_400_mA_1200' in sig_name: Xsec =  0.036630
-    if 'ma_450_mA_1200' in sig_name: Xsec =  2.66E-02
+    if 'ma_450_mA_1200' in sig_name: Xsec =  0.0266
     if 'ma_50_mA_1200' in sig_name: Xsec =  0.62480
     if 'ma_500_mA_1200' in sig_name: Xsec =  0.018970
     if 'ma_700_mA_1200' in sig_name: Xsec =  0.005750
@@ -53,4 +52,19 @@ def getSigXsec_official(sig_name):
     if 'ma_450_mA_600' in sig_name: Xsec =  0.034210
     if 'ma_50_mA_600' in sig_name: Xsec =  0.62520
     if 'ma_500_mA_600' in sig_name: Xsec =  0.0257900
+    if 'mphi_10_mchi_1' in sig_name: Xsec = 0.01208000
+    if 'mphi_50_mchi_1' in sig_name: Xsec = 0.00710200
+    if 'mphi_100_mchi_1' in sig_name: Xsec = 0.00446900
+    if 'mphi_150_mchi_1' in sig_name: Xsec = 0.00298100
+    if 'mphi_200_mchi_1' in sig_name: Xsec = 0.00186400
+    if 'mphi_250_mchi_1' in sig_name: Xsec = 0.00113800
+    if 'mphi_300_mchi_1' in sig_name: Xsec = 0.00079840
+    if 'mphi_350_mchi_1' in sig_name: Xsec = 0.00039440
+    if 'mphi_400_mchi_1' in sig_name: Xsec = 0.00019620
+    if 'mphi_450_mchi_1' in sig_name: Xsec = 0.00011120
+    if 'mphi_500_mchi_1' in sig_name: Xsec = 0.00008467
+    if 'mphi_700_mchi_1' in sig_name: Xsec = 0.00002900
+    if 'mphi_750_mchi_1' in sig_name: Xsec = 0.00002412
+    if 'mphi_1000_mchi_1' in sig_name: Xsec = 0.00000660
+
     return Xsec

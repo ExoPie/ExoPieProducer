@@ -13,13 +13,13 @@ def getXsec(samplename):
     if 'DYJetsToLL_M-50_HT-600to800' in samplename: Xsec  =	1.359
     if 'DYJetsToLL_M-50_HT-800to1200' in samplename: Xsec  =	0.623
     if 'DYJetsToLL_M-50_HT-70to100' in samplename: Xsec = 170.6
-    
+
     if 'GJets_HT-100To200' in samplename: Xsec  =	9239
     if 'GJets_HT-200To400' in samplename: Xsec  =	2303
     if 'GJets_HT-400To600' in samplename: Xsec  =	274.6
     if 'GJets_HT-40To100' in samplename: Xsec  =	20810
     if 'GJets_HT-600ToInf' in samplename: Xsec  =	93.53
-    
+
     if 'QCD_HT1000to1500' in samplename: Xsec  =	1208*qcd_fac
     if 'QCD_HT1500to2000' in samplename: Xsec  =	120*qcd_fac
     if 'QCD_HT2000toInf' in samplename: Xsec  =	25.27*qcd_fac
@@ -68,12 +68,29 @@ def getXsec(samplename):
     if 'ZJetsToNuNu_HT-400To600' in samplename: Xsec  =	3.585*zjet_fac
     if 'ZJetsToNuNu_HT-600To800' in samplename: Xsec  =	0.8548*zjet_fac
     if 'ZJetsToNuNu_HT-800To1200' in samplename: Xsec  =	1.499*zjet_fac
-    
+
     if 'ggZH_HToBB_ZToNuNu_M125'  in samplename: Xsec = 0.007842
     if 'ggZH_HToBB_ZToLL_M125'  in samplename: Xsec = 0.014366
     if 'WminusH_HToBB_WToLNu_M125' in samplename: Xsec = 0.3654
     if 'WplusH_HToBB_WToLNu_M125' in samplename: Xsec = 0.159
     if 'ZH_HToBB_ZToLL_M125'    in samplename and 'ggZH_HToBB_ZToLL_M125' not in samplename:   Xsec = 0.04865
     if 'ZH_HToBB_ZToNuNu_M125'  in samplename and 'ggZH_HToBB_ZToNuNu_M125' not in samplename: Xsec = 0.08912
+    if 'DYJetsToLL_Pt-100To250' in samplename: Xsec  =	97.36000
+    if 'DYJetsToLL_Pt-100To250' in samplename: Xsec  =	81.42000
+    if 'DYJetsToLL_Pt-250To400' in samplename: Xsec  =	3.76900
+    if 'DYJetsToLL_Pt-250To400' in samplename: Xsec  =	2.99100
+    if 'DYJetsToLL_Pt-400To650' in samplename: Xsec  =	0.51480
+    if 'DYJetsToLL_Pt-400To650' in samplename: Xsec  =	0.38820
+    if 'DYJetsToLL_Pt-50To100' in samplename: Xsec  =	354.90000
+    if 'DYJetsToLL_Pt-650ToInf' in samplename: Xsec  =	0.03737
+    if 'DYJetsToNuNu_PtZ-100To250' in samplename: Xsec  =	54.91000
+    if 'DYJetsToNuNu_PtZ-250To400' in samplename: Xsec  =	2.07300
+    if 'DYJetsToNuNu_PtZ-400To650' in samplename: Xsec  =	0.27850
+    if 'DYJetsToNuNu_PtZ-50To100' in samplename: Xsec  =	236.50000
+    if 'DYJetsToNuNu_PtZ-650ToInf' in samplename: Xsec  =	0.02604
+    if 'WJetsToLNu_Pt-100To250' in samplename: Xsec  =	626.20000
+    if 'WJetsToLNu_Pt-250To400' in samplename: Xsec  =	21.83000
+    if 'WJetsToLNu_Pt-400To600' in samplename: Xsec  =	2.63500
+    if 'WJetsToLNu_Pt-600ToInf' in samplename: Xsec  =	0.41020
 
     return Xsec

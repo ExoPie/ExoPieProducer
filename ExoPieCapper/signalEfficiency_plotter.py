@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import os
 import glob
 import math
@@ -125,9 +119,9 @@ def getGraph(n,x,y,lc,mc,ms):
     gr.SetMarkerColor(mc)
     gr.GetYaxis().SetTitle("Signal Efficiency")
     gr.GetXaxis().SetTitle("M_{a} (GeV)")
-#     gr.SetTitle("") 
+#     gr.SetTitle("")
     return gr
-    
+
 
 # In[2]:
 usage = "usage: %prog [options] arg1 arg2"
@@ -193,7 +187,7 @@ sig_list = [SignalPath+'/' +fl for fl in os.listdir(SignalPath) if '.root' in fl
 
 if not os.path.exists('Signal_Efficiency_Plots'):
     os.makedirs('Signal_Efficiency_Plots')
-    
+
 for cat in ('1b','2b'):
     sig_eff_ma_600 = {}
     sig_eff_ma_1200 = {}
@@ -214,8 +208,8 @@ for cat in ('1b','2b'):
             hist = fin.Get("h_reg_SR_"+cat+"_MET")
             hist_total = fin.Get("h_total_mcweight")
             hist_eff = hist.Integral()/hist_total.Integral()
-            sig_eff_ma_1200.update({int(rootFile.split('_')[6].strip('Ma')):hist_eff})        
-    
+            sig_eff_ma_1200.update({int(rootFile.split('_')[6].strip('Ma')):hist_eff})
+
     c1 = SetCanvas()
     c1.SetTickx()
     c1.SetTicky()
@@ -244,10 +238,10 @@ for cat in ('1b','2b'):
     y6 = array('d',y6)
     gr6=getGraph(len(x6),x6,y6,2,2,22)
     gr6.Draw('pl same')
-    
+
     if cat == '1b': sr = 'SR1'
     elif cat == '2b': sr = 'SR2'
-        
+
     latex=getLatex()
     latex.DrawLatex(0.22, 0.74,'#splitline{2HDM+a model, '+sr+'}{tan#beta = 35, sin#theta = 0.7}')
 
