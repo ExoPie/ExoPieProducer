@@ -108,6 +108,7 @@ def getXsec(samplename):
     if 'W2JetsToLNu_LHEWpT_400-inf' in samplename: Xsec  = 3
     #if 'W2JetsToLNu_LHEWpT_50-150' in samplename: Xsec  =
 
+    #for 2016 NLO samples
     if 'DYJetsToLL_Pt-100To250' in samplename: Xsec = 81.42000
     if 'DYJetsToLL_Pt-250To400' in samplename: Xsec = 2.99100
     if 'DYJetsToLL_Pt-400To650' in samplename: Xsec = 0.38820
@@ -118,9 +119,29 @@ def getXsec(samplename):
     if 'DYJetsToNuNu_PtZ-400To650' in samplename: Xsec = 0.27850
     if 'DYJetsToNuNu_PtZ-50To100' in samplename: Xsec = 236.50000
     if 'DYJetsToNuNu_PtZ-650ToInf' in samplename: Xsec = 0.02604
-    if 'WJetsToLNu_Pt-100To250' in samplename: Xsec = 626.20000
-    if 'WJetsToLNu_Pt-250To400' in samplename: Xsec = 21.83000
-    if 'WJetsToLNu_Pt-400To600' in samplename: Xsec = 2.63500
-    if 'WJetsToLNu_Pt-600ToInf' in samplename: Xsec = 0.41020
+    # if 'WJetsToLNu_Pt-100To250' in samplename: Xsec = 626.20000
+    # if 'WJetsToLNu_Pt-250To400' in samplename: Xsec = 21.83000
+    # if 'WJetsToLNu_Pt-400To600' in samplename: Xsec = 2.63500
+    # if 'WJetsToLNu_Pt-600ToInf' in samplename: Xsec = 0.41020
+
+    ##for 2018 NLO samples
+    ##from monoj
+    # if 'WJetsToLNu_Pt-100To250' in samplename: Xsec = 769.20000
+    # if 'WJetsToLNu_Pt-250To400' in samplename: Xsec = 27.62000
+    # if 'WJetsToLNu_Pt-400To600' in samplename: Xsec = 3.59500
+    # if 'WJetsToLNu_Pt-600ToInf' in samplename: Xsec = 0.549020
+    ##from GenXanalyser
+    if 'WJetsToLNu_Pt-100To250' in samplename: Xsec = 771.20
+    if 'WJetsToLNu_Pt-250To400' in samplename: Xsec = 28.06
+    if 'WJetsToLNu_Pt-400To600' in samplename: Xsec = 3.59
+    if 'WJetsToLNu_Pt-50To100' in samplename: Xsec = 3578.00
+    if 'WJetsToLNu_Pt-600ToInf' in samplename: Xsec = 0.55
+    if 'Z1JetsToNuNu_M-50_LHEZpT_150-250' in samplename: Xsec = 17.97
+    if 'Z1JetsToNuNu_M-50_LHEZpT_250-400' in samplename: Xsec = 2.053
+    if 'Z1JetsToNuNu_M-50_LHEZpT_400-inf' in samplename: Xsec = 0.224
+    if 'Z1JetsToNuNu_M-50_LHEZpT_50-150' in samplename: Xsec = 598.000
+    if 'Z2JetsToNuNu_M-50_LHEZpT_150-250' in samplename: Xsec = 29.660
+    if 'Z2JetsToNuNu_M-50_LHEZpT_250-400' in samplename: Xsec = 5.214
+    if 'Z2JetsToNuNu_M-50_LHEZpT_50-150' in samplename: Xsec = 326.000
 
     return Xsec
