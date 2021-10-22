@@ -181,123 +181,48 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
                 ep_elePt[0], ep_eleEta[0])
             tot_weight = weightEle[0]*common_weight*weightEleTrig
         if (nEle == 2):
-            if ep_eleIsPTight[1]:
-                weightEle[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[0][0]
-                weightEle_up[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[1][0]
-                weightEle_down[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[2][0]
+            weightEle[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[0][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][0]
+            weightEle_up[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[1][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][0]
+            weightEle_down[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[2][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][0]
 
-                weightEle[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[0][1]
-                weightEle_up[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[1][1]
-                weightEle_down[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[2][1]
+            weightEle[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[0][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][1]
+            weightEle_up[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[1][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][1]
+            weightEle_down[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[2][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][1]
 
-                weightEle[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[0][1]
-                weightEle_up[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[1][2]
-                weightEle_down[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'T')[2][2]
-            else:
-                weightEle[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][0]
-                weightEle_up[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][0]
-                weightEle_down[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][0]
+            weightEle[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[0][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][2]
+            weightEle_up[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[1][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][2]
+            weightEle_down[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[2][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][2]
 
-                weightEle[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][1]
-                weightEle_up[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][1]
-                weightEle_down[1] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2][1] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][1]
-
-                weightEle[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    0][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][2]
-                weightEle_up[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    1][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[1][2]
-                weightEle_down[2] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[
-                    2][2] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[2][2]
             weightEleTrig = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])[0]
             weightEleTrig_up = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])[1]
-            weightEleTrig_down = wgt.eletrig_weight(
-                ep_elePt[0], ep_eleEta[0])[2]
+            weightEleTrig_down = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])[2]
 
             tot_weight = weightEle[0]*common_weight*weightEleTrig
 
     if (nEle == 0 and nMu == 1):
-        weightMu, weightMu_up, weightMu_down = wgt.mu_weight(
-            ep_muPt[0], ep_muEta[0], 'T')
+        weightMu, weightMu_up, weightMu_down = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')
         if ep_WmunuRecoil > 250:
-            weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(
-                ep_WmunuRecoil, 'R')
+            weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(ep_WmunuRecoil, 'R')
         tot_weight = weightMu[0]*common_weight*weightRecoiltrig
     if (nEle == 0 and nMu == 2):
-        if ep_isTightMuon[1] and ep_muPt[1] > 20.0:
-            weightMu[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][0]
-            weightMu_up[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][0]
-            weightMu_down[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][0]
+        weightMu[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[0][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][0]
+        weightMu_up[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[1][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][0]
+        weightMu_down[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[2][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][0]
 
-            weightMu[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][1]
-            weightMu_up[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][1]
-            weightMu_down[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][1]
+        weightMu[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[0][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][1]
+        weightMu_up[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[1][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][1]
+        weightMu_down[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[2][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][1]
 
-            weightMu[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][2]
-            weightMu_up[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][2]
-            weightMu_down[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][2]
+        weightMu[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[0][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][2]
+        weightMu_up[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[1][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][2]
+        weightMu_down[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[2][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][2]
 
-            weightMu[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[0][3]
-            weightMu_up[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[1][3]
-            weightMu_down[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'T')[2][3]
+        weightMu[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[0][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][3]
+        weightMu_up[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[1][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][3]
+        weightMu_down[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[2][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][3]
 
-        else:
-            weightMu[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][0]
-            weightMu_up[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][0]
-            weightMu_down[0] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][0]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][0]
-
-            weightMu[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][1]
-            weightMu_up[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][1]
-            weightMu_down[1] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][1]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][1]
-
-            weightMu[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][2]
-            weightMu_up[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][2]
-            weightMu_down[2] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][2]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][2]
-
-            weightMu[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                0][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[0][3]
-            weightMu_up[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                1][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[1][3]
-            weightMu_down[3] = wgt.mu_weight(ep_muPt[0], ep_muEta[0], 'T')[
-                2][3]*wgt.mu_weight(ep_muPt[1], ep_muEta[1], 'L')[2][3]
         if ep_ZmumuRecoil > 250:
-            weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(
-                ep_ZmumuRecoil, 'R')
+            weightRecoiltrig, weightRecoiltrig_up, weightRecoiltrig_down = wgt.getMETtrig_First(ep_ZmumuRecoil, 'R')
         tot_weight = weightMu[0]*common_weight*weightRecoiltrig
 
     ele_wgt = [weightEle[0]*weightEleTrig, weightEle_up[0]*weightEleTrig_up, weightEle_down[0]*weightEleTrig_down]
