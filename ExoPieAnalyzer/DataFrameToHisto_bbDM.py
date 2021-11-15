@@ -40,6 +40,7 @@ parser.add_argument("-o", "--outputfile", dest="outputfile", default="out.root")
 parser.add_argument("-F", "--farmout", action="store_true",  dest="farmout")
 parser.add_argument("-inDir", "--inputDir", dest="inputDir", default=".")
 parser.add_argument("-D", "--outputdir", dest="outputdir", default=".")
+parser.add_argument("-c", "--isCondor", action="store_true", dest="isCondor")
 
 args = parser.parse_args()
 
@@ -55,8 +56,18 @@ outputdir = '.'
 if args.outputdir:
     outputdir = str(args.outputdir)
 
+if args.isCondor == None:
+    isCondor = False
+else:
+    isCondor = args.isCondor
 
-infile = args.inputfile
+if isCondor:
+    with open(args.inputfile) as f:
+        content_list = f.readlines()
+    content_list = [x.strip() for x in content_list]
+    infile = content_list[0]
+else:
+    infile = args.inputfile
 
 
 args = parser.parse_args()

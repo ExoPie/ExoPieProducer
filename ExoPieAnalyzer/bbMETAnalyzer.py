@@ -437,7 +437,7 @@ def runbbdm(txtfile):
             ep_nTau_DRBased_EleMuVeto, ep_nTau_discBased_looseElelooseMuVeto, ep_nTau_discBased_looseEleTightMuVeto, ep_nTau_discBased_mediumElelooseMuVeto, ep_nTau_discBased_TightEleTightMuVeto,\
             ep_pu_nTrueInt, ep_pu_nPUVert, \
             ep_THINjetNPV, \
-            ep_mcweight, ep_genParPt, ep_genParSample, eletrigdecision, mutrigdecision, mettrigdecision, \
+            ep_mcweight, ep_genParPt, ep_genParSample, eletrigdecision, photrigdecision, mutrigdecision, mettrigdecision, \
             ep_isak4JetBasedHemEvent, ep_ismetphiBasedHemEvent1, ep_ismetphiBasedHemEvent2 \
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId,
                    df.st_prefiringweight, df.st_prefiringweightup, df.st_prefiringweightdown,
@@ -462,7 +462,7 @@ def runbbdm(txtfile):
                    df.st_nTau_DRBased_EleMuVeto, df.st_nTau_discBased_looseElelooseMuVeto, df.st_nTau_discBased_looseEleTightMuVeto, df.st_nTau_discBased_mediumElelooseMuVeto, df.st_nTau_discBased_TightEleTightMuVeto,
                    df.st_pu_nTrueInt, df.st_pu_nPUVert,
                    df.st_THINjetNPV,
-                   df.mcweight, df.st_genParPt, df.st_genParSample, df.st_eletrigdecision, df.st_mutrigdecision, df.st_mettrigdecision, df.st_isak4JetBasedHemEvent, df.st_ismetphiBasedHemEvent1, df.st_ismetphiBasedHemEvent2):
+                   df.mcweight, df.st_genParPt, df.st_genParSample, df.st_eletrigdecision, df.st_photrigdecision, df.st_mutrigdecision, df.st_mettrigdecision, df.st_isak4JetBasedHemEvent, df.st_ismetphiBasedHemEvent1, df.st_ismetphiBasedHemEvent2):
             ieve = ieve + 1
             if ieve % 10000 == 0:
                 print("Processed", ieve, "Events")
@@ -523,6 +523,8 @@ def runbbdm(txtfile):
             electron VARS
             -------------------------------------------------------------------------------
             '''
+            eletrigdecision = eletrigdecision or photrigdecision
+
             ep_nEle_ = [ij for ij in range(ep_nEle) if (ep_eleIsPassLoose[ij])]
             ep_nEle_index = len(ep_nEle_)
             ep_elePt = [getPt(ep_elePx[ij], ep_elePy[ij]) for ij in ep_nEle_]
