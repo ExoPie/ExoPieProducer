@@ -523,7 +523,8 @@ def runbbdm(txtfile):
             electron VARS
             -------------------------------------------------------------------------------
             '''
-            eletrigdecision = eletrigdecision or photrigdecision
+            if era == '2018' or era == '2017':
+                eletrigdecision = eletrigdecision or photrigdecision
 
             ep_nEle_ = [ij for ij in range(ep_nEle) if (ep_eleIsPassLoose[ij])]
             ep_nEle_index = len(ep_nEle_)

@@ -85,3 +85,5 @@ bbv12.00.03 * added various variables for bdt.
 bbv12.00.04 * photons cleaned against jets
 
 bbv12.01.00 * shifter to NLO
+
+bbv12.01.01 * using OR of ELE and PHO trigger for 2017 adn 2018, and fixed sf for di-lepton region(tight SF for leading and loose for loose) and separation of b-tag weight w.r.t tagged and non-tagged separation.
