@@ -754,9 +754,14 @@ def runFile(trees, filename):
             df['dPhiCalo_pfMET'] = DeltaPhi(df.METPhi, df.pfpatCaloMETPhi)
             df['weightcentral'] = 1.0
             df = df[df.Jet1Pt > 0.0]
+            df['weight'] = df.weight/(df.weightQCD*df.weightTop*df.weightEWK)
             if ('SR' not in tree) and ('QCD' not in tree) and ('preselR' not in tree):
                 df['dPhiJet1Lep1'] = DeltaPhi(df.Jet1Phi, df.leadingLepPhi)
+            if ('Z' in tree and 'CR' in tree):
+                df['weight'] = df.weight/(df.weightB*df.weightFakeB)
+
             # df = df[df.isak4JetBasedHemEvent == 0] #### only uncomment it for 2018 CD Era
+            # df = df[df.ismetphiBasedHemEvent2==0] #### only uncomment it for 2018 CD Era
             HistWrtter(df, outfilename, tree, limit_varSR, limit_varCR, mainBin, mode)
         else:
             emptyHistWritter(tree, outfilename, limit_varSR, limit_varCR, mainBin, mode)
