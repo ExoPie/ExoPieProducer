@@ -1,0 +1,58 @@
+region h_reg_SR_1b_MET
+       Bin1   Bin2   Bin3   Bin4
+ZJets   12841.0±50.7   7133.9±32.2   1362.9±10.1   217.1±2.5
+DYJets   91.2±3.9   39.7±2.5   3.8±0.4   0.3±0.1
+WJets   5278.5±66.1   2437.3±41.0   374.4±12.0   40.1±2.4
+STop   699.6±5.7   282.8±4.1   33.2±1.5   3.0±0.4
+GJets   2.5±0.5   0.8±0.3   0.0±0.0   0.0±0.0
+Top   2452.0±8.6   922.5±5.9   84.1±1.7   6.4±0.4
+DIBOSON   193.7±6.2   122.0±5.4   30.6±2.6   6.2±1.1
+QCD   313.9±56.3   162.3±48.3   8.3±5.8   0.0±0.0
+SM H   56.9±0.2   30.5±0.2   4.8±0.1   1.1±0.0
+bkgSum   21929.3±101.3   11131.8±71.7   1902.0±17.1   274.2±3.7
+data_obs   21929.3±101.3   11131.8±71.7   1902.0±17.1   274.2±3.7
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_1200.root   337.6±1.8   257.3±1.8   67.7±0.9   12.9±0.4
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_600.root   372.3±2.2   261.1±2.0   60.0±1.0   8.6±0.4
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_1200.root   216.5±1.2   165.8±1.1   44.0±0.6   8.4±0.3
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_600.root   247.3±1.4   175.1±1.3   40.2±0.6   5.9±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_1200.root   145.0±0.8   111.8±0.8   29.7±0.4   5.7±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_600.root   164.6±1.0   117.3±0.9   27.3±0.4   3.9±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_1200.root   65.5±0.3   51.0±0.3   13.7±0.2   2.6±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_600.root   80.6±0.5   58.0±0.4   13.8±0.2   2.1±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_1200.root   45.3±0.2   35.5±0.2   9.6±0.1   1.8±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_600.root   59.2±0.3   42.6±0.3   10.1±0.2   1.5±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_1200.root   23.4±0.1   18.4±0.1   5.0±0.1   1.0±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_600.root   33.4±0.2   24.4±0.2   6.0±0.1   0.9±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_700_mA_1200.root   7.1±0.0   5.5±0.0   1.5±0.0   0.3±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_750_mA_1200.root   5.4±0.0   4.2±0.0   1.1±0.0   0.2±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_1000_mA_1200.root   1.8±0.0   1.4±0.0   0.4±0.0   0.1±0.0
+
+region h_reg_SR_2b_MET
+       Bin1   Bin2   Bin3   Bin4
+ZJets   1111.5±12.9   645.9±8.9   120.8±2.6   17.5±0.6
+DYJets   6.4±1.0   2.5±0.5   0.6±0.3   0.0±0.0
+WJets   230.3±12.4   129.1±9.6   23.3±2.7   2.5±0.6
+STop   261.3±3.4   109.0±2.6   17.0±1.2   1.5±0.4
+GJets   0.4±0.2   0.0±0.0   0.0±0.0   0.0±0.0
+Top   1011.0±5.4   352.4±3.6   36.3±1.1   3.5±0.3
+DIBOSON   38.9±2.6   34.9±2.6   6.5±1.1   0.0±0.0
+QCD   42.9±23.6   0.0±0.0   0.0±0.0   0.0±0.0
+SM H   39.8±0.2   27.7±0.1   6.2±0.1   0.9±0.0
+bkgSum   2742.5±30.5   1301.5±14.0   210.7±4.3   26.0±1.0
+data_obs   2742.5±30.5   1301.5±14.0   210.7±4.3   26.0±1.0
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_1200.root   176.9±1.3   152.3±1.3   44.5±0.7   9.7±0.3
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_600.root   194.3±1.5   154.5±1.5   39.2±0.8   7.1±0.3
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_1200.root   114.0±0.8   98.7±0.9   29.2±0.5   6.4±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_600.root   128.6±1.0   103.8±1.0   26.5±0.5   4.7±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_1200.root   76.5±0.6   66.7±0.6   19.7±0.3   4.3±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_600.root   86.1±0.7   69.6±0.7   17.9±0.3   3.3±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_1200.root   34.7±0.3   30.5±0.3   9.1±0.1   1.9±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_600.root   42.2±0.3   34.6±0.3   8.9±0.2   1.7±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_1200.root   24.0±0.2   21.3±0.2   6.4±0.1   1.4±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_600.root   30.9±0.2   25.1±0.2   6.7±0.1   1.2±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_1200.root   12.4±0.1   10.9±0.1   3.3±0.1   0.8±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_600.root   17.5±0.1   14.5±0.1   3.9±0.1   0.7±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_700_mA_1200.root   3.8±0.0   3.3±0.0   1.0±0.0   0.2±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_750_mA_1200.root   2.9±0.0   2.5±0.0   0.7±0.0   0.2±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_1000_mA_1200.root   0.9±0.0   0.8±0.0   0.2±0.0   0.1±0.0
+

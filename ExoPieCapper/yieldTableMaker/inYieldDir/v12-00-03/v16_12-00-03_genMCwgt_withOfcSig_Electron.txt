@@ -1,0 +1,78 @@
+region Zee-CR-(2j)
+$t\bar{t}$ 99.86±2.25
+Single $t$ 28.46±2.27
+W(l$\nu$)+jets 22.25±6.98
+WW/WZ/ZZ 151.28±13.19
+$\gamma$+jets 0.00±0.00
+Z($\nu\nu$)+jets 0.00±0.00
+Z(ll)+jets 13557.72±53.39
+QCD 13.93±13.93
+SM H 6.47±0.09
+Total_Bkg 13879.96±57.25
+data_obs 12822.00±113.23
+
+region Zee-CR-(3j)
+$t\bar{t}$ 190.84±3.16
+Single $t$ 45.03±2.87
+W(l$\nu$)+jets 18.51±5.36
+WW/WZ/ZZ 137.76±12.15
+$\gamma$+jets 0.00±0.00
+Z($\nu\nu$)+jets 0.00±0.00
+Z(ll)+jets 9610.94±41.08
+QCD 0.00±0.00
+SM H 8.27±0.10
+Total_Bkg 10011.36±43.39
+data_obs 9413.00±97.02
+
+region t$\bar{t}(e)$-CR-(1b)
+$t\bar{t}$ 4646.30±32.38
+Single $t$ 1642.88±18.36
+W(l$\nu$)+jets 4275.52±96.63
+WW/WZ/ZZ 85.14±14.17
+$\gamma$+jets 14.98±2.59
+Z($\nu\nu$)+jets 0.25±0.10
+Z(ll)+jets 158.92±5.00
+QCD 63.46±28.90
+SM H 25.15±0.57
+Total_Bkg 10912.60±108.59
+data_obs 12409.00±111.35
+
+region t$\bar{t}(e)$-CR-(2b)
+$t\bar{t}$ 745.93±12.76
+Single $t$ 331.43±8.23
+W(l$\nu$)+jets 134.48±14.42
+WW/WZ/ZZ 7.11±3.02
+$\gamma$+jets 0.42±0.38
+Z($\nu\nu$)+jets 0.03±0.03
+Z(ll)+jets 8.47±1.02
+QCD 170.09±111.56
+SM H 8.88±0.33
+Total_Bkg 1406.85±113.56
+data_obs 1275.00±35.71
+
+region W-$(e\nu)$-CR-(1b)
+$t\bar{t}$ 179.27±5.23
+Single $t$ 159.37±6.33
+W(l$\nu$)+jets 1554.17±68.84
+WW/WZ/ZZ 23.08±7.63
+$\gamma$+jets 0.00±0.00
+Z($\nu\nu$)+jets 0.05±0.04
+Z(ll)+jets 19.30±1.74
+QCD 14.94±14.94
+SM H 8.71±0.33
+Total_Bkg 1958.89±71.35
+data_obs 2216.00±47.05
+
+region W-$(e\nu)$-CR-(2b)
+$t\bar{t}$ 171.64±5.48
+Single $t$ 110.60±5.26
+W(l$\nu$)+jets 103.86±15.48
+WW/WZ/ZZ 5.90±2.96
+$\gamma$+jets 0.00±0.00
+Z($\nu\nu$)+jets 0.00±0.00
+Z(ll)+jets 2.10±0.52
+QCD 0.00±0.00
+SM H 17.65±0.47
+Total_Bkg 411.76±17.51
+data_obs 422.00±20.54
+

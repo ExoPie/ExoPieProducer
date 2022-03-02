@@ -91,17 +91,13 @@ def VarToHist(df_var, df_weight, df_weight_den, df_weight_num, HISTNAME, binning
     h_var = SetHist(HISTNAME, binning)
     weight = 1.0
     for value, weight, numerator, denominator in zip(df_var, df_weight, df_weight_num, df_weight_den):
-        if 'weightJEC' in HISTNAME:
-            denominator = 1.0
-        if denominator != 0:
-            scale = numerator/denominator
-        if '_nPV' in HISTNAME and denominator!=0:
-            scale = 1/denominator
-        if weight <= 0.0: scale = 1.0
+        if 'weightJEC' in HISTNAME: denominator = 1.0
+        if denominator != 0: scale=(numerator/denominator)
+        if '_nPV' in HISTNAME and denominator!=0: scale=(1/denominator)
+        if weight == 0.0: scale = 1.0
         if ApplyWeight: h_var.Fill(value, (weight * scale))
         if not ApplyWeight: h_var.Fill(value)
     return h_var
-
 
 def getBinRange(nBins, xlow, xhigh):
     diff = float(xhigh - xlow) / float(nBins)
@@ -177,8 +173,8 @@ def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mod
         # JER SYSTEMATICS
         h_list.append(VarToHist(df["MET_Res_up"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR+"_ResUp", mainBin))
         h_list.append(VarToHist(df["MET_Res_down"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR+"_ResDown", mainBin))
-        h_list.append(VarToHist(df["MET_En_up"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR+"_EnUp", mainBin))
-        h_list.append(VarToHist(df["MET_En_down"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR+"_EnDown", mainBin))
+        h_list.append(VarToHist(df["MET_En_up"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR+"_CMSyear_jesUp", mainBin))
+        h_list.append(VarToHist(df["MET_En_down"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varSR+"_CMSyear_jesDown", mainBin))
         # pdf and scale systematics
         h_list.append(VarToHist(df[limit_varSR], df["weight"], df["weightcentral"], df["weightscale_up"], "h_reg_"+reg+"_"+limit_varSR+"_CMSyear_mu_scaleUp", mainBin))
         h_list.append(VarToHist(df[limit_varSR], df["weight"], df["weightcentral"], df["weightscale_down"], "h_reg_"+reg+"_"+limit_varSR+"_CMSyear_mu_scaleDown", mainBin))
@@ -307,8 +303,8 @@ def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mod
         # JER SYSTEMATICS
         h_list.append(VarToHist(df["Recoil_Res_up"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varCR+"_ResUp", mainBin))
         h_list.append(VarToHist(df["Recoil_Res_down"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varCR+"_ResDown", mainBin))
-        h_list.append(VarToHist(df["Recoil_En_up"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varCR+"_EnUp", mainBin))
-        h_list.append(VarToHist(df["Recoil_En_down"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varCR+"_EnDown", mainBin))
+        h_list.append(VarToHist(df["Recoil_En_up"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varCR+"_CMSyear_jesUp", mainBin))
+        h_list.append(VarToHist(df["Recoil_En_down"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_"+limit_varCR+"_CMSyear_jesDown", mainBin))
         # pdf and scale systematics
         h_list.append(VarToHist(df[limit_varCR], df["weight"], df["weightcentral"], df["weightscale_up"], "h_reg_"+reg+"_"+limit_varCR+"_CMSyear_mu_scaleUp", mainBin))
         h_list.append(VarToHist(df[limit_varCR], df["weight"], df["weightcentral"], df["weightscale_down"], "h_reg_"+reg+"_"+limit_varCR+"_CMSyear_mu_scaleDown", mainBin))
@@ -361,6 +357,8 @@ def HistWrtter(df, outfilename, treeName, limit_varSR, limit_varCR, mainBin, mod
         h_list.append(VarToHist(df["dPhiCalo_pfMET"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_dPhiCalo_pfMET", [15, -3.2, 3.2]))
         h_list.append(VarToHist(df["JetwithEta4p5"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_JetwithEta4p5", [15, 0.0, 10]))  # min_dPhi)
         h_list.append(VarToHist(df["leadingLepPt"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_lep1_pT", [15, 30, 500]))
+        h_list.append(VarToHist(df["leadingLepPt"], df["weight"], df["weightEleID"], df["weightEleID_up"], "h_reg_"+reg+"_lep1_pT_CMSyear_EleIDUp", [15, 30, 500]))
+        h_list.append(VarToHist(df["leadingLepPt"], df["weight"], df["weightEleID"], df["weightEleID_down"], "h_reg_"+reg+"_lep1_pT_CMSyear_EleIDDown", [15, 30, 500]))
         h_list.append(VarToHist(df["leadingLepEta"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_lep1_eta", [30, -2.5, 2.5]))
         h_list.append(VarToHist(df["leadingLepPhi"], df["weight"], df["weight"], df["weight"], "h_reg_"+reg+"_lep1_Phi", [30, -3.14, 3.14]))
         if ('Wmunu' in reg) or ('Wenu' in reg) or ('Topmunu' in reg) or ('Topenu' in reg):
@@ -460,8 +458,8 @@ def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, m
         # JER SYSTEMATICS
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_ResUp",mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_ResDown",mainBin))
-        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_EnUp",mainBin))
-        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_EnDown",mainBin))
+        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_jesUp",mainBin))
+        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_jesDown",mainBin))
 
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_mu_scaleUp", mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varSR+"_CMSyear_mu_scaleDown", mainBin))
@@ -594,8 +592,8 @@ def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, m
         # JER SYSTEMATICS
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_ResUp",mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_ResDown",mainBin))
-        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_EnUp",mainBin))
-        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_EnDown",mainBin))
+        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_CMSyear_jesUp",mainBin))
+        h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_CMSyear_jesDown",mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_CMSyear_mu_scaleUp", mainBin))
         h_list.append(SetHist("h_reg_" + reg +"_"+limit_varCR+"_CMSyear_mu_scaleDown", mainBin))
         h_list.append(SetHist("h_reg_"+reg+"_"+limit_varCR+"_CMSyear_pdfUp", mainBin))
@@ -647,6 +645,8 @@ def emptyHistWritter(treeName, outfilename, limit_varSR, limit_varCR, mainBin, m
         h_list.append(SetHist("h_reg_"+reg+"_dPhiCalo_pfMET", [15, -3.2, 3.2]))
         h_list.append(SetHist("h_reg_"+reg+"_JetwithEta4p5", [15, 0.0, 10]))
         h_list.append(SetHist("h_reg_"+reg+"_lep1_pT", [15, 30, 500]))
+        h_list.append(SetHist("h_reg_"+reg+"_lep1_pT_CMSyear_EleIDUp", [15, 30, 500]))
+        h_list.append(SetHist("h_reg_"+reg+"_lep1_pT_CMSyear_EleIDDown", [15, 30, 500]))
         h_list.append(SetHist("h_reg_"+reg+"_lep1_eta", [30, -2.5, 2.5]))
         h_list.append(SetHist("h_reg_"+reg+"_lep1_Phi", [30, -3.14, 3.14]))
         if ('Wmunu' in reg) or ('Wenu' in reg) or ('Topmunu' in reg) or ('Topenu' in reg):
@@ -685,7 +685,9 @@ START MAKING HISTOGRAMS
 ---------------------------------------------------------------
 '''
 
-trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDbCR_1b', 'bbDM_QCDbCR_2b', 'bbDM_QCDaCR_1b', 'bbDM_QCDaCR_2b', 'bbDM_QCDcCR_1b', 'bbDM_QCDcCR_2b']
+# trees = ['bbDM_preselR', 'bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_1b', 'bbDM_ZeeCR_2b', 'bbDM_ZmumuCR_1b', 'bbDM_ZmumuCR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WenuCR_2b', 'bbDM_WmunuCR_1b', 'bbDM_WmunuCR_2b', 'bbDM_TopenuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_1b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDbCR_1b', 'bbDM_QCDbCR_2b', 'bbDM_QCDaCR_1b', 'bbDM_QCDaCR_2b', 'bbDM_QCDcCR_1b', 'bbDM_QCDcCR_2b']
+
+trees = ['bbDM_SR_1b', 'bbDM_SR_2b', 'bbDM_ZeeCR_2j', 'bbDM_ZeeCR_3j', 'bbDM_ZmumuCR_2j', 'bbDM_ZmumuCR_3j', 'bbDM_WenuCR_1b', 'bbDM_WmunuCR_1b', 'bbDM_TopenuCR_2b', 'bbDM_TopmunuCR_2b', 'bbDM_QCDbCR_1b', 'bbDM_QCDbCR_2b',]
 
 
 # inputFilename=infile
@@ -750,10 +752,21 @@ def runFile(trees, filename):
             #df['del_plus'] = abs(df.dPhi_jetMET + df.dPhiJet12 - np.pi)
             if ('_2b' in tree) or ('_3j' in tree):
                 df['ctsValue'] = abs(np.tanh(df.dEtaJet12.div(2)))
+                if 'SR' in tree or 'QCD' in tree:
+                    en_up = df.MET_En_up/df.MET
+                    en_down = df.MET_En_down/df.MET
+                    df['MET_En_up'] = (df.MET_En_up/df.MET)*df.ctsValue
+                    df['MET_En_down'] = en_down*df.ctsValue
+                else:
+                    en_up = df.Recoil_En_up/df.Recoil
+                    en_down = df.Recoil_En_down/df.Recoil
+                    df['Recoil_En_up'] = en_up*df.ctsValue
+                    df['Recoil_En_down'] = en_down*df.ctsValue
             df['dPhiTrk_pfMET'] = DeltaPhi(df.METPhi, df.pfTRKMETPhi)
             df['dPhiCalo_pfMET'] = DeltaPhi(df.METPhi, df.pfpatCaloMETPhi)
             df['weightcentral'] = 1.0
             df = df[df.Jet1Pt > 0.0]
+            # df['weightscalecentral'] = df.weight/abs(df.weight)
             df['weight'] = df.weight/(df.weightQCD*df.weightTop*df.weightEWK)
             if ('SR' not in tree) and ('QCD' not in tree) and ('preselR' not in tree):
                 df['dPhiJet1Lep1'] = DeltaPhi(df.Jet1Phi, df.leadingLepPhi)

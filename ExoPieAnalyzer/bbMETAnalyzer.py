@@ -15,6 +15,7 @@ from pandas import DataFrame, concat
 from pandas import Series
 import time
 import glob
+import scipy.stats as st
 
 ## for parallel threads in interactive running
 from multiprocessing import Process
@@ -22,7 +23,7 @@ import multiprocessing as mp
 
 dummyArr = numpy.array([-9999.0], dtype=numpy.float64)
 
-isCondor = True
+isCondor = False
 
 isJetSel = True
 
@@ -148,6 +149,25 @@ def getJECWeight(ep_THINjetCorrUnc):
         JECWeight_down *= (1-corr)
     return JECWeight_up, JECWeight_down
 
+def pdfWeightMaker(ep_mcweight, ep_pdfWeight):
+    # ep_pdfWeight = [pwgt*-1 for pwgt in ep_pdfWeight if all([pwgt < 0 for pwgt in ep_pdfWeight])]
+    # if all([pwgt < 0 for pwgt in ep_pdfWeight]) and ep_mcweight == -1:
+    #     ep_pdfWeight = [pwgt*-1 for pwgt in ep_pdfWeight]
+    ep_pdfWeight = numpy.array(ep_pdfWeight)/ep_mcweight
+    ep_pdfWeight = numpy.array([wgt for wgt in ep_pdfWeight if wgt > 0])
+    cl68_int = st.norm.interval(alpha=0.68, loc=numpy.mean(ep_pdfWeight), scale=st.sem(ep_pdfWeight))
+    min_ = float(cl68_int[0])
+    max_ = float(cl68_int[1])
+    pdf = numpy.array([i-1 for i in ep_pdfWeight if i > min_ and i < max_])
+    shift = numpy.sqrt(numpy.sum(pdf*pdf))
+    return (1+shift), (1-shift)
+
+def scaleWeightMaker(ep_mcweight, ep_scaleWeight):
+    ep_scaleWeight = numpy.array(ep_scaleWeight)/ep_mcweight
+    scale_up = numpy.amax(ep_scaleWeight)
+    scale_down = numpy.amin(ep_scaleWeight)
+    return (scale_up), (scale_down)
+
 def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle, ep_elePt, ep_eleEta, ep_eleIsPTight, nMu, ep_muPt, ep_muEta, ep_isTightMuon):
     tot_weight = 1.0
     weightMETtrig = 1.0
@@ -175,10 +195,8 @@ def weight_(common_weight, ep_pfMetCorrPt, ep_ZmumuRecoil, ep_WmunuRecoil, nEle,
     if (nEle > 0 and nMu == 0):
         weightEleTrig = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])[0]
         if (nEle == 1):
-            weightEle, weightEle_up, weightEle_down = wgt.ele_weight(
-                ep_elePt[0], ep_eleEta[0], 'T')
-            weightEleTrig, weightEleTrig_up, weightEleTrig_down = wgt.eletrig_weight(
-                ep_elePt[0], ep_eleEta[0])
+            weightEle, weightEle_up, weightEle_down = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')
+            weightEleTrig, weightEleTrig_up, weightEleTrig_down = wgt.eletrig_weight(ep_elePt[0], ep_eleEta[0])
             tot_weight = weightEle[0]*common_weight*weightEleTrig
         if (nEle == 2):
             weightEle[0] = wgt.ele_weight(ep_elePt[0], ep_eleEta[0], 'T')[0][0] * wgt.ele_weight(ep_elePt[1], ep_eleEta[1], 'L')[0][0]
@@ -437,32 +455,32 @@ def runbbdm(txtfile):
             ep_nTau_DRBased_EleMuVeto, ep_nTau_discBased_looseElelooseMuVeto, ep_nTau_discBased_looseEleTightMuVeto, ep_nTau_discBased_mediumElelooseMuVeto, ep_nTau_discBased_TightEleTightMuVeto,\
             ep_pu_nTrueInt, ep_pu_nPUVert, \
             ep_THINjetNPV, \
-            ep_mcweight, ep_genParPt, ep_genParSample, eletrigdecision, photrigdecision, mutrigdecision, mettrigdecision, \
+            ep_mcweight, ep_genParPt, ep_genParSample, eletrigdecision, photrigdecision, mutrigdecision, mettrigdecision, ep_scaleWeight, ep_pdfWeight, \
             ep_isak4JetBasedHemEvent, ep_ismetphiBasedHemEvent1, ep_ismetphiBasedHemEvent2 \
             in zip(df.st_runId, df.st_lumiSection, df.st_eventId,
-                   df.st_prefiringweight, df.st_prefiringweightup, df.st_prefiringweightdown,
-                   df.st_scaleWeightUP, df.st_scaleWeightDOWN, df.st_pdfWeightUP, df.st_pdfWeightDOWN,
-                   df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown,
-                   df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown,
-                   df.st_pfMetCorrSig, df.st_pfpatCaloMETPt, df.st_pfpatCaloMETPhi,
-                   df.st_pfTRKMETPt, df.st_pfTRKMETPhi,
-                   df.WenuPhi, df.WmunuPhi, df.ZeePhi, df.ZmumuPhi,
-                   df.ZeeRecoil, df.ZmumuRecoil, df.WenuRecoil, df.WmunuRecoil,
-                   df.ZeeMass, df.ZmumuMass, df.Wenumass, df.Wmunumass,
-                   df.st_isData,
-                   df.st_THINnJet, df.st_THINjetPx, df.st_THINjetPy, df.st_THINjetPz, df.st_THINjetEnergy,
-                   df.st_THINjetDeepCSV, df.st_THINjetHadronFlavor, df.st_THINjetNPV,
-                   df.st_THINjetCorrUnc, df.st_THINjetUncSources, df.st_THINPUjetIDTight,
-                   df.st_THINjetNHadEF, df.st_THINjetCHadEF, df.st_THINjetCEmEF, df.st_THINjetNEmEF,
-                   df.st_THINjetCMulti, df.st_THINjetNMultiplicity,
-                   df.st_nEle, df.st_elePx, df.st_elePy, df.st_elePz, df.st_eleEnergy,
-                   df.st_eleIsPassTight, df.st_eleIsPassLoose, df.st_eleCharge,
-                   df.st_nPho, df.st_phoIsPassTight, df.st_phoPx, df.st_phoPy, df.st_phoPz, df.st_phoEnergy,
-                   df.st_nMu, df.st_muPx, df.st_muPy, df.st_muPz, df.st_muEnergy, df.st_isTightMuon, df.st_muCharge,
-                   df.st_nTau_DRBased_EleMuVeto, df.st_nTau_discBased_looseElelooseMuVeto, df.st_nTau_discBased_looseEleTightMuVeto, df.st_nTau_discBased_mediumElelooseMuVeto, df.st_nTau_discBased_TightEleTightMuVeto,
-                   df.st_pu_nTrueInt, df.st_pu_nPUVert,
-                   df.st_THINjetNPV,
-                   df.mcweight, df.st_genParPt, df.st_genParSample, df.st_eletrigdecision, df.st_photrigdecision, df.st_mutrigdecision, df.st_mettrigdecision, df.st_isak4JetBasedHemEvent, df.st_ismetphiBasedHemEvent1, df.st_ismetphiBasedHemEvent2):
+                    df.st_prefiringweight, df.st_prefiringweightup, df.st_prefiringweightdown,
+                    df.st_scaleWeightUP, df.st_scaleWeightDOWN, df.st_pdfWeightUP, df.st_pdfWeightDOWN,
+                    df.st_pfMetCorrPt, df.st_pfMetCorrPhi, df.st_pfMetUncJetResUp, df.st_pfMetUncJetResDown,
+                    df.st_pfMetUncJetEnUp, df.st_pfMetUncJetEnDown,
+                    df.st_pfMetCorrSig, df.st_pfpatCaloMETPt, df.st_pfpatCaloMETPhi,
+                    df.st_pfTRKMETPt, df.st_pfTRKMETPhi,
+                    df.WenuPhi, df.WmunuPhi, df.ZeePhi, df.ZmumuPhi,
+                    df.ZeeRecoil, df.ZmumuRecoil, df.WenuRecoil, df.WmunuRecoil,
+                    df.ZeeMass, df.ZmumuMass, df.Wenumass, df.Wmunumass,
+                    df.st_isData,
+                    df.st_THINnJet, df.st_THINjetPx, df.st_THINjetPy, df.st_THINjetPz, df.st_THINjetEnergy,
+                    df.st_THINjetDeepCSV, df.st_THINjetHadronFlavor, df.st_THINjetNPV,
+                    df.st_THINjetCorrUnc, df.st_THINjetUncSources, df.st_THINPUjetIDTight,
+                    df.st_THINjetNHadEF, df.st_THINjetCHadEF, df.st_THINjetCEmEF, df.st_THINjetNEmEF,
+                    df.st_THINjetCMulti, df.st_THINjetNMultiplicity,
+                    df.st_nEle, df.st_elePx, df.st_elePy, df.st_elePz, df.st_eleEnergy,
+                    df.st_eleIsPassTight, df.st_eleIsPassLoose, df.st_eleCharge,
+                    df.st_nPho, df.st_phoIsPassTight, df.st_phoPx, df.st_phoPy, df.st_phoPz, df.st_phoEnergy,
+                    df.st_nMu, df.st_muPx, df.st_muPy, df.st_muPz, df.st_muEnergy, df.st_isTightMuon, df.st_muCharge,
+                    df.st_nTau_DRBased_EleMuVeto, df.st_nTau_discBased_looseElelooseMuVeto, df.st_nTau_discBased_looseEleTightMuVeto, df.st_nTau_discBased_mediumElelooseMuVeto, df.st_nTau_discBased_TightEleTightMuVeto,
+                    df.st_pu_nTrueInt, df.st_pu_nPUVert,
+                    df.st_THINjetNPV,
+                    df.mcweight, df.st_genParPt, df.st_genParSample, df.st_eletrigdecision, df.st_photrigdecision, df.st_mutrigdecision, df.st_mettrigdecision,df.st_scaleWeight, df.st_pdfWeight, df.st_isak4JetBasedHemEvent, df.st_ismetphiBasedHemEvent1, df.st_ismetphiBasedHemEvent2):
             ieve = ieve + 1
             if ieve % 10000 == 0:
                 print("Processed", ieve, "Events")
@@ -730,10 +748,6 @@ def runbbdm(txtfile):
             else:
                 [weightB, weightFakeB], [weightB_up, weightFakeB_up], [weightB_down, weightFakeB_down] = wgt.getBTagSF(ep_THINnJet, ep_THINjetPt, ep_THINjetEta, ep_THINjetHadronFlavor, ep_THINjetDeepCSV, 'MWP')
                 weightPU, weightPU_up, weightPU_down  = wgt.puweight(ep_pu_nTrueInt)
-                weightscale_up  = ep_scaleWeightUP
-                weightpdf_up = ep_pdfWeightUP
-                weightscale_down = ep_scaleWeightDOWN
-                weightpdf_down = ep_pdfWeightDOWN
                 weightEWK = 1.0
                 weightQCD = 1.0
                 weightTop = 1.0
@@ -772,6 +786,8 @@ def runbbdm(txtfile):
                 weightMuTRK, weightMuTRK_up, weightMuTRK_down = mutrk_wgt
                 weightMuID, weightMuID_up, weightMuID_down = muID_wgt
                 weightMuISO, weightMuISO_up, weightMuISO_down = muISO_wgt
+                weightscale_up, weightscale_down = scaleWeightMaker(ep_mcweight,ep_scaleWeight)
+                weightpdf_up, weightpdf_down  = pdfWeightMaker(ep_mcweight, ep_pdfWeight)
             JECSourceUp, JECSourceDown = getJECSourceUnc(ep_THINnJet, ep_THINjetUncSources, index=False)
 
             '''
@@ -961,7 +977,7 @@ def runbbdm(txtfile):
             ZEE CONTROL REGION
             --------------------------------------------------------------------------------
             '''
-            if zee_cr:
+            if False:
                 h_reg_ZeeCR_1b_cutFlow.AddBinContent(1, presel_weight)
                 h_reg_ZeeCR_2b_cutFlow.AddBinContent(1, presel_weight)
                 if eletrigdecision:
@@ -1097,7 +1113,8 @@ def runbbdm(txtfile):
             ZMUMU CONTROL REGION
             --------------------------------------------------------------------------------
             '''
-            if zmumu_cr:
+            # if zmumu_cr:
+            if False:
                 h_reg_ZmumuCR_1b_cutFlow.AddBinContent(1, presel_weight)
                 h_reg_ZmumuCR_2b_cutFlow.AddBinContent(1, presel_weight)
                 if mettrigdecision:
@@ -6126,10 +6143,10 @@ def runbbdm(txtfile):
 
 
     cfsr_list = {1: 'presel', 2: 'trigger', 3: 'MET',
-                 4: 'nLep', 5: 'min_dPhi', 6: 'nJet', 7: 'nBjets'}
+                    4: 'nLep', 5: 'min_dPhi', 6: 'nJet', 7: 'nBjets'}
     #cfcr_list = {1:'presel',2:'trigger',3:'MET',4:'nLep',5:'Recoil',6:'min_dPhi',7:'Z/W mass',8:'nJet',9:'nBjets'}
     cfcr_list = {1: 'presel', 2: 'trigger', 3: 'lep_veto', 4: 'tau_veto', 5: 'sel_lep',
-                 6: 'sel_lep_Pt_tight', 7: 'Recoil', 8: 'min_dPhi', 9: 'Z/W mass', 10: 'nJet', 11: 'nBjets'}
+                    6: 'sel_lep_Pt_tight', 7: 'Recoil', 8: 'min_dPhi', 9: 'Z/W mass', 10: 'nJet', 11: 'nBjets'}
     for i in [1, 2, 3, 4, 5, 6, 7]:
         h_reg_preselR_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])
         h_reg_SR_1b_cutFlow.GetXaxis().SetBinLabel(i, cfsr_list[i])

@@ -1,0 +1,78 @@
+region h_reg_ZeeCR_1b_Recoil
+data_obs 2612.0±51.1
+Total_Bkg 2511.4±20.6
+Top 169.3±2.3
+STop 44.2±2.4
+WJets 3.6±1.3
+DIBOSON 31.5±2.6
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 2251.5±20.1
+QCD 0.0±0.0
+SM H 11.2±0.0
+
+region h_reg_ZeeCR_2b_Recoil
+data_obs 328.0±18.1
+Total_Bkg 332.6±6.1
+Top 75.4±1.6
+STop 30.2±2.0
+WJets 0.0±0.0
+DIBOSON 8.7±1.3
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 208.3±5.4
+QCD 0.0±0.0
+SM H 10.1±0.0
+
+region h_reg_TopenuCR_1b_Recoil
+data_obs 43050.0±207.5
+Total_Bkg 44348.1±187.2
+Top 20356.1±24.7
+STop 5859.3±26.3
+WJets 15587.0±90.2
+DIBOSON 311.2±9.7
+GJets 41.1±3.3
+ZJets 1.2±0.2
+DYJets 631.9±9.6
+QCD 1520.9±159.4
+SM H 39.4±0.4
+
+region h_reg_TopenuCR_2b_Recoil
+data_obs 5738.0±75.7
+Total_Bkg 6037.8±41.0
+Top 4266.9±11.1
+STop 1193.7±11.6
+WJets 442.6±14.0
+DIBOSON 17.4±2.0
+GJets 2.8±0.7
+ZJets 0.0±0.0
+DYJets 31.4±1.6
+QCD 69.7±34.8
+SM H 13.3±0.2
+
+region h_reg_WenuCR_1b_Recoil
+data_obs 8152.0±90.3
+Total_Bkg 8120.8±76.1
+Top 1044.1±5.7
+STop 909.3±7.6
+WJets 5909.9±66.1
+DIBOSON 75.1±4.6
+GJets 0.0±0.0
+ZJets 0.8±0.3
+DYJets 115.5±4.7
+QCD 50.7±35.9
+SM H 15.3±0.2
+
+region h_reg_WenuCR_2b_Recoil
+data_obs 1898.0±43.6
+Total_Bkg 2079.2±17.0
+Top 1022.2±5.6
+STop 620.8±6.5
+WJets 368.1±14.4
+DIBOSON 24.9±2.4
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 17.5±1.4
+QCD 0.0±0.0
+SM H 25.7±0.3
+

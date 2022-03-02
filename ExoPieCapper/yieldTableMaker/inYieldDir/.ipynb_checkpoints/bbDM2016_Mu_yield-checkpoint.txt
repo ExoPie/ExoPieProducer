@@ -1,0 +1,104 @@
+region h_reg_SR_1b_MET
+ZJets 12161.9±51.7
+DYJets 99.8±5.6
+WJets 4748.5±130.6
+STop 714.0±14.0
+GJets 5.0±1.6
+Top 1501.1±11.2
+DIBOSON 145.8±9.1
+QCD 607.7±246.4
+SM H 38.8±0.4
+bkgSum 20022.7±284.4
+data_obs 20022.7±284.4
+
+region h_reg_SR_1b_dPhiTrk_pfMET
+ZJets 12161.9±51.0
+DYJets 99.8±5.5
+WJets 4748.5±128.3
+STop 714.0±13.7
+GJets 5.0±1.5
+Top 1501.1±11.0
+DIBOSON 145.8±9.0
+QCD 607.7±246.4
+SM H 38.0±0.4
+bkgSum 20022.7±283.2
+data_obs 20022.7±283.2
+
+region h_reg_SR_1b_dPhiCalo_pfMET
+ZJets 12161.9±51.3
+DYJets 99.8±5.5
+WJets 4748.5±129.1
+STop 714.0±13.9
+GJets 5.0±1.6
+Top 1501.1±11.1
+DIBOSON 145.8±9.1
+QCD 607.7±246.4
+SM H 38.4±0.4
+bkgSum 20022.6±283.6
+data_obs 20022.6±283.6
+
+region h_reg_SR_1b_rJet1PtMET
+ZJets 12161.9±51.7
+DYJets 99.8±5.6
+WJets 4748.5±130.6
+STop 714.0±14.0
+GJets 5.0±1.6
+Top 1501.1±11.2
+DIBOSON 145.8±9.1
+QCD 607.7±246.4
+SM H 38.9±0.4
+bkgSum 20022.7±284.4
+data_obs 20022.7±284.4
+
+region h_reg_SR_2b_MET
+ZJets 868.4±12.1
+DYJets 3.6±0.8
+WJets 235.3±27.2
+STop 230.7±8.2
+GJets 0.6±0.5
+Top 542.0±6.6
+DIBOSON 42.3±4.6
+QCD 11.5±11.5
+SM H 26.2±0.3
+bkgSum 1960.5±33.9
+data_obs 1960.5±33.9
+
+region h_reg_SR_2b_dPhiTrk_pfMET
+ZJets 868.4±11.9
+DYJets 3.6±0.8
+WJets 235.3±27.0
+STop 230.7±8.0
+GJets 0.6±0.5
+Top 542.0±6.4
+DIBOSON 42.3±4.4
+QCD 11.5±11.5
+SM H 25.6±0.3
+bkgSum 1960.5±33.6
+data_obs 1960.5±33.6
+
+region h_reg_SR_2b_dPhiCalo_pfMET
+ZJets 868.4±12.0
+DYJets 3.6±0.8
+WJets 235.3±27.2
+STop 230.7±8.2
+GJets 0.6±0.5
+Top 542.0±6.5
+DIBOSON 42.3±4.5
+QCD 11.5±11.5
+SM H 25.7±0.3
+bkgSum 1960.5±33.9
+data_obs 1960.5±33.9
+
+region h_reg_SR_2b_rJet1PtMET
+ZJets 868.4±12.1
+DYJets 3.6±0.8
+WJets 235.3±27.2
+STop 230.7±8.2
+GJets 0.6±0.5
+Top 542.0±6.6
+DIBOSON 42.3±4.6
+QCD 11.5±11.5
+SM H 26.2±0.3
+bkgSum 1960.5±33.9
+data_obs 1960.5±33.9
+
