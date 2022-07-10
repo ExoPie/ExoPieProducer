@@ -1,0 +1,112 @@
+region h_reg_SR_1b_MET
+data_obs 19412.0±172.6
+Total_Bkg 19412.0±172.6
+Top 1494.1±11.2
+STop 710.9±13.9
+WJets 4625.7±127.0
+DIBOSON 235.4±17.2
+GJets 4.9±1.6
+ZJets 11982.2±50.9
+DYJets 97.4±5.5
+QCD 221.4±102.2
+SM H 40.0±0.4
+Ma50_MChi1_MA1200 872.1±130.7
+Ma50_MChi1_MA600 1204.2±158.3
+Ma500_MChi1_MA1200 41.2±1.2
+Ma500_MChi1_MA600 59.5±1.7
+
+region h_reg_SR_2b_MET
+data_obs 1736.8±56.1
+Total_Bkg 1736.8±56.1
+Top 380.9±5.8
+STop 110.1±5.4
+WJets 297.8±28.1
+DIBOSON 31.0±6.2
+GJets 0.6±0.6
+ZJets 855.8±12.0
+DYJets 7.1±1.4
+QCD 46.0±45.9
+SM H 7.5±0.2
+Ma50_MChi1_MA1200 164.7±57.3
+Ma50_MChi1_MA600 265.9±76.3
+Ma500_MChi1_MA1200 6.4±0.5
+Ma500_MChi1_MA600 10.3±0.7
+
+region h_reg_ZmumuCR_1b_Recoil
+data_obs 2347.0±48.4
+Total_Bkg 2248.7±24.7
+Top 175.3±2.7
+STop 40.8±2.8
+WJets 4.7±3.5
+DIBOSON 23.5±3.9
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 1997.3±23.8
+QCD 0.0±0.0
+SM H 7.1±0.1
+
+region h_reg_ZmumuCR_2b_Recoil
+data_obs 305.0±17.5
+Total_Bkg 252.9±6.5
+Top 67.0±1.6
+STop 20.3±1.9
+WJets 0.3±0.3
+DIBOSON 8.8±1.7
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 150.9±5.8
+QCD 0.0±0.0
+SM H 5.6±0.1
+
+region h_reg_TopmunuCR_1b_Recoil
+data_obs 39367.0±198.4
+Total_Bkg 35419.8±298.7
+Top 17594.9±39.7
+STop 4743.3±31.1
+WJets 11105.3±167.8
+DIBOSON 226.1±21.1
+GJets 1.0±0.6
+ZJets 1.7±0.4
+DYJets 477.3±10.0
+QCD 1214.4±240.8
+SM H 55.7±0.8
+
+region h_reg_TopmunuCR_2b_Recoil
+data_obs 4668.0±68.3
+Total_Bkg 4731.0±77.2
+Top 3323.3±16.8
+STop 865.7±13.4
+WJets 352.5±26.9
+DIBOSON 16.8±5.4
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 21.7±1.8
+QCD 135.5±68.9
+SM H 15.5±0.4
+
+region h_reg_WmunuCR_1b_Recoil
+data_obs 8010.0±89.5
+Total_Bkg 6616.5±182.6
+Top 894.9±7.8
+STop 738.0±12.7
+WJets 4451.4±127.4
+DIBOSON 59.7±10.6
+GJets 0.0±0.0
+ZJets 1.0±0.3
+DYJets 118.4±5.7
+QCD 330.8±129.4
+SM H 22.4±0.5
+
+region h_reg_WmunuCR_2b_Recoil
+data_obs 1646.0±40.5
+Total_Bkg 1678.4±50.4
+Top 786.3±7.4
+STop 420.8±9.4
+WJets 363.7±32.5
+DIBOSON 26.5±5.8
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 10.3±1.4
+QCD 38.5±36.1
+SM H 32.3±0.6
+

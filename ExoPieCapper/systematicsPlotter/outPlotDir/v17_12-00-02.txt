@@ -1,0 +1,5 @@
+CMSyear_eff_b 0.44-4%
+CMSyear_fake_b 0.38-6%
+EWK 3-48%
+CMSyear_Top 0.90-33%
+CMSyear_trig_met 0.46%

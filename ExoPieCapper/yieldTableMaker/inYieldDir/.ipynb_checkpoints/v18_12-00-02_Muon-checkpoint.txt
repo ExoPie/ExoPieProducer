@@ -1,0 +1,112 @@
+region h_reg_SR_1b_MET
+data_obs 12584.1±58.5
+Total_Bkg 12584.1±58.5
+Top 530.0±4.4
+STop 287.9±4.3
+WJets 2835.9±43.3
+DIBOSON 160.5±7.0
+GJets 0.3±0.2
+ZJets 8624.2±34.1
+DYJets 44.2±2.6
+QCD 65.6±17.0
+SM H 35.5±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_1200.root 261.2±7.0
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_600.root 274.8±7.1
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_1200.root 27.8±0.6
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_600.root 38.3±0.8
+
+region h_reg_SR_2b_MET
+data_obs 1333.2±14.7
+Total_Bkg 1333.2±14.7
+Top 206.6±2.7
+STop 120.6±2.9
+WJets 149.8±10.1
+DIBOSON 42.4±3.3
+GJets 0.0±0.0
+ZJets 776.4±9.4
+DYJets 2.9±0.6
+QCD 0.0±0.0
+SM H 34.6±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_1200.root 136.0±4.9
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_600.root 152.8±5.1
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_1200.root 15.5±0.4
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_600.root 21.4±0.6
+
+region h_reg_ZmumuCR_1b_Recoil
+data_obs 1575.0±39.7
+Total_Bkg 1444.5±14.4
+Top 46.0±1.3
+STop 23.3±1.8
+WJets 3.0±1.2
+DIBOSON 17.5±2.3
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 1349.5±14.0
+QCD 0.0±0.0
+SM H 5.1±0.0
+
+region h_reg_ZmumuCR_2b_Recoil
+data_obs 174.0±13.2
+Total_Bkg 173.4±4.4
+Top 16.9±0.8
+STop 17.9±1.6
+WJets 0.0±0.0
+DIBOSON 5.5±1.1
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 127.4±3.9
+QCD 0.0±0.0
+SM H 5.6±0.0
+
+region h_reg_TopmunuCR_1b_Recoil
+data_obs 26524.0±162.8
+Total_Bkg 22937.0±104.3
+Top 9281.0±18.2
+STop 3127.9±20.3
+WJets 9225.2±66.1
+DIBOSON 192.8±8.7
+GJets 0.0±0.0
+ZJets 2.0±0.3
+DYJets 307.2±6.0
+QCD 776.8±75.2
+SM H 24.0±0.3
+
+region h_reg_TopmunuCR_2b_Recoil
+data_obs 3118.0±55.8
+Total_Bkg 2787.0±23.7
+Top 1646.5±7.6
+STop 730.7±9.8
+WJets 300.1±11.4
+DIBOSON 10.0±1.9
+GJets 0.0±0.0
+ZJets 0.0±0.0
+DYJets 17.2±1.2
+QCD 73.5±16.6
+SM H 9.0±0.2
+
+region h_reg_WmunuCR_1b_Recoil
+data_obs 6117.0±78.2
+Total_Bkg 5190.4±104.5
+Top 405.6±3.8
+STop 392.2±4.9
+WJets 3665.6±47.5
+DIBOSON 62.6±4.9
+GJets 0.0±0.0
+ZJets 1.0±0.2
+DYJets 75.3±3.5
+QCD 579.0±92.7
+SM H 9.1±0.2
+
+region h_reg_WmunuCR_2b_Recoil
+data_obs 1262.0±35.5
+Total_Bkg 1038.2±18.6
+Top 418.4±3.9
+STop 299.0±4.9
+WJets 266.6±16.6
+DIBOSON 15.6±2.3
+GJets 0.0±0.0
+ZJets 0.2±0.1
+DYJets 9.7±1.0
+QCD 8.8±5.1
+SM H 19.9±0.3
+

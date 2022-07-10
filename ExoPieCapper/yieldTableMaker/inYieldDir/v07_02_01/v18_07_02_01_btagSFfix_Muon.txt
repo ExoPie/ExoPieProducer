@@ -1,0 +1,56 @@
+region h_reg_SR_1b_MET
+ZJets 19852.8±58.5
+DYJets 124.4±4.4
+WJets 7480.6±80.2
+STop 932.9±6.7
+GJets 3.1±0.6
+Top 3185.3±13.1
+DIBOSON 321.9±8.4
+QCD 432.7±72.7
+SM H 66.4±0.3
+bkgSum 32400.1±124.2
+data_obs 32400.1±124.2
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_1200.root 739.1±3.0
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_600.root 755.0±3.0
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_1200.root 475.8±1.9
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_600.root 494.1±2.0
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_1200.root 306.7±1.4
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_600.root 329.4±1.4
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_1200.root 137.1±0.6
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_600.root 159.7±0.7
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_1200.root 95.7±0.4
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_600.root 117.3±0.5
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_1200.root 47.4±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_600.root 68.3±0.3
+TuneCP3_13TeV_madgraph_pythia8_ma_700_mA_1200.root 14.2±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_750_mA_1200.root 10.9±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_1000_mA_1200.root 3.6±0.0
+
+region h_reg_SR_2b_MET
+ZJets 1746.5±15.3
+DYJets 8.9±1.1
+WJets 365.5±16.4
+STop 357.7±4.2
+GJets 0.4±0.2
+Top 1289.1±8.3
+DIBOSON 73.2±3.6
+QCD 46.4±26.3
+SM H 55.1±0.3
+bkgSum 3942.7±36.0
+data_obs 3942.7±36.0
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_1200.root 422.3±2.2
+TuneCP3_13TeV_madgraph_pythia8_ma_150_mA_600.root 433.5±2.3
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_1200.root 273.5±1.4
+TuneCP3_13TeV_madgraph_pythia8_ma_200_mA_600.root 282.7±1.5
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_1200.root 173.1±1.0
+TuneCP3_13TeV_madgraph_pythia8_ma_250_mA_600.root 188.5±1.0
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_1200.root 77.2±0.5
+TuneCP3_13TeV_madgraph_pythia8_ma_350_mA_600.root 90.1±0.5
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_1200.root 54.8±0.3
+TuneCP3_13TeV_madgraph_pythia8_ma_400_mA_600.root 66.5±0.4
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_1200.root 26.9±0.1
+TuneCP3_13TeV_madgraph_pythia8_ma_500_mA_600.root 38.7±0.2
+TuneCP3_13TeV_madgraph_pythia8_ma_700_mA_1200.root 8.0±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_750_mA_1200.root 6.3±0.0
+TuneCP3_13TeV_madgraph_pythia8_ma_1000_mA_1200.root 2.0±0.0
+
